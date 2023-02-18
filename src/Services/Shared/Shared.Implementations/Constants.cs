@@ -3,5 +3,6 @@
 public class Constants
 {    
     //claims
-    public const string ClaimUserCodeType = "user_code";
+    public const string ClaimCompanyCodeType = "company_code";
+    public const string ClaimDepartmentCodeType = "department_code";
 }

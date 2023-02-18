@@ -36,11 +36,19 @@ public class CurrentUser : ICurrentUser
         }
     }
 
-    public string? UserCode
+    public string? CompanyCode
     {
         get
         {
-            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimUserCodeType)?.Value;
+            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimCompanyCodeType)?.Value;
+        }
+    }
+
+    public string? DepartmentCode
+    {
+        get
+        {
+            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimDepartmentCodeType)?.Value;
         }
     }
 
