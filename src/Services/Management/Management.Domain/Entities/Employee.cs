@@ -1,11 +1,26 @@
-﻿namespace Management.Domain.Entities;
+﻿using Shared.Domain.Base;
 
-public class Employee
+namespace Management.Domain.Entities;
+
+public class Employee : Entity
 {
     public string Name { get; }
     public string Surname { get; }
     public DateTime Birthday { get; }
     public string PersonalIdentificationNumber { get; }
-    public List<EmployeeContract> Contracts { get; set; }
-    public List<DayOffRequest> DayOffRequests { get; set; }
+    public ContactData ContactData { get; }
+    public List<EmployeeContract> Contracts { get; }
+    public List<DayOffRequest> DayOffRequests { get; }
+
+    private Employee(string name, string surname, DateTime birthday, string personalIdentificationNumber,
+        ContactData contactData, List<EmployeeContract> contracts, List<DayOffRequest> dayOffRequests)
+    {
+        Name = name;
+        Surname = surname;
+        Birthday = birthday;
+        PersonalIdentificationNumber = personalIdentificationNumber;
+        ContactData = contactData;
+        Contracts = contracts;
+        DayOffRequests = dayOffRequests;
+    }
 }

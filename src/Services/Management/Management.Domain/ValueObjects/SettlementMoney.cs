@@ -1,6 +1,8 @@
-﻿namespace Management.Domain.ValueObjects;
+﻿using Shared.Domain.Base;
 
-public record SettlementMoney
+namespace Management.Domain.ValueObjects;
+
+public class SettlementMoney : ValueObject
 {
     public decimal Amount { get; }
     public decimal Bonus { get; } 
@@ -13,5 +15,11 @@ public record SettlementMoney
     public static SettlementMoney Create(decimal amount, decimal bonus)
     {
         return new SettlementMoney(amount, bonus);
+    }
+
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return this.Amount;
+        yield return this.Bonus;
     }
 }

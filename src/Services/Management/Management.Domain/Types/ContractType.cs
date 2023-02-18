@@ -1,15 +1,14 @@
-﻿namespace Management.Domain.Types;
+﻿using Shared.Domain.Base;
 
-public record ContractType(string Value)
-{
-    public const string None = nameof(None);
-    public const string ContractWork = nameof(ContractWork);
-    public const string ContractEmploymentLimitedPeriod = nameof(ContractEmploymentLimitedPeriod);
-    public const string ContractEmploymentIndefinitePeriod = nameof(ContractEmploymentIndefinitePeriod);
+namespace Management.Domain.Types;
 
-    public static implicit operator string(ContractType contractType)
-        => contractType.Value;
+public class ContractType : Enumeration
+{ 
+    public static ContractType ContractWork = new(1, nameof(ContractWork));
+    public static ContractType ContractEmploymentLimitedPeriod = new(2, nameof(ContractEmploymentLimitedPeriod));
+    public static ContractType ContractEmploymentIndefinitePeriod = new(3, nameof(ContractEmploymentIndefinitePeriod)); 
 
-    public static implicit operator ContractType(string value)
-        => new(value);
+    protected ContractType(int id, string name) : base(id, name)
+    {
+    }
 }
