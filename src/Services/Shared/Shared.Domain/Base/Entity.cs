@@ -6,6 +6,8 @@ public abstract class Entity
 {
     public int Id { get; protected set; }
     public int Version { get; protected set; }
+    public Watcher? Watcher { get; protected set; } 
+
     public IEnumerable<IDomainNotification> Events => _events;
 
     private readonly List<IDomainNotification> _events = new();

@@ -4,7 +4,8 @@ public interface ICurrentUser
 {
     bool IsInRole(string roleName);
     int UserId { get; }
-    string? UserCode { get; }
+    string? CompanyCode { get; }
+    string? DepartmentCode { get; }
     string UserName { get; }
     string Email { get; }
 }

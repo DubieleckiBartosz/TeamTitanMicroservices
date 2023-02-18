@@ -6,7 +6,8 @@ namespace Shared.Domain.Base;
 public abstract class Aggregate
 {
     public Guid Id { get; protected set; }
-    public int Version { get; protected set; } 
+    public int Version { get; protected set; }
+    public Watcher? Watcher { get; protected set; }
 
     [JsonIgnore]
     private readonly Queue<IEvent>? _uncommittedEvents = new Queue<IEvent>();
