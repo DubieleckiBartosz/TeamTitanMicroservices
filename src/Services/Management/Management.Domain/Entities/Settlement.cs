@@ -1,8 +1,9 @@
 ﻿using Management.Domain.ValueObjects;
+using Shared.Domain.Base;
 
 namespace Management.Domain.Entities;
 
-public class Settlement
+public class Settlement : Entity
 { 
     public bool IsPaid { get; private set; }
     public int EmployeeId { get; }

@@ -1,6 +1,8 @@
-﻿namespace Management.Domain.ValueObjects;
+﻿using Shared.Domain.Base;
 
-public record Period
+namespace Management.Domain.ValueObjects;
+
+public class Period : ValueObject
 {
     public string Value { get; }
 
@@ -10,4 +12,8 @@ public record Period
     }
 
     public static Period Create(DateTime from, DateTime to) => new Period(from, to);
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return this.Value;
+    }
 }
