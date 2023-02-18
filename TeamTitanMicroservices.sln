@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management.Application", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C29B1DF4-BE07-4AA3-931B-9848CB7AFD82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Domain", "src\Services\Shared\Shared.Domain\Shared.Domain.csproj", "{ED693758-414D-4242-B3AD-29427294429C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Domain", "src\Services\Shared\Shared.Domain\Shared.Domain.csproj", "{ED693758-414D-4242-B3AD-29427294429C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Implementations", "src\Services\Shared\Shared.Implementations\Shared.Implementations.csproj", "{4FB36D9F-E2FC-4165-A99E-4CF86BABE64D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{ED693758-414D-4242-B3AD-29427294429C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED693758-414D-4242-B3AD-29427294429C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED693758-414D-4242-B3AD-29427294429C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FB36D9F-E2FC-4165-A99E-4CF86BABE64D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FB36D9F-E2FC-4165-A99E-4CF86BABE64D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FB36D9F-E2FC-4165-A99E-4CF86BABE64D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FB36D9F-E2FC-4165-A99E-4CF86BABE64D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +97,7 @@ Global
 		{01FD7983-CD1E-4C85-9DD1-5D22B6B1F031} = {080F1A92-5240-4643-BB6D-D07D5A9723AD}
 		{C29B1DF4-BE07-4AA3-931B-9848CB7AFD82} = {34E852B2-AF5F-4402-95CA-47EA5C7F6B6A}
 		{ED693758-414D-4242-B3AD-29427294429C} = {C29B1DF4-BE07-4AA3-931B-9848CB7AFD82}
+		{4FB36D9F-E2FC-4165-A99E-4CF86BABE64D} = {C29B1DF4-BE07-4AA3-931B-9848CB7AFD82}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6FB9205-7C78-4F1D-9BD6-1DBC3C5958C2}
