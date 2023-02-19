@@ -12,17 +12,20 @@ public class EmployeeContract : Entity
     public string ContractNumber { get; }
     public ContractType ContractType { get; }
     public SettlementType? SettlementType { get; }
-    public decimal Salary { get; private set; }
+    public decimal Salary { get; }
+    public decimal? HourlyRate { get; }
+    public decimal? OvertimeRate { get; }
     public TimeRange TimeRange { get; }
-    public int NumberHoursPerDay { get; private set; }
-    public int FreeDaysPerYear { get; private set; }
-    public string BankAccountNumber { get; private set; }
-    public bool PaidIntoAccount { get; private set; }
-    public string CreatedBy { get; } 
+    public int NumberHoursPerDay { get; }
+    public int FreeDaysPerYear { get; }
+    public string BankAccountNumber { get; }
+    public bool PaidIntoAccount { get; }
+    public string CreatedBy { get; }
 
-    private EmployeeContract(int departmentId, Employee employee, string position, 
+    private EmployeeContract(int departmentId, Employee employee, string position,
         ContractType contractType, SettlementType? settlementType, decimal salary, TimeRange timeRange,
-        int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy)
+        int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy,
+        decimal? hourlyRate, decimal? overtimeRate)
     {
         DepartmentId = departmentId;
         Employee = employee;
@@ -37,13 +40,17 @@ public class EmployeeContract : Entity
         BankAccountNumber = bankAccountNumber;
         PaidIntoAccount = paidIntoAccount;
         CreatedBy = createdBy;
+        HourlyRate = hourlyRate;
+        OvertimeRate = overtimeRate;
     }
 
-    public static EmployeeContract Create(int departmentId, Employee employee, string position, 
+    public static EmployeeContract Create(int departmentId, Employee employee, string position,
         ContractType contractType, SettlementType? settlementType, decimal salary, TimeRange timeRange,
-        int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy)
+        int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy,
+        decimal? hourlyRate, decimal? overtimeRate)
     {
         return new EmployeeContract(departmentId, employee, position, contractType, settlementType, salary, timeRange,
-            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, createdBy);
+            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, createdBy, hourlyRate,
+            overtimeRate);
     }
 }
