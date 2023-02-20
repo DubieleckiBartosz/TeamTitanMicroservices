@@ -6,9 +6,9 @@ public class BonusCountRecipient
     public int All => Bonuses.Count;
     public List<Bonus> Bonuses { get; private set; } = new(); 
 
-    public void AddNewBonus(DateTime settlementTime, string creator)
+    public void AddNewBonus(string creator)
     {
-        var bonus = Bonus.Create(settlementTime, creator); 
+        var bonus = Bonus.Create(creator); 
 
         Bonuses.Add(bonus);
         Count++;

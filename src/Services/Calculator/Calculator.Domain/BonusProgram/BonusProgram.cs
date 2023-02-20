@@ -11,7 +11,7 @@ public class BonusProgram : Aggregate
     public DateTime? Expires { get; private set; }
     public string Reason { get;}
     public Dictionary<string, BonusCountRecipient>? Departments { get; private set; }
-    public Dictionary<string, BonusCountRecipient>? Persons { get; private set; }
+    public Dictionary<string, BonusCountRecipient>? Accounts { get; private set; }
 
     public BonusProgram(decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
     {
@@ -21,14 +21,14 @@ public class BonusProgram : Aggregate
         Expires = expires;
         Reason = reason;
         Departments = new Dictionary<string, BonusCountRecipient>();
-        Persons = new Dictionary<string, BonusCountRecipient>();
+        Accounts = new Dictionary<string, BonusCountRecipient>();
     }
     public void AddDepartmentToBonus()
     {
 
     }
 
-    public void AddPersonToBonus()
+    public void AddAccountToBonus()
     {
 
     }
@@ -38,7 +38,7 @@ public class BonusProgram : Aggregate
 
     }
 
-    public void RemovePersonFromBonus()
+    public void RemoveAccountFromBonus()
     {
 
     }
