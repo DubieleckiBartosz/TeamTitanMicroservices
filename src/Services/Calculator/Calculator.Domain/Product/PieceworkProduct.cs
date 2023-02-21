@@ -1,8 +1,9 @@
-﻿using Shared.Domain.Base;
+﻿using Shared.Domain.Abstractions;
+using Shared.Domain.Base;
 
 namespace Calculator.Domain.Product;
 
-public class PieceworkProduct : Entity
+public class PieceworkProduct : Aggregate
 {
     public string CreatedBy { get; }
     public string ProductCode { get; }
@@ -34,5 +35,10 @@ public class PieceworkProduct : Entity
 
     public void UpdateUnit()
     {
-    } 
+    }
+
+    protected override void When(IEvent @event)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -2,14 +2,18 @@
 
 public class ProductItem
 { 
-    public int PieceworkProductId { get; }
+    public Guid PieceworkProductId { get; }
+    //aggregates should not interact with each other
+    //that's why we keep the price
+    public decimal CurrentPrice { get; }
     public decimal Quantity { get; }
 
-    private ProductItem(int pieceworkProductId, decimal quantity)
+    private ProductItem(Guid pieceworkProductId, decimal quantity, decimal currentPrice)
     {
         PieceworkProductId = pieceworkProductId;
         Quantity = quantity;
+        CurrentPrice = currentPrice;
     }
 
-    public static ProductItem Create(int pieceworkProductId, decimal quantity) => new ProductItem(pieceworkProductId, quantity);
+    public static ProductItem Create(Guid pieceworkProductId, decimal quantity, decimal currentPrice) => new ProductItem(pieceworkProductId, quantity, currentPrice);
 }
