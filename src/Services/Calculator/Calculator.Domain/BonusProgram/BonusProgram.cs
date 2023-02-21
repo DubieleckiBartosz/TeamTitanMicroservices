@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Abstractions;
+﻿using Calculator.Domain.BonusProgram.Events;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
 
 namespace Calculator.Domain.BonusProgram;
@@ -25,7 +26,6 @@ public class BonusProgram : Aggregate
     }
     public void AddDepartmentToBonus()
     {
-
     }
 
     public void AddAccountToBonus()
@@ -45,7 +45,16 @@ public class BonusProgram : Aggregate
 
     protected override void When(IEvent @event)
     {
-        throw new NotImplementedException();
+        switch (@event)
+        {
+            case BonusAccountAdded e:
+                break;
+            case BonusDepartmentAdded e:
+                break;
+            case NewBonusProgramCreated e:
+                break;
+            default:
+                break;
+        }
     }
-
 }

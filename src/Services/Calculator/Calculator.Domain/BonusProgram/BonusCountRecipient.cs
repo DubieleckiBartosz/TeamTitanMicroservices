@@ -2,8 +2,7 @@
 
 public class BonusCountRecipient 
 {
-    public int Count { get; private set; }
-    public int All => Bonuses.Count;
+    public int Count { get; private set; } 
     public List<Bonus> Bonuses { get; private set; } = new(); 
 
     public void AddNewBonus(string creator)
@@ -14,7 +13,15 @@ public class BonusCountRecipient
         Count++;
     }
 
-    public void RemoveBonus()
-    { 
+    public void CancelBonus()
+    {
+        if (Count == 0)
+        {
+            return;
+        }
+
+        var result = Bonuses.Last();
+        Bonuses.Remove(result);
+        Count--;
     }
 }

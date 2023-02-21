@@ -1,4 +1,6 @@
-﻿using Calculator.Domain.Statuses;
+﻿using Calculator.Domain.Account.Events;
+using Calculator.Domain.Account.Snapshots;
+using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
@@ -26,11 +28,13 @@ public class Account : Aggregate
         WorkDays = new List<WorkDay>();
     }
     
-    private Account(Guid accountId, string accountOwnerExternalId, string departmentCode, CountingType countingType,
-        AccountStatus accountStatus, string? activatedBy, string? createdBy, string? deactivatedBy, bool isActive,
+    //Load
+    private Account(Guid accountId, int version, string accountOwnerExternalId, string departmentCode, CountingType countingType,
+        AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
     {
         Id = accountId;
+        Version = version;
         Details = AccountDetails.CreateAccountDetails(
             accountOwnerExternalId, departmentCode,
             countingType, accountStatus, activatedBy, 
@@ -41,24 +45,28 @@ public class Account : Aggregate
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
     }
-
-    public void ActiveAccount()
+    
+    public void ActiveAccount(string activatedBy)
     {
     }
 
-    public void DeactivateAccount()
+    public void DeactivateAccount(string deactivatedBy)
     {
     }
 
-    public void UpdateWorkDayHours()
+    public void UpdateWorkDayHours(int newWorkDayHours)
     {
     }
 
-    public void AddNewPayment()
+    public void UpdateHourlyRate(decimal newHourlyRate)
     {
     }
-
-    public void Calculate()
+    
+    public void UpdateOvertimeRate(decimal newOvertimeRate)
+    {
+    }
+    
+    public void UpdateCountingType(CountingType newCountingType)
     {
     }
 
@@ -67,9 +75,13 @@ public class Account : Aggregate
         var workDay = WorkDay.Create(date, hoursWorked, overtime, isDayOff, createdBy);
     }
 
+    public void AddNewPieceProductItem(Guid pieceworkProductId, decimal quantity, decimal currentPrice)
+    { 
+    }
+
     public AccountSnapshot CreateSnapshot()
     {
-        return AccountSnapshot.Create(this.Id).Set(this);
+        return AccountSnapshot.Create(this.Id, this.Version).Set(this);
     }
     public Account? FromSnapshot(ISnapshot? snapshot)
     {
@@ -81,7 +93,8 @@ public class Account : Aggregate
 
         var details = snapshotAccount.State.Details;
         return new Account(
-            snapshotAccount.AccountId, 
+            snapshotAccount.AccountId,
+            snapshotAccount.Version,
             details.AccountOwnerExternalId,
             details.DepartmentCode,
             details.CountingType, 
@@ -96,6 +109,26 @@ public class Account : Aggregate
     }
     protected override void When(IEvent @event)
     {
-        throw new NotImplementedException();
+        switch (@event)
+        {
+            case NewAccountInitiated e:
+                break;
+            case AccountStatusChanged e:
+                break;
+            case HourlyRateChanged e:
+                break;
+            case NewWorkDayAdded e:
+                break;
+            case OvertimeRateChanged e:
+                break;
+            case PieceProductAdded e:
+                break;
+            case WorkDayHoursChanged e:
+                break;
+            default:
+                break;
+        }
     }
+
+
 }

@@ -1,19 +1,21 @@
 ﻿using Shared.Domain.Abstractions;
 
-namespace Calculator.Domain.Account;
+namespace Calculator.Domain.Account.Snapshots;
 
 public class AccountSnapshot : ISnapshot
 {
     public Guid AccountId { get; }
+    public int Version { get; private set; }
     public AccountState? State { get; private set; }
 
-    private AccountSnapshot(Guid accountId)
+    private AccountSnapshot(Guid accountId, int version)
     {
-        AccountId = accountId; 
+        AccountId = accountId;
+        Version = version;
     }
-    public static AccountSnapshot Create(Guid accountId)
+    public static AccountSnapshot Create(Guid accountId, int version)
     {
-        return new AccountSnapshot(accountId);
+        return new AccountSnapshot(accountId, version);
     }
     public AccountSnapshot Set(Account account)
     {

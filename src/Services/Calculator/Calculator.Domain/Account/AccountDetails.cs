@@ -7,17 +7,17 @@ public class AccountDetails
 {
     public string AccountOwnerExternalId { get; }
     public string DepartmentCode { get; }
-    public CountingType CountingType { get; }
-    public AccountStatus AccountStatus { get; }
-    public string? ActivatedBy { get; }
-    public string? CreatedBy { get; }
-    public string? DeactivatedBy { get; }
-    public bool IsActive { get; }
-    public int WorkDayHours { get; }
-    public decimal? HourlyRate { get; }
-    public decimal? OvertimeRate { get; }
+    public CountingType CountingType { get; private set; }
+    public AccountStatus AccountStatus { get; private set; }
+    public string? ActivatedBy { get; private set; }
+    public string CreatedBy { get; }
+    public string? DeactivatedBy { get; private set; }
+    public bool IsActive { get; private set; }
+    public int WorkDayHours { get; private set; }
+    public decimal? HourlyRate { get; private set; }
+    public decimal? OvertimeRate { get; private set; }
     public AccountDetails(string accountOwnerExternalId, string departmentCode, CountingType countingType,
-        AccountStatus accountStatus, string? activatedBy, string? createdBy, string? deactivatedBy, bool isActive,
+        AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
     {
         AccountOwnerExternalId = accountOwnerExternalId;
@@ -27,7 +27,7 @@ public class AccountDetails
         ActivatedBy = activatedBy;
         CreatedBy = createdBy;
         DeactivatedBy = deactivatedBy;
-        IsActive = isActive;
+        IsActive = isActive; //
         WorkDayHours = workDayHours;
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate; 
@@ -35,11 +35,13 @@ public class AccountDetails
 
     public static AccountDetails CreateAccountDetails(string accountExternalId, string departmentCode,
         CountingType countingType,
-        AccountStatus accountStatus, string? activatedBy, string? createdBy, string? deactivatedBy, bool isActive,
+        AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
     {
         return new AccountDetails(accountExternalId, departmentCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate);
     }
+
+
 }

@@ -10,7 +10,7 @@ public class AccountState
     public List<WorkDay> WorkDays { get; }
 
     private AccountState(string accountOwnerExternalId, string departmentCode, CountingType countingType,
-        AccountStatus accountStatus, string? activatedBy, string? createdBy, string? deactivatedBy, bool isActive,
+        AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
     {
         Details = AccountDetails.CreateAccountDetails(accountOwnerExternalId, departmentCode,
