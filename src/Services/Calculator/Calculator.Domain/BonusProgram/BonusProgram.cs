@@ -7,8 +7,7 @@ using Shared.Domain.DomainExceptions;
 namespace Calculator.Domain.BonusProgram;
 
 public class BonusProgram : Aggregate
-{
-    private BonusCountRecipient? _holder;
+{ 
     public decimal BonusAmount { get; private set; }
     public string CreatedBy { get; private set; }
     public string CompanyCode { get; private set; }
@@ -17,7 +16,7 @@ public class BonusProgram : Aggregate
     public Dictionary<string, BonusCountRecipient>? Departments { get; private set; }
     public Dictionary<string, BonusCountRecipient>? Accounts { get; private set; }
 
-    public BonusProgram(decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
+    private BonusProgram(decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
     { 
         var @event = NewBonusProgramCreated.Create(bonusAmount, createdBy, companyCode, expires,
             reason, Guid.NewGuid());
@@ -47,7 +46,7 @@ public class BonusProgram : Aggregate
                 HttpStatusCode.NotFound);
         }
 
-        if (!Departments.TryGetValue(department, out _holder))
+        if (!Departments.TryGetValue(department, out var departmentValue))
         {
             throw new BusinessException("Department is NULL", "Department is not assigned to the program.",
                 HttpStatusCode.NotFound);
@@ -56,8 +55,7 @@ public class BonusProgram : Aggregate
         var @event = DepartmentRemoved.Create(department, this.Id);
 
         Apply(@event);
-        this.Enqueue(@event);
-        _holder = null;
+        this.Enqueue(@event); 
     }
 
     public void RemoveAccountFromBonus(string account)
@@ -67,7 +65,7 @@ public class BonusProgram : Aggregate
             throw new BusinessException("Dictionary is NULL", "Account dictionary is NULL.", HttpStatusCode.NotFound);
         }
 
-        if (!Accounts.TryGetValue(account, out _holder))
+        if (!Accounts.TryGetValue(account, out var accountValue))
         {
             throw new BusinessException("Account is NULL", "Account is not assigned to the program.",
                 HttpStatusCode.NotFound);
@@ -76,8 +74,7 @@ public class BonusProgram : Aggregate
         var @event = AccountRemoved.Create(account, this.Id);
 
         Apply(@event);
-        this.Enqueue(@event);
-        _holder = null;
+        this.Enqueue(@event); 
     }
 
     protected override void When(IEvent @event)

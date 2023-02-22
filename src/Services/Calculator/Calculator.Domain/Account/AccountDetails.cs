@@ -102,14 +102,12 @@ public class AccountDetails
     }
 
     public void AssignData(CountingType countingType,
-        AccountStatus accountStatus, string? activatedBy, string? deactivatedBy, bool isActive,
+        AccountStatus accountStatus, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
     {          
         //Validation
         CountingType = countingType;
         AccountStatus = accountStatus;
-        ActivatedBy = activatedBy; 
-        DeactivatedBy = deactivatedBy;
         IsActive = isActive;
         WorkDayHours = workDayHours;
         HourlyRate = hourlyRate;
