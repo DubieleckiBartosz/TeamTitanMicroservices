@@ -160,8 +160,10 @@ public class Account : Aggregate
         switch (@event)
         {
             case NewAccountInitiated e:
+                this.Initiated(e);
                 break;
             case AccountDataCompleted e:
+                this.DataCompleted(e);
                 break;
             case AccountActivated e:
                 this.AccountActivated(e);
@@ -199,7 +201,7 @@ public class Account : Aggregate
     }
     private void DataCompleted(AccountDataCompleted @event)
     {
-        Details.AssignData(@event.CountingType, @event.Status, null, null, false,
+        Details.AssignData(@event.CountingType, @event.Status, false,
             @event.WorkDayHours, @event.HourlyRate, @event.OvertimeRate);
     }
 

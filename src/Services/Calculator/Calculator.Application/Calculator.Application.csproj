@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.Implementations\Shared.Implementations.csproj" />
     <ProjectReference Include="..\Calculator.Domain\Calculator.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ReadModels\" />
   </ItemGroup>
 
 </Project>
