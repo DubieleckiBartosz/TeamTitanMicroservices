@@ -1,5 +1,11 @@
-﻿namespace Calculator.Domain.Account.Events;
+﻿using Shared.Domain.Abstractions;
 
-public record OvertimeRateChanged
+namespace Calculator.Domain.Account.Events;
+
+public record OvertimeRateChanged(decimal NewOvertimeRate, Guid AccountId) : IEvent
 {
+    public static OvertimeRateChanged Create(decimal newOvertimeRate, Guid accountId)
+    {
+        return new OvertimeRateChanged(newOvertimeRate, accountId);
+    }
 }

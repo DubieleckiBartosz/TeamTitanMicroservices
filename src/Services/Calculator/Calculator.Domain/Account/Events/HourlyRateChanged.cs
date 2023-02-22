@@ -1,5 +1,11 @@
-﻿namespace Calculator.Domain.Account.Events;
+﻿using Shared.Domain.Abstractions;
 
-public record HourlyRateChanged
+namespace Calculator.Domain.Account.Events;
+
+public record HourlyRateChanged(decimal NewHourlyRate, Guid AccountId) : IEvent
 {
+    public static HourlyRateChanged Create(decimal newHourlyRate, Guid accountId)
+    {
+        return new HourlyRateChanged(newHourlyRate, accountId);
+    }
 }
