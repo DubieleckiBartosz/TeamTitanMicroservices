@@ -1,5 +1,11 @@
-﻿namespace Calculator.Domain.Account.Events;
+﻿using Shared.Domain.Abstractions;
 
-public record NewAccountInitiated
+namespace Calculator.Domain.Account.Events;
+
+public record NewAccountInitiated(string DepartmentCode, string AccountOwnerExternalId, string CreatedBy, Guid AccountId) : IEvent
 {
+    public static NewAccountInitiated Create(string departmentCode, string accountOwnerExternalId, string createdBy, Guid accountId)
+    {
+        return new NewAccountInitiated(departmentCode, accountOwnerExternalId, createdBy, accountId);
+    }
 }

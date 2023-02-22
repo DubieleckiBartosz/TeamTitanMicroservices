@@ -20,8 +20,7 @@ public class PieceworkProduct : Aggregate
         CountedInUnit = countedInUnit;
         ProductName = productName;
         CreatedBy = createdBy;
-        ProductCode = Guid.NewGuid().ToString();
-        Watcher = Watcher.Create();
+        ProductCode = Guid.NewGuid().ToString(); 
     }
 
     public static PieceworkProduct Create(string companyCode, decimal pricePerUnit, string countedInUnit, string productName,
