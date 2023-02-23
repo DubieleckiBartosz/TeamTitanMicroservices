@@ -26,7 +26,7 @@ public class BonusProgramReader : IRead
         Departments = new Dictionary<string, BonusCountRecipient>();
         Accounts = new Dictionary<string, BonusCountRecipient>();
     }
-    public BonusProgramReader BonusCreate(NewBonusProgramCreated @event)
+    public static BonusProgramReader BonusCreate(NewBonusProgramCreated @event)
     {
         return new BonusProgramReader(@event.BonusId, @event.BonusAmount, @event.CreatedBy, @event.CompanyCode,
             @event.Expires, @event.Reason);
