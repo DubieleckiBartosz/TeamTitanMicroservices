@@ -1,8 +1,6 @@
 ﻿using Calculator.Application.Contracts;
 using Calculator.Application.ReadModels.AccountReaders;
-using Calculator.Domain.Account;
 using Calculator.Domain.Account.Events;
-using Shared.Domain.Base;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Projection;
 
