@@ -11,4 +11,12 @@
     <ProjectReference Include="..\Calculator.Domain\Calculator.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Bonus\Commands\" />
+    <Folder Include="Features\Bonus\Queries\" />
+    <Folder Include="Features\Product\Commands\" />
+    <Folder Include="Features\Product\Queries\" />
+    <Folder Include="Parameters\" />
+  </ItemGroup>
+
 </Project>
