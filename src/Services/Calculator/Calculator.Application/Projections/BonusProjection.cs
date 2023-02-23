@@ -4,10 +4,10 @@ namespace Calculator.Application.Projections;
 
 public class BonusProjection
 {
-    private readonly IWrapperRepository _wrapperRepository;
+    private readonly IBonusRepository _bonusRepository;
 
-    public BonusProjection(IWrapperRepository wrapperRepository)
+    public BonusProjection(IBonusRepository bonusRepository)
     {
-        _wrapperRepository = wrapperRepository ?? throw new ArgumentNullException(nameof(wrapperRepository));
+        _bonusRepository = bonusRepository ?? throw new ArgumentNullException(nameof(bonusRepository));
     }
 }

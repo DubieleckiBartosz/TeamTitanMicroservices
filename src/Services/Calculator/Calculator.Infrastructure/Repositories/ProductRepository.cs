@@ -1,5 +1,12 @@
-﻿namespace Calculator.Infrastructure.Repositories;
+﻿using Calculator.Application.Contracts;
+using Shared.Implementations.Dapper;
+using Shared.Implementations.Logging;
 
-public class ProductRepository
+namespace Calculator.Infrastructure.Repositories;
+
+public class ProductRepository : BaseRepository<ProductRepository>, IProductRepository
 {
+    public ProductRepository(string dbConnection, ILoggerManager<ProductRepository> loggerManager) : base(dbConnection, loggerManager)
+    {
+    }
 }

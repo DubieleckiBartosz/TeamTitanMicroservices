@@ -1,5 +1,12 @@
-﻿namespace Calculator.Infrastructure.Repositories;
+﻿using Calculator.Application.Contracts;
+using Shared.Implementations.Dapper;
+using Shared.Implementations.Logging;
 
-public class BonusRepository
+namespace Calculator.Infrastructure.Repositories;
+
+public class BonusRepository : BaseRepository<BonusRepository>, IBonusRepository
 {
+    public BonusRepository(string dbConnection, ILoggerManager<BonusRepository> loggerManager) : base(dbConnection, loggerManager)
+    {
+    }
 }
