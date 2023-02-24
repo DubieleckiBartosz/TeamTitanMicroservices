@@ -4,7 +4,7 @@ BEGIN
 	CREATE TABLE ApplicationUsers
 		(
 		    Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,  
-			UserName VARCHAR(50) NOT NULL,
+			UserName VARCHAR(50) NULL,
 		    Email VARCHAR(50) NULL,
 		    PasswordHash VARCHAR(MAX) NULL,
 		    PhoneNumber VARCHAR(50) NULL,
@@ -13,6 +13,7 @@ BEGIN
 			VerificationTokenExpirationDate DATETIME NULL,
 			EmployeeCode VARCHAR(MAX) NULL,
 			DepartmentCode VARCHAR(MAX) NULL,
+			CompanyId VARCHAR(MAX) NULL,
 			ResetToken VARCHAR(MAX) NULL,
 			ResetTokenExpirationDate DATETIME NULL,
 			UniqueUserCode VARCHAR(MAX) NULL, 
@@ -60,7 +61,7 @@ BEGIN
 				RoleName VARCHAR(25) NULL,
 			)
 
-		INSERT INTO Roles VALUES('Admin'), ('Owner'), ('Manager'), ('Employee')
+		INSERT INTO Roles VALUES('Admin'), ('Owner'), ('Manager'), ('Employee'), ('User')
 								
 END
 

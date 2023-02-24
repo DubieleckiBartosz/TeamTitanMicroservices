@@ -6,6 +6,7 @@ public interface ICurrentUser
     int UserId { get; }
     string? CompanyCode { get; }
     string? DepartmentCode { get; }
+    string? EmployeeCode { get; }
     string UserName { get; }
     string Email { get; }
 }

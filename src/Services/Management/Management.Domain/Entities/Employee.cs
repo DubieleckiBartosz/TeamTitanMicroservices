@@ -5,6 +5,7 @@ namespace Management.Domain.Entities;
 public class Employee : Entity
 {
     public Guid? AccountId { get; private set; }
+    public string EmployeeCode { get; }
     public string Name { get; }
     public string Surname { get; }
     public DateTime Birthday { get; }
@@ -23,6 +24,7 @@ public class Employee : Entity
         ContactData = contactData;
         Contracts = contracts;
         DayOffRequests = dayOffRequests;
+        EmployeeCode = Guid.NewGuid().ToString().ToUpper();
     }
     public void AssignAccount(Guid accountId)
     {

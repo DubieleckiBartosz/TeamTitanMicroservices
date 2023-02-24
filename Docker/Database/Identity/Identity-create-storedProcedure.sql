@@ -1,10 +1,69 @@
-CREATE OR ALTER PROCEDURE [dbo].[user_createNewUser_I]
+
+CREATE OR ALTER PROCEDURE user_initAccount_I 
+	@departmentCode VARCHAR(MAX),
+	@companyId VARCHAR(MAX),
+	@employeeCode VARCHAR(MAX), 
+	@isConfirmed BIT,
+	@roleId INT
+AS
+BEGIN  
+	BEGIN TRY
+		BEGIN TRANSACTION; 
+	 
+			IF EXISTS (SELECT* FROM Roles WHERE Id = @roleId) 
+			BEGIN 
+				DECLARE @newIdentity INT;
+					
+				INSERT INTO ApplicationUsers(IsConfirmed, EmployeeCode, DepartmentCode, CompanyId)
+				VALUES(@isConfirmed, @employeeCode, @departmentCode, @companyId) 
+
+				SET @newIdentity = CAST(SCOPE_IDENTITY() AS INT)
+			
+				INSERT INTO UserRoles(RoleId, UserId) VALUES(@roleId, @newIdentity)
+			END
+
+		COMMIT TRANSACTION; 
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH
+END
+GO
+
+
+
+CREATE OR ALTER PROCEDURE user_getUserByCode  
+	@uniqueCode VARCHAR(MAX) 
+AS
+BEGIN  
+	SELECT Id, CompanyId, DepartmentCode, EmployeeCode 
+	FROM ApplicationUsers WHERE EmployeeCode = @uniqueCode
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE user_codeExists_S
+	@code VARCHAR(MAX)
+AS
+BEGIN
+	SELECT 1 FROM ApplicationUsers WHERE EmployeeCode = @code
+END
+GO
+
+ CREATE OR ALTER PROCEDURE [dbo].[user_createNewUser_I]
     @roleId INT,
 	@verificationToken VARCHAR(MAX),
 	@verificationTokenExpirationDate DATETIME,
-	@isConfirmed BIT,
-	@firstName VARCHAR(50),
-	@lastName VARCHAR(50),
+	@isConfirmed BIT, 
 	@userName VARCHAR(50),
 	@email VARCHAR(50),
 	@phoneNumber VARCHAR(50),
@@ -17,10 +76,10 @@ BEGIN
 	 
 			IF EXISTS (SELECT* FROM Roles WHERE Id = @roleId) 
 			BEGIN
-				INSERT INTO ApplicationUsers(FirstName, LastName, IsConfirmed,
+				INSERT INTO ApplicationUsers(IsConfirmed,
 							UserName, Email, PhoneNumber, PasswordHash, VerificationToken, 
 							VerificationTokenExpirationDate, ResetToken, ResetTokenExpirationDate) 
-					VALUES (@firstName, @lastName, @isConfirmed, @userName, 
+					VALUES (@isConfirmed, @userName, 
 							@email, @phoneNumber, @passwordHash, @verificationToken, 
 							@verificationTokenExpirationDate, NULL, NULL) 
 				
@@ -62,17 +121,16 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[user_addToRole_I] 
 	@userId INT, 
 	@role INT,
-	@employeeCode VARCHAR(MAX) = NULL,
-	@departmentCode VARCHAR(MAX) = NULL
+	@companyId VARCHAR(MAX) = NULL,
+	@trainerYearsExperience INT = NULL
 AS 
 BEGIN 
 	BEGIN TRY  
 		BEGIN TRANSACTION;
 
-			IF(@employeeCode IS NOT NULL)
+			IF(@companyId IS NOT NULL)
 			BEGIN
-				UPDATE ApplicationUsers SET EmployeeCode = @employeeCode, 
-											DepartmentCode = @departmentCode
+				UPDATE ApplicationUsers SET CompanyId = @companyId
 				WHERE Id = @userId;
 			END;
 
@@ -119,9 +177,7 @@ CREATE OR ALTER PROCEDURE [dbo].[user_getUserByEmail_S]
 AS
 BEGIN 
 	SELECT 
-	au.Id AS Id,
-	au.FirstName,
-	au.LastName,
+	au.Id AS Id, 
 	au.UserName,
 	au.Email,
 	au.PhoneNumber,
@@ -131,6 +187,7 @@ BEGIN
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
 	au.ResetTokenExpirationDate,
+	au.CompanyId,
 	au.EmployeeCode,
 	au.DepartmentCode,
 	rt.Id,
@@ -151,9 +208,7 @@ CREATE OR ALTER PROCEDURE [dbo].[user_getUserByToken_S]
 AS
 BEGIN 
 	SELECT
-	au.Id,
-	au.FirstName,
-	au.LastName,
+	au.Id, 
 	au.UserName,
 	au.Email,
 	au.PhoneNumber,
@@ -163,6 +218,7 @@ BEGIN
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
 	au.ResetTokenExpirationDate,
+	au.CompanyId,
 	au.EmployeeCode,
 	au.DepartmentCode,
 	rt.Id,
@@ -183,9 +239,7 @@ CREATE OR ALTER PROCEDURE [dbo].[user_getUserByVerificationToken_S]
 AS
 BEGIN 
 	SELECT
-	au.Id,
-	au.FirstName,
-	au.LastName,
+	au.Id, 
 	au.UserName,
 	au.Email,
 	au.PhoneNumber,
@@ -195,6 +249,7 @@ BEGIN
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
 	au.ResetTokenExpirationDate,
+	au.CompanyId,
 	au.EmployeeCode,
 	au.DepartmentCode,
 	rt.Id,
@@ -215,9 +270,7 @@ CREATE OR ALTER PROCEDURE [dbo].[user_getUserByResetToken_S]
 AS
 BEGIN 
 	SELECT
-	au.Id,
-	au.FirstName,
-	au.LastName,
+	au.Id, 
 	au.UserName,
 	au.Email,
 	au.PhoneNumber,
@@ -227,6 +280,7 @@ BEGIN
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
 	au.ResetTokenExpirationDate,
+	au.CompanyId,
 	au.EmployeeCode,
 	au.DepartmentCode,
 	rt.Id,
