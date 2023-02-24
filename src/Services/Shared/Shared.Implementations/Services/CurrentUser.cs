@@ -51,6 +51,14 @@ public class CurrentUser : ICurrentUser
             return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimDepartmentCodeType)?.Value;
         }
     }
+    
+    public string? EmployeeCode
+    {
+        get
+        {
+            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimEmployeeCodeType)?.Value;
+        }
+    }
 
     public string UserName
     {

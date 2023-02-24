@@ -28,7 +28,17 @@ protected async Task<IEnumerable<TReturn>> QueryAsync<T1, T2, TReturn>(string sq
             commandType: commandType));
 }
 
-protected async Task<int> ExecuteAsync(string sql, object? param = null,
+protected async Task<IEnumerable<TReturn>> QueryAsync<T1, T2, T3, TReturn>(string sql,
+    Func<T1, T2, T3, TReturn> map,
+    string splitOn = "Id", object? param = null,
+    CommandType? commandType = null)
+{
+    return await this._connection.WithConnection(
+        async _ => await _.QueryAsync<T1, T2, T3, TReturn>(sql: sql, map: map, splitOn: splitOn, param: param,
+            commandType: commandType));
+} 
+
+    protected async Task<int> ExecuteAsync(string sql, object? param = null,
     CommandType? commandType = null)
 {
     return await this._connection.WithConnection(

@@ -5,7 +5,7 @@ using Shared.Domain.Base;
 
 namespace Management.Domain.Entities;
 
-public class Company : Entity, IAggregation
+public class Company : Entity, IAggregateRoot
 {
     public string CompanyExternalId { get; }
     public string OwnerId { get; }

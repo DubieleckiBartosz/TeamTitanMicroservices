@@ -1,5 +1,5 @@
 ﻿namespace Shared.Domain.Abstractions;
 
-public interface IAggregation
+public interface IAggregateRoot
 {
 }

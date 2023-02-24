@@ -39,14 +39,25 @@ public static class SharedConfigurations
         return services;
     }
 
-    public static IServiceCollection GetFullDependencyInjection(this IServiceCollection services,
-        Func<IServiceProvider, List<IProjection>>? projectionFunc)
-    {
+    public static IServiceCollection GetAccessoriesDependencyInjection(this IServiceCollection services)
+    {        
+        //USER
+        services.AddHttpContextAccessor();
+        services.AddTransient<ICurrentUser, CurrentUser>();
+        
         //EMAIL
         services.AddScoped<IEmailRepository, EmailRepository>();
 
         //LOGGER
-        services.AddSingleton(typeof(ILoggerManager<>), typeof(LoggerManager<>));  
+        services.AddSingleton(typeof(ILoggerManager<>), typeof(LoggerManager<>));
+
+        return services;
+    }
+
+    public static IServiceCollection GetFullDependencyInjection(this IServiceCollection services,
+        Func<IServiceProvider, List<IProjection>>? projectionFunc)
+    {
+        services.GetAccessoriesDependencyInjection();
 
         //EVENT
         services.AddScoped<ICommandBus, CommandBus>();
@@ -60,11 +71,7 @@ public static class SharedConfigurations
         services.AddScoped<IOutboxStore, OutboxStore>();
         services.AddScoped<IRabbitEventListener, RabbitEventListener>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
-        //USER
-        services.AddHttpContextAccessor();
-        services.AddTransient<ICurrentUser, CurrentUser>();
-
+         
         //MONGO
         services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
 
