@@ -4,9 +4,8 @@ namespace Shared.Implementations.Mongo;
 
 public class MongoContext
 {
-    public IMongoDatabase Database { get; }
-    public readonly string CollectionName;
-    public MongoContext(string connection, string databaseName, string collection)
+    public IMongoDatabase Database { get; } 
+    public MongoContext(string connection, string databaseName)
     {
         if (connection == null)
         {
@@ -16,9 +15,7 @@ public class MongoContext
         if (databaseName == null)
         {
             throw new ArgumentNullException(nameof(databaseName));
-        }
-
-        this.CollectionName = collection ?? throw new ArgumentNullException(nameof(collection));
+        } 
 
         var client = new MongoClient(connection);
         Database = client.GetDatabase(databaseName);

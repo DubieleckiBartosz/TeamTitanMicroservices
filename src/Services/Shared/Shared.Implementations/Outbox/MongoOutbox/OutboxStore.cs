@@ -7,22 +7,24 @@ namespace Shared.Implementations.Outbox.MongoOutbox;
 
 public class OutboxStore : IOutboxStore
 {
+    private const string CollectionName = "Messages";
     private readonly IMongoRepository<OutboxMessage> _mongoRepository;
-
+    private readonly IMongoCollection<OutboxMessage> _collection;
     public OutboxStore(IMongoRepository<OutboxMessage> mongoRepository)
     {
         _mongoRepository = mongoRepository ?? throw new ArgumentNullException(nameof(mongoRepository));
+        _collection = _mongoRepository.GetCollection(CollectionName);
     }
 
     public async Task AddAsync(OutboxMessage message)
-    {
-        await _mongoRepository.AddAsync(message);
+    { 
+        await _mongoRepository.AddAsync(message, _collection);
     }
 
     public async Task<IEnumerable<Guid>> GetUnprocessedMessageIdsAsync()
     {
         var filter = Builders<OutboxMessage>.Filter.Where(_ => !_.Processed.HasValue);
-        var cursor = await _mongoRepository.Collection.Find(filter).ToCursorAsync();
+        var cursor = await _collection.Find(filter).ToCursorAsync();
 
         var result = cursor
             .ToList()
@@ -36,7 +38,7 @@ public class OutboxStore : IOutboxStore
         var filter = Builders<OutboxMessage>.Filter.Where(_ => _.Id == id);
         var update = Builders<OutboxMessage>.Update.Set(_ => _.Processed, DateTime.UtcNow);
 
-        var result = await _mongoRepository.Collection.UpdateOneAsync(filter, update);
+        var result = await _collection.UpdateOneAsync(filter, update);
 
         if (result.ModifiedCount == 0)
         {
@@ -48,11 +50,11 @@ public class OutboxStore : IOutboxStore
     public async Task DeleteAsync(IEnumerable<Guid> ids)
     {
         var filter = Builders<OutboxMessage>.Filter.In(_ => _.Id, ids);
-        await _mongoRepository.Collection.DeleteManyAsync(filter);
+        await _collection.DeleteManyAsync(filter);
     }
 
     public async Task<OutboxMessage?> GetMessageAsync(Guid id)
     {
-        return await _mongoRepository.GetAsync(_ => _.Id == id);
+        return await _mongoRepository.GetAsync(_ => _.Id == id, _collection);
     }
 }

@@ -105,8 +105,7 @@ public static class SharedConfigurations
         configuration.GetSection(nameof(MongoOutboxOptions)).Bind(options);
 
         services.Configure<MongoOutboxOptions>(configuration.GetSection(nameof(MongoOutboxOptions)));
-        services.AddSingleton<MongoContext>(_ => new MongoContext(options.ConnectionString,
-            options.DatabaseName, options.CollectionName));
+        services.AddSingleton<MongoContext>(_ => new MongoContext(options.ConnectionString, options.DatabaseName));
 
         return services;
     }
