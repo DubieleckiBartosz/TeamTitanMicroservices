@@ -6,7 +6,8 @@ namespace Shared.Implementations.Mongo;
 
 public interface IMongoRepository<T> where T : IIdentifier
 {
-    IMongoCollection<T> Collection { get; }
-    Task<T> GetAsync(Expression<Func<T, bool>> predicate);
-    Task AddAsync(T entity);
+    IMongoDatabase GetDatabase();
+    IMongoCollection<T> GetCollection(string collectionName);
+    Task<T> GetAsync(Expression<Func<T, bool>> predicate, IMongoCollection<T> collection);
+    Task AddAsync(T entity, IMongoCollection<T> collection);
 }
