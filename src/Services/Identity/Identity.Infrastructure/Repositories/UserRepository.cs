@@ -54,11 +54,9 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
     public async Task InitUserAsync(User user)
     {
         var param = new DynamicParameters();
-
-        param.Add("@companyId", user.CompanyId);
-        param.Add("@isConfirmed", user.IsConfirmed);
-        param.Add("@departmentCode", user.DepartmentCode);
-        param.Add("@employeeCode", user.EmployeeCode);
+         
+        param.Add("@isConfirmed", user.IsConfirmed); 
+        param.Add("@verificationCode", user.VerificationCode);
         param.Add("@roleId", user.Roles.FirstOrDefault()?.Id);
 
         await this.ExecuteAsync("user_initAccount_I", param, CommandType.StoredProcedure);
@@ -104,8 +102,7 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
         var param = new DynamicParameters();
 
         var roleId = user.Roles.LastOrDefault()?.Id;
-        param.Add("@userId", user.Id);
-        param.Add("@companyId", user.CompanyId); 
+        param.Add("@userId", user.Id); 
         param.Add("@role", roleId);
 
         var result =

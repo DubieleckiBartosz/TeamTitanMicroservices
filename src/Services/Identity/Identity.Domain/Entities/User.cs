@@ -13,10 +13,8 @@ public class User : Entity, IAggregateRoot
     public string Email { get; private set; }
     public string PhoneNumber { get; private set; }
     public bool IsConfirmed { get; private set; }
-    public string PasswordHash { get; private set; }
-    public string? DepartmentCode { get; private set; }
-    public string? CompanyId { get; private set; }
-    public string? EmployeeCode { get; private set; }
+    public string PasswordHash { get; private set; } 
+    public string? VerificationCode { get; private set; }
     public TokenValue VerificationToken { get; private set; }
     public TokenValue? ResetToken { get; private set; }
     public List<RefreshToken> RefreshTokens { get; private set; }
@@ -25,16 +23,12 @@ public class User : Entity, IAggregateRoot
     /// <summary>
     /// Create employee or manager by manager or owner
     /// </summary>
-    /// <param name="companyId"></param>
-    /// <param name="departmentCode"></param>
-    /// <param name="employeeCode"></param>
+    /// <param name="verificationCode"></param>
     /// <param name="role"></param>
-    private User(string companyId, string? departmentCode, string employeeCode, int role)
-    {
-        CompanyId = companyId;
-        IsConfirmed = false; 
-        DepartmentCode = departmentCode;
-        EmployeeCode = employeeCode;  
+    private User(string verificationCode, int role)
+    { 
+        IsConfirmed = false;  
+        VerificationCode = verificationCode;  
         var userRole = Enumeration.GetById<Role>(role);
         Roles = new List<Role> { userRole };
     }
@@ -42,17 +36,13 @@ public class User : Entity, IAggregateRoot
     /// <summary>
     /// Load data for user registration
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="companyId"></param>
-    /// <param name="departmentCode"></param>
-    /// <param name="employeeCode"></param>
+    /// <param name="id"></param> 
+    /// <param name="verificationCode"></param>
     /// <param name="role"></param>
-    private User(int id, string companyId, string? departmentCode, string employeeCode, int role)
+    private User(int id, string verificationCode, int role)
     {
         Id = id;
-        CompanyId = companyId;
-        DepartmentCode = departmentCode;
-        EmployeeCode = employeeCode;
+        VerificationCode = verificationCode;
         var userRole = Enumeration.GetById<Role>(role);
         Roles = new List<Role> { userRole };
     }
@@ -73,9 +63,7 @@ public class User : Entity, IAggregateRoot
         VerificationToken = verificationToken;
         IsConfirmed = false;
         ResetToken = null;
-        CompanyId = null;
-        EmployeeCode = null;
-        DepartmentCode = null;
+        VerificationCode = null;
         RefreshTokens = new List<RefreshToken>();
         Roles = new List<Role> { Role.User };
     }
@@ -83,10 +71,8 @@ public class User : Entity, IAggregateRoot
     /// <summary>
     /// Load user for user
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="companyId"></param>
-    /// <param name="departmentCode"></param>
-    /// <param name="employeeCode"></param>
+    /// <param name="id"></param> 
+    /// <param name="verificationCode"></param>
     /// <param name="isConfirmed"></param>
     /// <param name="resetToken"></param>
     /// <param name="resetTokenExpirationDate"></param>
@@ -99,7 +85,7 @@ public class User : Entity, IAggregateRoot
     /// <param name="roles"></param>
     /// <param name="refreshTokens"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    private User(int id, string? companyId, string? departmentCode, string? employeeCode, bool isConfirmed, string resetToken,
+    private User(int id, string? verificationCode, bool isConfirmed, string resetToken,
         DateTime? resetTokenExpirationDate,
         string verificationToken, DateTime? verificationTokenExpirationDate,  
         string userName,
@@ -109,9 +95,7 @@ public class User : Entity, IAggregateRoot
         phoneNumber)
     {
         Id = id;
-        CompanyId = companyId;
-        EmployeeCode = employeeCode;
-        DepartmentCode = departmentCode; 
+        VerificationCode = verificationCode;
 
         if (refreshTokens != null && refreshTokens.Any())
         {
@@ -124,28 +108,28 @@ public class User : Entity, IAggregateRoot
         Roles = roles ?? throw new ArgumentNullException(nameof(roles));
     }
 
-    public static User LoadUser(int id, string companyId, string departmentCode, string employeeCode, int role)
+    public static User LoadUser(int id, string verificationExternalCode, int role)
     {
-        return new User(id, companyId, departmentCode, employeeCode, role);
+        return new User(id, verificationExternalCode, role);
     }
 
-    public static User LoadUser(int id, string? companyId, string? departmentCode, string? employeeCode, bool isConfirmed,
+    public static User LoadUser(int id, string? verificationExternalCode, bool isConfirmed,
         string resetToken, DateTime? resetTokenExpirationDate,
         string verificationToken, DateTime? verificationTokenExpirationDate,  
         string userName, string email,
         string phoneNumber,
         string passwordHash, List<Role> roles, List<RefreshToken>? refreshTokens = null)
     {
-        return new User(id, companyId, departmentCode, employeeCode, isConfirmed, resetToken, resetTokenExpirationDate,
+        return new User(id, verificationExternalCode, isConfirmed, resetToken, resetTokenExpirationDate,
             verificationToken,
             verificationTokenExpirationDate, userName, email,
             phoneNumber, passwordHash, roles, refreshTokens);
     }
 
 
-    public static User InitUser(string companyId, string? departmentCode, string employeeCode, int role)
+    public static User InitUser(string verificationExternalCode, int role)
     {
-        return new User(companyId, departmentCode, employeeCode, role);
+        return new User(verificationExternalCode, role);
     }
 
     public static User CreateUser(string verificationToken, string userName, string email, string phoneNumber)
@@ -193,16 +177,14 @@ public class User : Entity, IAggregateRoot
         Roles.Add(role);
     }
 
-    public void MarkAsOwner(string companyId)
+    public void MarkAsOwner()
     {
-        if (EmployeeCode != null)
+        if (VerificationCode != null)
         {
             throw new BusinessException(BusinessRuleErrorMessages.UniqueUserRoleErrorMessage,
                 BusinessExceptionTitles.UniqueRoleTitle);
         }
-
-        CompanyId = companyId;
-
+         
         this.AddNewRole(Role.Owner);
     }
 

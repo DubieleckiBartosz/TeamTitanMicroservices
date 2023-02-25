@@ -6,10 +6,8 @@ namespace Identity.Infrastructure.AccessObjects;
 
 internal class UserDao
 {
-    public int Id { get; set; }
-    public string? DepartmentCode { get; set; }
-    public string? CompanyId { get; set; }
-    public string? EmployeeCode { get; set; }
+    public int Id { get; set; } 
+    public string? VerificationCode { get; set; }
     public string UserName { get; set; }
     public string Email { get; set; }
     public bool IsConfirmed { get; set; }
@@ -26,7 +24,7 @@ internal class UserDao
     {
         var roles = Roles.Select(Enumeration.GetById<Role>).ToList();
         var tokens = RefreshTokens.Select(_ => _.Map())?.ToList();
-        return User.LoadUser(Id, CompanyId, DepartmentCode, EmployeeCode, IsConfirmed,
+        return User.LoadUser(Id, VerificationCode, IsConfirmed,
             ResetToken, ResetTokenExpirationDate,
             VerificationToken,
             VerificationTokenExpirationDate, UserName, Email, PhoneNumber,

@@ -56,12 +56,10 @@ public class UserService : IUserService
             throw new AuthException(ExceptionIdentityMessages.CodeIsInUse,
                 ExceptionIdentityTitles.IncorrectCode);
         }
-
-        var department = initUserDto.Department ?? _currentUser.DepartmentCode;
-        var company = _currentUser.CompanyCode;
+         
         var role = this.CheckRole(initUserDto.Role);
         var code = initUserDto.Code;  
-        var newUser = User.InitUser(company!, department, code, (int) role.ToEnum<Roles>());
+        var newUser = User.InitUser(code, (int) role.ToEnum<Roles>());
 
         _loggerManager.LogInformation(initUserDto); 
 
@@ -254,7 +252,7 @@ public class UserService : IUserService
                 ExceptionIdentityTitles.UserByEmail, HttpStatusCode.BadRequest, null);
         }
 
-        user.MarkAsOwner(userOwnerRoleDto.CompanyId);
+        user.MarkAsOwner();
 
         await this._userRepository.AddToRoleAsync(user);
 
@@ -340,7 +338,7 @@ public class UserService : IUserService
 
         var roles = user.Roles.Select(_ => _.Name).ToList();
         var modelResponse =
-            new UserCurrentIFullInfoDto(user.DepartmentCode, user.CompanyId, user.EmployeeCode, user.UserName,
+            new UserCurrentIFullInfoDto(user.VerificationCode, user.UserName,
                 user.Email, user.PhoneNumber, roles);
 
         return Response<UserCurrentIFullInfoDto>.Ok(modelResponse);

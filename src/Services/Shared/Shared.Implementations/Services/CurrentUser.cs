@@ -52,11 +52,11 @@ public class CurrentUser : ICurrentUser
         }
     }
     
-    public string? EmployeeCode
+    public string? VerificationCode
     {
         get
         {
-            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimEmployeeCodeType)?.Value;
+            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimCodeType)?.Value;
         }
     }
 

@@ -4,14 +4,12 @@ namespace Identity.Infrastructure.AccessObjects;
 
 public class UserInitiatedDao
 {
-    public int Id { get; set; }
-    public string CompanyId { get; set; }
-    public string DepartmentCode { get; set; }
-    public string EmployeeCode { get; set; }
+    public int Id { get; set; } 
+    public string VerificationCode { get; set; }
     public int Role { get; set; }
 
     public User Map()
     {
-        return User.LoadUser(Id, CompanyId, DepartmentCode, EmployeeCode, Role);
+        return User.LoadUser(Id, VerificationCode, Role);
     }
 }

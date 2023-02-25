@@ -6,15 +6,13 @@ public class InitUserParameters
 {
     public string Code { get; init; }
     public string RecipientEmail { get; init; }
-    public string Role { get; }
-    public string? Department { get; }
+    public string Role { get; } 
 
     [JsonConstructor]
-    public InitUserParameters(string code, string recipientEmail, string role, string? department)
+    public InitUserParameters(string code, string recipientEmail, string role)
     {
         Code = code;
         RecipientEmail = recipientEmail;
-        Role = role;
-        Department = department;
+        Role = role; 
     }
 }
