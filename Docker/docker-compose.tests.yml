@@ -82,5 +82,4 @@ services:
 #volumes:
 #  teamtitan-sqldata:
 #  mongodb-data: 
-#  rabbitmq:
-#  cosmosdb-data:
+#  rabbitmq: 

@@ -59,8 +59,8 @@ public class UserService : IUserService
 
         var department = initUserDto.Department ?? _currentUser.DepartmentCode;
         var company = _currentUser.CompanyCode;
-        var role = initUserDto.Role;
-        var code = initUserDto.Code;
+        var role = this.CheckRole(initUserDto.Role);
+        var code = initUserDto.Code;  
         var newUser = User.InitUser(company!, department, code, (int) role.ToEnum<Roles>());
 
         _loggerManager.LogInformation(initUserDto); 
@@ -69,14 +69,48 @@ public class UserService : IUserService
 
         _loggerManager.LogInformation($"Initiated user: {newUser.Email}");
         
-        await _identityEmailService.SendEmailInitUserAsync(newUser.Email, code);
+        await _identityEmailService.SendEmailInitUserAsync(initUserDto.RecipientEmail, code);
 
         _loggerManager.LogInformation($"Send unique code: {newUser.Email}");
 
         return Response<string>.Ok(ResponseStrings.InitSuccess);
     }
 
-    public async Task<Response<int>> RegisterAsync(RegisterDto registerDto, string origin)
+    public async Task<Response<string>> CompleteDataInitiatedUser(CompleteDataInitiatedUserDto completeDataInitiatedUser, string origin)
+    {
+        var user = await _userRepository.FindByCodeAsync(completeDataInitiatedUser.Code);
+
+        var userEmail = completeDataInitiatedUser.Email; 
+        var userName = completeDataInitiatedUser.UserName;
+        var phone = completeDataInitiatedUser.PhoneNumber;
+        var verificationToken = TokenUtils.RandomTokenString();
+
+        user.CompleteData(verificationToken, userName, userEmail, phone);
+
+        var pwdHash = this._passwordHasher.HashPassword(user, completeDataInitiatedUser.Password);
+        user.SetPasswordHash(pwdHash);
+        try
+        {
+            await this._userRepository.CompleteDataAsync(user);
+
+            await SendVerificationEmailAsync(user, origin);
+
+            return Response<string>.Ok(ResponseStrings.CompleteDataSuccess);
+        }
+        catch
+        {
+            this._loggerManager.LogError(new
+            {
+                Message = "Attempt to complete data has failed.",
+                UserMail = user.Email
+            });
+
+            throw;
+        }
+
+    }
+
+    public async Task<Response<int>> RegisterNewUserAsync(RegisterDto registerDto, string origin)
     {
         if (registerDto == null)
         {
@@ -191,17 +225,8 @@ public class UserService : IUserService
             throw new IdentityResultException(ExceptionIdentityMessages.AccountNotApproval,
                 ExceptionIdentityTitles.UserByEmail, HttpStatusCode.BadRequest, null);
         }
-
-        var allRoles = EnumUtils.GetStringValuesFromEnum<Roles>();
-        var newRole = allRoles.FirstOrDefault(_ =>
-            _.ToLower() == userNewRoleDto.Role.ToLower());
-
-        if (newRole == null)
-        {
-            throw new BadRequestException(ExceptionIdentityMessages.RoleNotFound(allRoles),
-                ExceptionIdentityTitles.RoleDoesNotExist);
-        }
-
+         
+        var newRole = this.CheckRole(userNewRoleDto.Role);
         user.AddNewRole(Enumeration.GetById<Role>((int)newRole.ToEnum<Roles>()));
 
         await this._userRepository.AddToRoleAsync(user);
@@ -365,5 +390,21 @@ public class UserService : IUserService
         var verificationUri = QueryHelpers.AddQueryString(routeUri.ToString(), "code", tokenCode);
 
         await _identityEmailService.SendEmailAfterCreateNewAccountAsync(user.Email, verificationUri, user.UserName);
+    }
+
+    private string CheckRole(string role)
+    {
+
+        var allRoles = EnumUtils.GetStringValuesFromEnum<Roles>();
+        var newRole = allRoles.FirstOrDefault(_ =>
+            _.ToLower() == role.ToLower());
+
+        if (newRole == null)
+        {
+            throw new BadRequestException(ExceptionIdentityMessages.RoleNotFound(allRoles),
+                ExceptionIdentityTitles.RoleDoesNotExist);
+        }
+
+        return newRole;
     }
 }

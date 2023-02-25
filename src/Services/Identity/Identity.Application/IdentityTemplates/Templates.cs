@@ -43,7 +43,7 @@ public class Templates
                "</style>" +
                "</head>" +
                    "<body>" +
-                       "<div class=\"container\"><h1>Uni Code</h1>" +
+                       "<div class=\"container\"><h1>Unique Code</h1>" +
                        "<p>Welcome to our company. Your code is:</p>" +
                        "<div class=\"code\">{uniqueCode}</div><p>Please keep this code in a safe place.</p></div>" +
                    "</body>" +

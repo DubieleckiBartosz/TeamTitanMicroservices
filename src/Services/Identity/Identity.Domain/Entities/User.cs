@@ -155,7 +155,7 @@ public class User : Entity, IAggregateRoot
     }
 
 
-    public void Register(string verificationToken, string userName, string email, string phoneNumber)
+    public void CompleteData(string verificationToken, string userName, string email, string phoneNumber)
     {
         var token = TokenValue.CreateVerificationToken(verificationToken); 
         UserName = userName ?? throw new ArgumentNullException(nameof(userName));

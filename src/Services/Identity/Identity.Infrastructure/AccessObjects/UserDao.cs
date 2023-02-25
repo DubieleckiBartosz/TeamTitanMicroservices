@@ -7,9 +7,9 @@ namespace Identity.Infrastructure.AccessObjects;
 internal class UserDao
 {
     public int Id { get; set; }
-    public string? DepartmentCode { get; private set; }
-    public string? CompanyId { get; private set; }
-    public string? EmployeeCode { get; private set; }
+    public string? DepartmentCode { get; set; }
+    public string? CompanyId { get; set; }
+    public string? EmployeeCode { get; set; }
     public string UserName { get; set; }
     public string Email { get; set; }
     public bool IsConfirmed { get; set; }
