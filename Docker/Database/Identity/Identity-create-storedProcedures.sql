@@ -39,14 +39,42 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE user_completeData_U
+	@identifier INT, 
+	@verificationToken VARCHAR(MAX),
+	@verificationTokenExpirationDate DATETIME,
+	@isConfirmed BIT, 
+	@userName VARCHAR(50),
+	@email VARCHAR(50),
+	@phoneNumber VARCHAR(50),
+	@passwordHash VARCHAR(MAX)
+AS
+BEGIN
+	UPDATE ApplicationUsers 
+		SET VerificationToken = @verificationToken, 
+			VerificationTokenExpirationDate = @verificationTokenExpirationDate,
+			IsConfirmed = @isConfirmed, UserName = @userName, 
+			Email = @email, PhoneNumber = @phoneNumber,
+			PasswordHash = @passwordHash,
+			Completed = 1
+	WHERE Id = @identifier AND Completed = 0
+END
+GO
 
 
 CREATE OR ALTER PROCEDURE user_getUserByCode  
 	@uniqueCode VARCHAR(MAX) 
 AS
 BEGIN  
-	SELECT Id, CompanyId, DepartmentCode, EmployeeCode 
-	FROM ApplicationUsers WHERE EmployeeCode = @uniqueCode
+	SELECT 
+		au.Id,
+		au.CompanyId, 
+		au.DepartmentCode,
+		au.EmployeeCode,
+		ur.RoleId 
+	FROM ApplicationUsers AS au
+	INNER JOIN UserRoles AS ur ON ur.UserId = au.Id 
+	WHERE au.EmployeeCode = @uniqueCode AND au.Completed = 0
 END
 GO
 
@@ -78,14 +106,14 @@ BEGIN
 			BEGIN
 				INSERT INTO ApplicationUsers(IsConfirmed,
 							UserName, Email, PhoneNumber, PasswordHash, VerificationToken, 
-							VerificationTokenExpirationDate, ResetToken, ResetTokenExpirationDate) 
+							VerificationTokenExpirationDate, ResetToken, ResetTokenExpirationDate, Completed) 
 					VALUES (@isConfirmed, @userName, 
 							@email, @phoneNumber, @passwordHash, @verificationToken, 
-							@verificationTokenExpirationDate, NULL, NULL) 
+							@verificationTokenExpirationDate, NULL, NULL, 1) 
 				
 					SET @newIdentity = CAST(SCOPE_IDENTITY() AS INT)
 			
-				INSERT INTO UserRoles(RoleId, UserId) VALUES(@roleId, @newIdentity)
+					INSERT INTO UserRoles(RoleId, UserId) VALUES(@roleId, @newIdentity)
 			END
 
 		COMMIT TRANSACTION;

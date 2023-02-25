@@ -35,11 +35,23 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(object), 400)]
     [ProducesResponseType(typeof(object), 500)]
     [ProducesResponseType(typeof(Response<int>), 200)]
-    [SwaggerOperation(Summary = "Register user")]
+    [SwaggerOperation(Summary = "Complete data initiated user")]
     [HttpPost("[action]")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterParameters parameters)
+    public async Task<IActionResult> CompleteDataInitiatedUserAsync([FromBody] CompleteDataInitiatedUserParameters parameters)
     {
-        var response = await _userService.RegisterAsync(new RegisterDto(parameters), Request.Headers["origin"]);
+        var response = await _userService.CompleteDataInitiatedUser(new CompleteDataInitiatedUserDto(parameters),
+            Request.Headers["origin"]);
+        return Ok(response);
+    }
+
+    [ProducesResponseType(typeof(object), 400)]
+    [ProducesResponseType(typeof(object), 500)]
+    [ProducesResponseType(typeof(Response<int>), 200)]
+    [SwaggerOperation(Summary = "Register new user")]
+    [HttpPost("[action]")]
+    public async Task<IActionResult> RegisterNewUser([FromBody] RegisterParameters parameters)
+    {
+        var response = await _userService.RegisterNewUserAsync(new RegisterDto(parameters), Request.Headers["origin"]);
         return Ok(response);
     }
 
@@ -148,7 +160,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(object), 400)]
     [ProducesResponseType(typeof(object), 500)]
     [ProducesResponseType(typeof(Response<string>), 200)]
-    [SwaggerOperation(Summary = "Add user to trainer role")]
+    [SwaggerOperation(Summary = "Add user to owner role")]
     [HttpPut("[action]")]
     public async Task<IActionResult> AddTrainerRoleToUser([FromBody] UserOwnerRoleParameters parameters)
     {

@@ -21,6 +21,24 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
     {
     }
 
+    public async Task<User> FindByCodeAsync(string code)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@uniqueCode", code);
+
+        var result = (await this.QueryAsync<UserInitiatedDao>("user_getUserByCode", param, CommandType.StoredProcedure))
+            .FirstOrDefault();
+
+        if (result == null)
+        {
+            throw new IdentityResultException(ExceptionIdentityMessages.UserNotFound,
+                ExceptionIdentityTitles.UserByUniqueCode, HttpStatusCode.NotFound, null);
+        }
+
+        return result.Map();
+    }
+
     public async Task<bool> CodeIsInUseAsync(string code)
     {
         var param = new DynamicParameters();
@@ -98,6 +116,23 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
             throw new IdentityResultException(ExceptionIdentityMessages.NewRoleForUserFailed,
                 ExceptionIdentityTitles.NewUserRole, HttpStatusCode.InternalServerError, null);
         }
+    }
+
+    public async Task CompleteDataAsync(User user)
+    {
+        var param = new DynamicParameters();
+         
+        param.Add("@identifier", user.Id);
+        param.Add("@verificationToken", user.VerificationToken.Token);
+        param.Add("@verificationTokenExpirationDate", user.VerificationToken.TokenExpirationDate);
+        param.Add("@isConfirmed", user.IsConfirmed);
+        param.Add("@userName", user.UserName);
+        param.Add("@email", user.Email);
+        param.Add("@phoneNumber", user.PhoneNumber);
+        param.Add("@passwordHash", user.PasswordHash); 
+
+        await ExecuteAsync("user_completeData_U", param,
+            commandType: CommandType.StoredProcedure);  
     }
 
     public async Task<int> CreateAsync(User user)

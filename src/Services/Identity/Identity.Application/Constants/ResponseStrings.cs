@@ -3,6 +3,7 @@
 public class ResponseStrings
 {
     public const string RegisterSuccess = "User created!";
+    public const string CompleteDataSuccess = "Data completed!";
     public const string InitSuccess = "User initiated!";
     public const string OperationSuccess = "The operation was successful.";
     public const string VerificationAccountSuccess = "The verification was successful, you can login now.";
