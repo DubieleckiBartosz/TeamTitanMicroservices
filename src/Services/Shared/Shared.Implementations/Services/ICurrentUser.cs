@@ -3,10 +3,8 @@
 public interface ICurrentUser
 {
     bool IsInRole(string roleName);
-    int UserId { get; }
-    string? CompanyCode { get; }
-    string? DepartmentCode { get; }
-    string? EmployeeCode { get; }
+    int UserId { get; } 
+    string? VerificationCode { get; }
     string UserName { get; }
     string Email { get; }
 }

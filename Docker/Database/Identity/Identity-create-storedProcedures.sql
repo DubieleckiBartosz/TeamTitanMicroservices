@@ -1,8 +1,6 @@
 
-CREATE OR ALTER PROCEDURE user_initAccount_I 
-	@departmentCode VARCHAR(MAX),
-	@companyId VARCHAR(MAX),
-	@employeeCode VARCHAR(MAX), 
+CREATE OR ALTER PROCEDURE user_initAccount_I  
+	@verificationCode VARCHAR(MAX), 
 	@isConfirmed BIT,
 	@roleId INT
 AS
@@ -14,8 +12,8 @@ BEGIN
 			BEGIN 
 				DECLARE @newIdentity INT;
 					
-				INSERT INTO ApplicationUsers(IsConfirmed, EmployeeCode, DepartmentCode, CompanyId)
-				VALUES(@isConfirmed, @employeeCode, @departmentCode, @companyId) 
+				INSERT INTO ApplicationUsers(IsConfirmed, VerificationCode)
+				VALUES(@isConfirmed, @verificationCode) 
 
 				SET @newIdentity = CAST(SCOPE_IDENTITY() AS INT)
 			
@@ -67,14 +65,12 @@ CREATE OR ALTER PROCEDURE user_getUserByCode
 AS
 BEGIN  
 	SELECT 
-		au.Id,
-		au.CompanyId, 
-		au.DepartmentCode,
-		au.EmployeeCode,
+		au.Id, 
+		au.VerificationCode,
 		ur.RoleId 
 	FROM ApplicationUsers AS au
 	INNER JOIN UserRoles AS ur ON ur.UserId = au.Id 
-	WHERE au.EmployeeCode = @uniqueCode AND au.Completed = 0
+	WHERE au.VerificationCode = @uniqueCode AND au.Completed = 0
 END
 GO
 
@@ -83,7 +79,7 @@ CREATE OR ALTER PROCEDURE user_codeExists_S
 	@code VARCHAR(MAX)
 AS
 BEGIN
-	SELECT 1 FROM ApplicationUsers WHERE EmployeeCode = @code
+	SELECT 1 FROM ApplicationUsers WHERE VerificationCode = @code
 END
 GO
 
@@ -148,20 +144,12 @@ GO
 
 CREATE OR ALTER PROCEDURE [dbo].[user_addToRole_I] 
 	@userId INT, 
-	@role INT,
-	@companyId VARCHAR(MAX) = NULL,
-	@trainerYearsExperience INT = NULL
+	@role INT
 AS 
 BEGIN 
 	BEGIN TRY  
 		BEGIN TRANSACTION;
-
-			IF(@companyId IS NOT NULL)
-			BEGIN
-				UPDATE ApplicationUsers SET CompanyId = @companyId
-				WHERE Id = @userId;
-			END;
-
+		 
 			INSERT INTO UserRoles(UserId, RoleId) 
 			VALUES (@userId, @role)
 	
@@ -214,10 +202,8 @@ BEGIN
 	au.VerificationToken,
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
-	au.ResetTokenExpirationDate,
-	au.CompanyId,
-	au.EmployeeCode,
-	au.DepartmentCode,
+	au.ResetTokenExpirationDate, 
+	au.VerificationCode, 
 	rt.Id,
 	rt.Token,
 	rt.TokenExpirationDate,
@@ -245,10 +231,8 @@ BEGIN
 	au.VerificationToken,
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
-	au.ResetTokenExpirationDate,
-	au.CompanyId,
-	au.EmployeeCode,
-	au.DepartmentCode,
+	au.ResetTokenExpirationDate, 
+	au.VerificationCode, 
 	rt.Id,
 	rt.Token,
 	rt.TokenExpirationDate,
@@ -276,10 +260,8 @@ BEGIN
 	au.VerificationToken,
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
-	au.ResetTokenExpirationDate,
-	au.CompanyId,
-	au.EmployeeCode,
-	au.DepartmentCode,
+	au.ResetTokenExpirationDate, 
+	au.VerificationCode, 
 	rt.Id,
 	rt.Token,
 	rt.TokenExpirationDate,
@@ -307,10 +289,8 @@ BEGIN
 	au.VerificationToken,
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
-	au.ResetTokenExpirationDate,
-	au.CompanyId,
-	au.EmployeeCode,
-	au.DepartmentCode,
+	au.ResetTokenExpirationDate, 
+	au.VerificationCode, 
 	rt.Id,
 	rt.Token,
 	rt.TokenExpirationDate,

@@ -4,11 +4,9 @@ namespace Identity.Application.Models.DataTransferObjects;
 
 public class UserOwnerRoleDto
 {
-    public string Email { get; }
-    public string CompanyId { get; }
+    public string Email { get; } 
     public UserOwnerRoleDto(UserOwnerRoleParameters parameters)
     {
-        Email = parameters.Email;
-        CompanyId = parameters.CompanyId;
+        Email = parameters.Email; 
     }
 }
