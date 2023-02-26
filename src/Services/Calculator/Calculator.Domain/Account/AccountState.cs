@@ -24,7 +24,7 @@ public class AccountState
     public static AccountState CreateAccountState(Account account)
     {
         var details = account.Details!;
-        return new AccountState(details.AccountOwnerExternalId, details.DepartmentCode,
+        return new AccountState(details.AccountOwner, details.DepartmentCode,
             details.CountingType, details.AccountStatus, details.ActivatedBy, details.CreatedBy, details.DeactivatedBy, details.IsActive,
             details.WorkDayHours, details.HourlyRate, details.OvertimeRate);
     }

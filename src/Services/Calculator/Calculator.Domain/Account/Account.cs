@@ -143,7 +143,7 @@ public class Account : Aggregate
         return new Account(
             snapshotAccount.AccountId,
             snapshotAccount.Version,
-            details.AccountOwnerExternalId,
+            details.AccountOwner,
             details.DepartmentCode,
             details.CountingType, 
             details.AccountStatus, 
@@ -195,7 +195,7 @@ public class Account : Aggregate
     private void Initiated(NewAccountInitiated @event)
     {
         Id = @event.AccountId;
-        Details = AccountDetails.Init(@event.AccountOwnerExternalId, @event.DepartmentCode, @event.CreatedBy);
+        Details = AccountDetails.Init(@event.AccountExternal, @event.DepartmentCode, @event.CreatedBy);
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
     }

@@ -34,24 +34,7 @@ public class CurrentUser : ICurrentUser
 
             return int.TryParse(result, out var identifier) ? identifier : default;
         }
-    }
-
-    public string? CompanyCode
-    {
-        get
-        {
-            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimCompanyCodeType)?.Value;
-        }
-    }
-
-    public string? DepartmentCode
-    {
-        get
-        {
-            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimDepartmentCodeType)?.Value;
-        }
-    }
-    
+    } 
     public string? VerificationCode
     {
         get

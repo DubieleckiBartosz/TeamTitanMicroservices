@@ -27,7 +27,7 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
 
         param.Add("@uniqueCode", code);
 
-        var result = (await this.QueryAsync<UserInitiatedDao>("user_getUserByCode", param, CommandType.StoredProcedure))
+        var result = (await this.QueryAsync<UserInitiatedDao>("user_getUserByCode_S", param, CommandType.StoredProcedure))
             .FirstOrDefault();
 
         if (result == null)
@@ -56,6 +56,7 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
         var param = new DynamicParameters();
          
         param.Add("@isConfirmed", user.IsConfirmed); 
+        param.Add("@email", user.Email); 
         param.Add("@verificationCode", user.VerificationCode);
         param.Add("@roleId", user.Roles.FirstOrDefault()?.Id);
 
@@ -123,8 +124,7 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
         param.Add("@verificationToken", user.VerificationToken.Token);
         param.Add("@verificationTokenExpirationDate", user.VerificationToken.TokenExpirationDate);
         param.Add("@isConfirmed", user.IsConfirmed);
-        param.Add("@userName", user.UserName);
-        param.Add("@email", user.Email);
+        param.Add("@userName", user.UserName); 
         param.Add("@phoneNumber", user.PhoneNumber);
         param.Add("@passwordHash", user.PasswordHash); 
 

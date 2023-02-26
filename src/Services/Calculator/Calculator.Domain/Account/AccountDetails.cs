@@ -5,7 +5,7 @@ namespace Calculator.Domain.Account;
 
 public class AccountDetails
 {
-    public string AccountOwnerExternalId { get; }
+    public string AccountOwner { get; }
     public string DepartmentCode { get; }
     public CountingType CountingType { get; private set; }
     public AccountStatus AccountStatus { get; private set; }
@@ -17,11 +17,11 @@ public class AccountDetails
     public decimal? HourlyRate { get; private set; }
     public decimal? OvertimeRate { get; private set; }
  
-    private AccountDetails(string accountOwnerExternalId, string departmentCode, CountingType countingType,
+    private AccountDetails(string accountOwner, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
     {
-        AccountOwnerExternalId = accountOwnerExternalId;
+        AccountOwner = accountOwner;
         DepartmentCode = departmentCode;
         CountingType = countingType;
         AccountStatus = accountStatus;
@@ -33,15 +33,16 @@ public class AccountDetails
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
     }
+
     /// <summary>
     /// Init
     /// </summary>
-    /// <param name="accountOwnerExternalId"></param>
+    /// <param name="accountOwner"></param>
     /// <param name="departmentCode"></param>
     /// <param name="createdBy"></param>
-    private AccountDetails(string accountOwnerExternalId, string departmentCode, string createdBy)
+    private AccountDetails(string accountOwner, string departmentCode, string createdBy)
     {
-        AccountOwnerExternalId = accountOwnerExternalId;
+        AccountOwner = accountOwner;
         DepartmentCode = departmentCode;
         CreatedBy = createdBy;
     }
