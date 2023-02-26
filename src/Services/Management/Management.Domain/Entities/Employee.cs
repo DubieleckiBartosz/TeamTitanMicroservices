@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Base;
+﻿using Management.Domain.ValueObjects;
+using Shared.Domain.Base;
 
 namespace Management.Domain.Entities;
 
@@ -36,4 +37,27 @@ public class Employee : Entity
     {
         this.UserId = userId;
     }
+
+    public void AddContract(EmployeeContract contract)
+    {
+        Contracts.Add(contract);
+    }
+    
+    public void AddDayOffRequests(DayOffRequest dayOffRequest)
+    {
+        DayOffRequests.Add(dayOffRequest);
+    }
+
+    public void UpdateAddress(string city, string street, string numberStreet, string postalCode)
+    {
+        var newAddress = Address.Create(city, street, numberStreet, postalCode);
+        this.ContactData.UpdateAddress(newAddress);
+    }
+
+    public void UpdateContact(string phoneNumber, string email)
+    {
+        var newContact = Contact.Create(phoneNumber, email);
+        this.ContactData.UpdateContact(newContact);
+    }
+
 }

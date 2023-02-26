@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Company\Commands\" />
+    <Folder Include="Features\Contract\Commands\" />
+    <Folder Include="Features\DayOffRequest\Commands\" />
+    <Folder Include="Features\Department\Commands\" />
+    <Folder Include="Features\Department\Queries\" />
+    <Folder Include="Features\Employee\Commands\" />
+    <Folder Include="Features\Employee\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.Implementations\Shared.Implementations.csproj" />
+  </ItemGroup>
+
+</Project>
