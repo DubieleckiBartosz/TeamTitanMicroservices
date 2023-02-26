@@ -52,4 +52,4 @@ public class EmployeeContract : Entity
             overtimeRate);
     }
 
-}
+} 
