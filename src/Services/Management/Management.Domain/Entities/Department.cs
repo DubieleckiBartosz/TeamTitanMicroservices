@@ -19,5 +19,11 @@ public class Department : Entity
     public static Department CreateDepartment(DepartmentName departmentName)
     {
         return new Department(departmentName);
-    } 
+    }
+
+    public void AddNewEmployee(Employee newEmployee)
+    {
+        //Validation
+        Employees.Add(newEmployee);
+    }
 }

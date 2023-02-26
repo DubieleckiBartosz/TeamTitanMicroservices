@@ -8,28 +8,31 @@ namespace Management.Domain.Entities;
 public class DayOffRequest : Entity
 {
     public string CreatedBy { get; }
-    public string ConsideredBy { get; }
+    public string? ConsideredBy { get; private set;}
     public RangeDaysOff DaysOff { get; }
-    public DayOffRequestCurrentStatus CurrentStatus { get; }
+    public DayOffRequestCurrentStatus CurrentStatus { get; private set; }
     public ReasonType ReasonType { get; }
     public DayOffRequestDescription? Description { get; set; }
 
-    private DayOffRequest(string createdBy, string consideredBy, RangeDaysOff daysOff,
-        DayOffRequestCurrentStatus currentStatus, ReasonType reasonType, DayOffRequestDescription? description)
+    private DayOffRequest(string createdBy, RangeDaysOff daysOff, ReasonType reasonType,
+        DayOffRequestDescription? description)
     {
         CreatedBy = createdBy;
-        ConsideredBy = consideredBy;
         DaysOff = daysOff;
-        CurrentStatus = currentStatus;
+        CurrentStatus = DayOffRequestCurrentStatus.Initial;
         ReasonType = reasonType;
         Description = description;
     }
 
-    public static DayOffRequest Create(string createdBy, string consideredBy, RangeDaysOff daysOff,
-        DayOffRequestCurrentStatus currentStatus, ReasonType reasonType, DayOffRequestDescription? description)
+    public static DayOffRequest Create(string createdBy, RangeDaysOff daysOff, ReasonType reasonType,
+        DayOffRequestDescription? description)
     {
-        return new DayOffRequest(createdBy, consideredBy, daysOff, currentStatus, reasonType, description);
+        return new DayOffRequest(createdBy, daysOff, reasonType, description);
     }
 
-
+    public void UpdateStatus(string considerBy, DayOffRequestCurrentStatus newStatus)
+    { 
+        ConsideredBy = considerBy;
+        CurrentStatus = newStatus;
+    }
 }

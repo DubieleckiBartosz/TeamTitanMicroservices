@@ -54,6 +54,18 @@ public class Company : Entity, IAggregateRoot
         }
 
     }
+     
+    public void UpdateAddress(string city, string street, string numberStreet, string postalCode)
+    {
+        var newAddress = Address.Create(city, street, numberStreet, postalCode);
+        this.ContactData.UpdateAddress(newAddress);
+    }
+
+    public void UpdateContact(string phoneNumber, string email)
+    {
+        var newContact = Contact.Create(phoneNumber, email);
+        this.ContactData.UpdateContact(newContact);
+    }
 
     private Department? FindDepartmentByName(DepartmentName departmentName) => this.Departments.FirstOrDefault(_ => _.DepartmentName == departmentName);
     private Department? FindDepartmentById(int departmentId) => this.Departments.FirstOrDefault(_ => _.Id == departmentId);
