@@ -8,7 +8,7 @@ namespace Calculator.Application.ReadModels.AccountReaders;
 public class AccountReader : IRead
 {
     public Guid Id { get; }
-    public string AccountOwnerExternalId { get; }
+    public string AccountOwner { get; }
     public string DepartmentCode { get; }
     public CountingType CountingType { get; private set; }
     public AccountStatus AccountStatus { get; private set; }
@@ -26,16 +26,16 @@ public class AccountReader : IRead
     {
     }
 
-    private AccountReader(Guid accountId, string accountOwnerExternalId, string departmentCode, string createdBy)
+    private AccountReader(Guid accountId, string accountOwner, string departmentCode, string createdBy)
     {
         Id = accountId;
-        AccountOwnerExternalId = accountOwnerExternalId;
+        AccountOwner = accountOwner;
         DepartmentCode = departmentCode;
         CreatedBy = createdBy;
     }
     public static AccountReader Create(NewAccountInitiated @event)
     {
-        return new AccountReader(@event.AccountId, @event.AccountOwnerExternalId, @event.DepartmentCode, @event.CreatedBy);
+        return new AccountReader(@event.AccountId, @event.AccountExternal, @event.DepartmentCode, @event.CreatedBy);
     }
     public AccountReader DataCompleted(AccountDataCompleted @event)
     {
@@ -98,7 +98,8 @@ public class AccountReader : IRead
     public AccountReader NewWorkDayAdded(WorkDayAdded @event)
     {
         var workDay = WorkDayReader.Create(@event.Date, @event.HoursWorked, @event.Overtime, @event.IsDayOff,
-            @event.CreatedBy);
+            @event.CreatedBy, this.Id);
+
         WorkDays.Add(workDay);
 
         return this;
@@ -106,7 +107,7 @@ public class AccountReader : IRead
 
     public AccountReader NewPieceProductItemAdded(PieceProductAdded @event)
     {
-        var pieceProduct = ProductItemReader.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice);
+        var pieceProduct = ProductItemReader.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice, this.Id);
         ProductItems.Add(pieceProduct); 
         
         return this;

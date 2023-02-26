@@ -1,0 +1,103 @@
+--Accounts table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Accounts' and xtype='U')
+BEGIN
+	CREATE TABLE Accounts(
+	Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL, 
+	AccountOwner VARCHAR(MAX) NOT NULL,
+	AccountStatus INT NOT NULL,
+	CountingType INT NOT NULL,
+	ActivatedBy VARCHAR(MAX) NULL, 
+	CreatedBy VARCHAR(MAX) NOT NULL, 
+	DeactivatedBy VARCHAR(MAX) NULL, 
+	WorkDayHours INT NOT NULL, 
+	HourlyRate DECIMAL NULL, 
+	OvertimeRate DECIMAL NULL,  
+	IsActive BIT NOT NULL,
+	Created DATETIME DEFAULT GETDATE(),
+	Modified DATETIME DEFAULT GETDATE()
+) 
+END
+
+--WorkDays table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='WorkDays' and xtype='U')
+BEGIN
+	CREATE TABLE WorkDays(
+	Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+	AccountId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES Accounts(Id),
+	[Date] DATETIME NOT NULL,
+	HoursWorked INT NOT NULL,
+	Overtime INT DEFAULT 0,
+	IsDayOff BIT DEFAULT 0,  
+	CreatedBy VARCHAR(MAX) NOT NULL,
+	Created DATETIME DEFAULT GETDATE(),
+	Modified DATETIME DEFAULT GETDATE()
+) 
+END
+ 
+--BonusPrograms table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='BonusPrograms' and xtype='U')
+BEGIN
+	CREATE TABLE BonusPrograms(
+	Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL, 
+	BonusAmount DECIMAL NOT NULL,
+	CompanyCode VARCHAR(MAX) NULL,
+	Expires DATETIME NULL,
+	Reason VARCHAR(MAX) NOT NULL,
+	Created DATETIME DEFAULT GETDATE(),
+	Modified DATETIME DEFAULT GETDATE(), 
+) 
+END
+
+--BonusRecipients table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='BonusRecipients' and xtype='U')
+BEGIN
+	CREATE TABLE BonusRecipients(
+	Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL DEFAULT NEWID(), 
+	BonusProgramId UNIQUEIDENTIFIER NOT NULL REFERENCES BonusPrograms(Id), 
+	[Count] INT NULL
+) 
+END
+
+--Bonuses table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Bonuses' and xtype='U')
+BEGIN
+	CREATE TABLE Bonuses(
+	Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL DEFAULT NEWID(), 
+	BonusRecipientId UNIQUEIDENTIFIER NOT NULL REFERENCES BonusRecipients(Id), 
+	Creator VARCHAR(MAX) NOT NULL,
+	SettledBIT NOT NULL DEFAULT 0,
+	Created DATETIME DEFAULT GETDATE(),
+	Modified DATETIME DEFAULT GETDATE(), 
+) 
+END
+
+--PieceworkProducts table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='PieceworkProducts' and xtype='U')
+BEGIN
+	CREATE TABLE PieceworkProducts(
+	Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL, 
+	CompanyCode VARCHAR(MAX) NOT NULL,
+	ProductCode VARCHAR(MAX) NOT NULL,
+	PricePerUnit DECIMAL NOT NULL,
+	CountedInUnit VARCHAR(MAX) NOT NULL,
+	ProductName VARCHAR(MAX) NOT NULL,
+	CreatedBy VARCHAR(MAX) NOT NULL,
+	Created DATETIME DEFAULT GETDATE(),
+	Modified DATETIME DEFAULT GETDATE(),
+) 
+END
+
+
+--ProductItems table
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ProductItems' and xtype='U')
+BEGIN
+	CREATE TABLE ProductItems(
+	Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+	AccountId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES Accounts(Id),
+	PieceworkProductId UNIQUEIDENTIFIER NOT NULL FOREIGN KEY REFERENCES PieceworkProducts(Id),
+	CurrentPrice DECIMAL NOT NULL,
+	Quantity DECIMAL NOT NULL,
+	Created DATETIME DEFAULT GETDATE(),
+	Modified DATETIME DEFAULT GETDATE()
+) 
+END

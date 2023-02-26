@@ -25,10 +25,12 @@ public class User : Entity, IAggregateRoot
     /// </summary>
     /// <param name="verificationCode"></param>
     /// <param name="role"></param>
-    private User(string verificationCode, int role)
+    /// <param name="email"></param>
+    private User(string verificationCode, int role, string email)
     { 
         IsConfirmed = false;  
-        VerificationCode = verificationCode;  
+        VerificationCode = verificationCode;
+        Email = email;
         var userRole = Enumeration.GetById<Role>(role);
         Roles = new List<Role> { userRole };
     }
@@ -39,9 +41,11 @@ public class User : Entity, IAggregateRoot
     /// <param name="id"></param> 
     /// <param name="verificationCode"></param>
     /// <param name="role"></param>
-    private User(int id, string verificationCode, int role)
+    /// <param name="email"></param>
+    private User(int id, string verificationCode, int role, string email)
     {
         Id = id;
+        Email = email;
         VerificationCode = verificationCode;
         var userRole = Enumeration.GetById<Role>(role);
         Roles = new List<Role> { userRole };
@@ -108,9 +112,9 @@ public class User : Entity, IAggregateRoot
         Roles = roles ?? throw new ArgumentNullException(nameof(roles));
     }
 
-    public static User LoadUser(int id, string verificationExternalCode, int role)
+    public static User LoadUser(int id, string verificationExternalCode, int role, string email)
     {
-        return new User(id, verificationExternalCode, role);
+        return new User(id, verificationExternalCode, role, email);
     }
 
     public static User LoadUser(int id, string? verificationExternalCode, bool isConfirmed,
@@ -127,9 +131,9 @@ public class User : Entity, IAggregateRoot
     }
 
 
-    public static User InitUser(string verificationExternalCode, int role)
+    public static User InitUser(string verificationExternalCode, int role, string email)
     {
-        return new User(verificationExternalCode, role);
+        return new User(verificationExternalCode, role, email);
     }
 
     public static User CreateUser(string verificationToken, string userName, string email, string phoneNumber)
@@ -139,11 +143,10 @@ public class User : Entity, IAggregateRoot
     }
 
 
-    public void CompleteData(string verificationToken, string userName, string email, string phoneNumber)
+    public void CompleteData(string verificationToken, string userName, string phoneNumber)
     {
         var token = TokenValue.CreateVerificationToken(verificationToken); 
-        UserName = userName ?? throw new ArgumentNullException(nameof(userName));
-        Email = email ?? throw new ArgumentNullException(nameof(email));
+        UserName = userName ?? throw new ArgumentNullException(nameof(userName)); 
         PhoneNumber = phoneNumber ?? throw new ArgumentNullException(nameof(phoneNumber));
         VerificationToken = token;
         IsConfirmed = false;

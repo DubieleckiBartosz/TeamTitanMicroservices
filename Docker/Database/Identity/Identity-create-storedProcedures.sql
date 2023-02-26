@@ -2,6 +2,7 @@
 CREATE OR ALTER PROCEDURE user_initAccount_I  
 	@verificationCode VARCHAR(MAX), 
 	@isConfirmed BIT,
+	@email VARCHAR(50),
 	@roleId INT
 AS
 BEGIN  
@@ -12,8 +13,8 @@ BEGIN
 			BEGIN 
 				DECLARE @newIdentity INT;
 					
-				INSERT INTO ApplicationUsers(IsConfirmed, VerificationCode)
-				VALUES(@isConfirmed, @verificationCode) 
+				INSERT INTO ApplicationUsers(IsConfirmed, VerificationCode, Email)
+				VALUES(@isConfirmed, @verificationCode, @email) 
 
 				SET @newIdentity = CAST(SCOPE_IDENTITY() AS INT)
 			
@@ -42,8 +43,7 @@ CREATE OR ALTER PROCEDURE user_completeData_U
 	@verificationToken VARCHAR(MAX),
 	@verificationTokenExpirationDate DATETIME,
 	@isConfirmed BIT, 
-	@userName VARCHAR(50),
-	@email VARCHAR(50),
+	@userName VARCHAR(50), 
 	@phoneNumber VARCHAR(50),
 	@passwordHash VARCHAR(MAX)
 AS
@@ -52,7 +52,7 @@ BEGIN
 		SET VerificationToken = @verificationToken, 
 			VerificationTokenExpirationDate = @verificationTokenExpirationDate,
 			IsConfirmed = @isConfirmed, UserName = @userName, 
-			Email = @email, PhoneNumber = @phoneNumber,
+			PhoneNumber = @phoneNumber,
 			PasswordHash = @passwordHash,
 			Completed = 1
 	WHERE Id = @identifier AND Completed = 0
@@ -60,13 +60,14 @@ END
 GO
 
 
-CREATE OR ALTER PROCEDURE user_getUserByCode  
+CREATE OR ALTER PROCEDURE user_getUserByCode_S  
 	@uniqueCode VARCHAR(MAX) 
 AS
 BEGIN  
 	SELECT 
 		au.Id, 
 		au.VerificationCode,
+		au.Email,
 		ur.RoleId 
 	FROM ApplicationUsers AS au
 	INNER JOIN UserRoles AS ur ON ur.UserId = au.Id 

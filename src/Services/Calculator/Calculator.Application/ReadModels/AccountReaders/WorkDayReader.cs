@@ -2,14 +2,16 @@
 
 public class WorkDayReader
 {
+    public Guid AccountId { get; }
     public DateTime Date { get; }
     public int HoursWorked { get; }
     public int Overtime { get; }
     public bool IsDayOff { get; }
     public string CreatedBy { get; }
 
-    public WorkDayReader(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy)
+    private WorkDayReader(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy, Guid accountId)
     {
+        AccountId = accountId;
         Date = date;
         HoursWorked = hoursWorked;
         Overtime = overtime;
@@ -17,8 +19,8 @@ public class WorkDayReader
         CreatedBy = createdBy;
     }
 
-    public static WorkDayReader Create(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy)
+    public static WorkDayReader Create(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy, Guid accountId)
     {
-        return new WorkDayReader(date, hoursWorked, overtime, isDayOff, createdBy);
+        return new WorkDayReader(date, hoursWorked, overtime, isDayOff, createdBy, accountId);
     }
 }

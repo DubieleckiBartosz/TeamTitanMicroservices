@@ -15,7 +15,6 @@ using Microsoft.Extensions.Options;
 using Shared.Domain.Base;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Logging;
-using Shared.Implementations.Services;
 using Shared.Implementations.Utils;
 using System.Net;
 using System.Text;
@@ -27,19 +26,17 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly ILoggerManager<UserService> _loggerManager;
-    private readonly IIdentityEmailService _identityEmailService;
-    private readonly ICurrentUser _currentUser;
+    private readonly IIdentityEmailService _identityEmailService; 
     private readonly JwtSettings _jwtSettings;
 
     public UserService(IUserRepository userRepository, IPasswordHasher<User> passwordHasher,
         IOptions<JwtSettings> jwtSettings, ILoggerManager<UserService> loggerManager,
-        IIdentityEmailService identityEmailService, ICurrentUser currentUser)
+        IIdentityEmailService identityEmailService)
     {
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         _loggerManager = loggerManager ?? throw new ArgumentNullException(nameof(loggerManager));
-        _identityEmailService = identityEmailService ?? throw new ArgumentNullException(nameof(identityEmailService));
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+        _identityEmailService = identityEmailService ?? throw new ArgumentNullException(nameof(identityEmailService)); 
         _jwtSettings = jwtSettings?.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
 
@@ -58,18 +55,20 @@ public class UserService : IUserService
         }
          
         var role = this.CheckRole(initUserDto.Role);
-        var code = initUserDto.Code;  
-        var newUser = User.InitUser(code, (int) role.ToEnum<Roles>());
+        var code = initUserDto.Code;
+        var email = initUserDto.RecipientEmail;
+
+        var newUser = User.InitUser(code, (int) role.ToEnum<Roles>(), email);
 
         _loggerManager.LogInformation(initUserDto); 
 
         await _userRepository.InitUserAsync(newUser);
 
-        _loggerManager.LogInformation($"Initiated user: {newUser.Email}");
+        _loggerManager.LogInformation($"Initiated user: {email}");
         
-        await _identityEmailService.SendEmailInitUserAsync(initUserDto.RecipientEmail, code);
+        await _identityEmailService.SendEmailInitUserAsync(email, code);
 
-        _loggerManager.LogInformation($"Send unique code: {newUser.Email}");
+        _loggerManager.LogInformation($"Send unique code: {email}");
 
         return Response<string>.Ok(ResponseStrings.InitSuccess);
     }
@@ -77,13 +76,12 @@ public class UserService : IUserService
     public async Task<Response<string>> CompleteDataInitiatedUser(CompleteDataInitiatedUserDto completeDataInitiatedUser, string origin)
     {
         var user = await _userRepository.FindByCodeAsync(completeDataInitiatedUser.Code);
-
-        var userEmail = completeDataInitiatedUser.Email; 
+         
         var userName = completeDataInitiatedUser.UserName;
         var phone = completeDataInitiatedUser.PhoneNumber;
         var verificationToken = TokenUtils.RandomTokenString();
 
-        user.CompleteData(verificationToken, userName, userEmail, phone);
+        user.CompleteData(verificationToken, userName, phone);
 
         var pwdHash = this._passwordHasher.HashPassword(user, completeDataInitiatedUser.Password);
         user.SetPasswordHash(pwdHash);
