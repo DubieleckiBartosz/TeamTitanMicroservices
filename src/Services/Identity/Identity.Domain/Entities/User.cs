@@ -21,21 +21,6 @@ public class User : Entity, IAggregateRoot
     public List<Role> Roles { get; private set; }
 
     /// <summary>
-    /// Create employee or manager by manager or owner
-    /// </summary>
-    /// <param name="verificationCode"></param>
-    /// <param name="role"></param>
-    /// <param name="email"></param>
-    private User(string verificationCode, int role, string email)
-    { 
-        IsConfirmed = false;  
-        VerificationCode = verificationCode;
-        Email = email;
-        var userRole = Enumeration.GetById<Role>(role);
-        Roles = new List<Role> { userRole };
-    }
-
-    /// <summary>
     /// Load data for user registration
     /// </summary>
     /// <param name="id"></param> 
@@ -110,12 +95,7 @@ public class User : Entity, IAggregateRoot
         IsConfirmed = isConfirmed;
         PasswordHash = passwordHash ?? throw new ArgumentNullException(nameof(passwordHash));
         Roles = roles ?? throw new ArgumentNullException(nameof(roles));
-    }
-
-    public static User LoadUser(int id, string verificationExternalCode, int role, string email)
-    {
-        return new User(id, verificationExternalCode, role, email);
-    }
+    } 
 
     public static User LoadUser(int id, string? verificationExternalCode, bool isConfirmed,
         string resetToken, DateTime? resetTokenExpirationDate,
@@ -130,10 +110,14 @@ public class User : Entity, IAggregateRoot
             phoneNumber, passwordHash, roles, refreshTokens);
     }
 
-
-    public static User InitUser(string verificationExternalCode, int role, string email)
+    public static User LoadUserLess(int id, string verificationExternalCode, int role, string email)
     {
-        return new User(verificationExternalCode, role, email);
+        return new User(id, verificationExternalCode, role, email);
+    }
+
+    public void AssignCode(string verificationExternalCode)
+    {
+        VerificationCode = verificationExternalCode;
     }
 
     public static User CreateUser(string verificationToken, string userName, string email, string phoneNumber)

@@ -18,6 +18,7 @@ using Shared.Implementations.Logging;
 using Shared.Implementations.Utils;
 using System.Net;
 using System.Text;
+using Shared.Implementations.Services;
 
 namespace Identity.Application.Services;
 
@@ -26,86 +27,52 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly ILoggerManager<UserService> _loggerManager;
-    private readonly IIdentityEmailService _identityEmailService; 
+    private readonly IIdentityEmailService _identityEmailService;
+    private readonly ICurrentUser _currentUser;
     private readonly JwtSettings _jwtSettings;
 
     public UserService(IUserRepository userRepository, IPasswordHasher<User> passwordHasher,
         IOptions<JwtSettings> jwtSettings, ILoggerManager<UserService> loggerManager,
-        IIdentityEmailService identityEmailService)
+        IIdentityEmailService identityEmailService, ICurrentUser currentUser)
     {
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         _loggerManager = loggerManager ?? throw new ArgumentNullException(nameof(loggerManager));
-        _identityEmailService = identityEmailService ?? throw new ArgumentNullException(nameof(identityEmailService)); 
+        _identityEmailService = identityEmailService ?? throw new ArgumentNullException(nameof(identityEmailService));
+        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
         _jwtSettings = jwtSettings?.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
 
-    public async Task<Response<string>> InitUserAsync(InitUserDto initUserDto)
+    public async Task<Response<string>> AssignUserCodeAsync(AssignUserCodeDto assignUserCodeDto)
     {
-        if (initUserDto == null)
+        if (assignUserCodeDto == null)
         {
-            throw new ArgumentNullException(nameof(initUserDto));
+            throw new ArgumentNullException(nameof(assignUserCodeDto));
         }
 
-        var isInUse = await this._userRepository.CodeIsInUseAsync(initUserDto.Code);
+        var isInUse = await this._userRepository.CodeIsInUseAsync(assignUserCodeDto.Code);
         if (isInUse)
         {
             throw new AuthException(ExceptionIdentityMessages.CodeIsInUse,
                 ExceptionIdentityTitles.IncorrectCode);
         }
-         
-        var role = this.CheckRole(initUserDto.Role);
-        var code = initUserDto.Code;
-        var email = initUserDto.RecipientEmail;
+          
+        var code = assignUserCodeDto.Code;
+        var currentUserId = _currentUser.UserId;
 
-        var newUser = User.InitUser(code, (int) role.ToEnum<Roles>(), email);
+        var user = await _userRepository.FindByIdAsync(currentUserId);
 
-        _loggerManager.LogInformation(initUserDto); 
+        user.AssignCode(code);
 
-        await _userRepository.InitUserAsync(newUser);
+        _loggerManager.LogInformation($"Code {code} has been assigned to user {user.Email}"); 
 
-        _loggerManager.LogInformation($"Initiated user: {email}");
-        
-        await _identityEmailService.SendEmailInitUserAsync(email, code);
+        await _userRepository.AssignUserVerificationCodeAsync(user); 
 
-        _loggerManager.LogInformation($"Send unique code: {email}");
+        _loggerManager.LogInformation($"User code saved {code}");
 
-        return Response<string>.Ok(ResponseStrings.InitSuccess);
+        return Response<string>.Ok(ResponseStrings.CompleteDataSuccess);
     }
-
-    public async Task<Response<string>> CompleteDataInitiatedUser(CompleteDataInitiatedUserDto completeDataInitiatedUser, string origin)
-    {
-        var user = await _userRepository.FindByCodeAsync(completeDataInitiatedUser.Code);
-         
-        var userName = completeDataInitiatedUser.UserName;
-        var phone = completeDataInitiatedUser.PhoneNumber;
-        var verificationToken = TokenUtils.RandomTokenString();
-
-        user.CompleteData(verificationToken, userName, phone);
-
-        var pwdHash = this._passwordHasher.HashPassword(user, completeDataInitiatedUser.Password);
-        user.SetPasswordHash(pwdHash);
-        try
-        {
-            await this._userRepository.CompleteDataAsync(user);
-
-            await SendVerificationEmailAsync(user, origin);
-
-            return Response<string>.Ok(ResponseStrings.CompleteDataSuccess);
-        }
-        catch
-        {
-            this._loggerManager.LogError(new
-            {
-                Message = "Attempt to complete data has failed.",
-                UserMail = user.Email
-            });
-
-            throw;
-        }
-
-    }
-
+     
     public async Task<Response<int>> RegisterNewUserAsync(RegisterDto registerDto, string origin)
     {
         if (registerDto == null)
@@ -179,6 +146,7 @@ public class UserService : IUserService
 
         var authenticationModel = new AuthenticationDto();
         var jwtSecurityToken = user.CreateJwtToken(_jwtSettings);
+
         authenticationModel.Token = jwtSecurityToken;
         authenticationModel.Email = user.Email;
         authenticationModel.UserName = user.UserName;

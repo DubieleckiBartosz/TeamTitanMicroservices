@@ -4,9 +4,9 @@ namespace Identity.Application.Contracts;
 
 public interface IUserRepository
 {
-    Task CompleteDataAsync(User user);
+    Task<User> FindByIdAsync(int id);
     Task<User> FindByCodeAsync(string code);
-    Task InitUserAsync(User user);
+    Task AssignUserVerificationCodeAsync(User user);
     Task<bool> CodeIsInUseAsync(string code);
     Task<int> CreateAsync(User user);
     Task ConfirmAccountAsync(User user);

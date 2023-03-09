@@ -14,7 +14,7 @@ public class AuthenticationDto
 
     public AuthenticationDto()
     {
-    }
+    } 
 
     public AuthenticationDto(string userName, string email, List<string> roles, string token, string refreshToken,
         DateTime refreshTokenExpiration)

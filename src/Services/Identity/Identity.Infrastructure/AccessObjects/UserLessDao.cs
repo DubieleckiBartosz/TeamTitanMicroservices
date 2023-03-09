@@ -2,7 +2,7 @@
 
 namespace Identity.Infrastructure.AccessObjects;
 
-public class UserInitiatedDao
+public class UserLessDao
 {
     public int Id { get; set; } 
     public string VerificationCode { get; set; }
@@ -11,6 +11,6 @@ public class UserInitiatedDao
 
     public User Map()
     {
-        return User.LoadUser(Id, VerificationCode, Role, Email);
+        return User.LoadUserLess(Id, VerificationCode, Role, Email);
     }
 }
