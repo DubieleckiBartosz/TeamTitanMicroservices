@@ -5,10 +5,7 @@ namespace Identity.Application.Contracts.Services;
 
 public interface IUserService
 {
-    Task<Response<string>> InitUserAsync(InitUserDto initUserDto);
-
-    Task<Response<string>> CompleteDataInitiatedUser(CompleteDataInitiatedUserDto completeDataInitiatedUser,
-        string origin);
+    Task<Response<string>> AssignUserCodeAsync(AssignUserCodeDto assignUserCodeDto);
     Task<Response<int>> RegisterNewUserAsync(RegisterDto registerDto, string origin);
     Task<Response<AuthenticationDto>> LoginAsync(LoginDto loginDto);
     Task<Response<string>> AddToRoleAsync(UserNewRoleDto userNewRoleDto);

@@ -20,30 +20,18 @@ public class AccountController : ControllerBase
         _userService = userService;
     }
 
-    [Authorize(Roles = "Manager,Owner,Admin")]
+    [Authorize]
     [ProducesResponseType(typeof(object), 400)]
     [ProducesResponseType(typeof(object), 500)]
     [ProducesResponseType(typeof(Response<string>), 200)]
-    [SwaggerOperation(Summary = "Init new user")]
+    [SwaggerOperation(Summary = "Assign code to user")]
     [HttpPost("[action]")]
-    public async Task<IActionResult> Init([FromBody] InitUserParameters parameters)
+    public async Task<IActionResult> Init([FromBody] AssignUserCodeParameters codeParameters)
     { 
-        var response = await _userService.InitUserAsync(new InitUserDto(parameters));
+        var response = await _userService.AssignUserCodeAsync(new AssignUserCodeDto(codeParameters));
         return Ok(response);
     }
-
-    [ProducesResponseType(typeof(object), 400)]
-    [ProducesResponseType(typeof(object), 500)]
-    [ProducesResponseType(typeof(Response<int>), 200)]
-    [SwaggerOperation(Summary = "Complete data initiated user")]
-    [HttpPost("[action]")]
-    public async Task<IActionResult> CompleteDataInitiatedUserAsync([FromBody] CompleteDataInitiatedUserParameters parameters)
-    {
-        var response = await _userService.CompleteDataInitiatedUser(new CompleteDataInitiatedUserDto(parameters),
-            Request.Headers["origin"]);
-        return Ok(response);
-    }
-
+     
     [ProducesResponseType(typeof(object), 400)]
     [ProducesResponseType(typeof(object), 500)]
     [ProducesResponseType(typeof(Response<int>), 200)]

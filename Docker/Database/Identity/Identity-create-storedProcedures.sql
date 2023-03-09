@@ -1,64 +1,14 @@
 
-CREATE OR ALTER PROCEDURE user_initAccount_I  
-	@verificationCode VARCHAR(MAX), 
-	@isConfirmed BIT,
-	@email VARCHAR(50),
-	@roleId INT
+CREATE OR ALTER PROCEDURE user_assignCode_U  
+	@code VARCHAR(MAX), 
+	@userId INT
 AS
 BEGIN  
-	BEGIN TRY
-		BEGIN TRANSACTION; 
-	 
-			IF EXISTS (SELECT* FROM Roles WHERE Id = @roleId) 
-			BEGIN 
-				DECLARE @newIdentity INT;
-					
-				INSERT INTO ApplicationUsers(IsConfirmed, VerificationCode, Email)
-				VALUES(@isConfirmed, @verificationCode, @email) 
-
-				SET @newIdentity = CAST(SCOPE_IDENTITY() AS INT)
-			
-				INSERT INTO UserRoles(RoleId, UserId) VALUES(@roleId, @newIdentity)
-			END
-
-		COMMIT TRANSACTION; 
-	END TRY  
-	BEGIN CATCH
-	    IF (XACT_STATE()) = -1
-        BEGIN
-			ROLLBACK TRANSACTION
-		END
-  
-		IF (XACT_STATE()) = 1
-        BEGIN
-			COMMIT TRANSACTION
-		END
-		
-	END CATCH
+	UPDATE ApplicationUsers
+		SET VerificationCode = @code
+	WHERE Id = @userId							
 END
-GO
-
-CREATE OR ALTER PROCEDURE user_completeData_U
-	@identifier INT, 
-	@verificationToken VARCHAR(MAX),
-	@verificationTokenExpirationDate DATETIME,
-	@isConfirmed BIT, 
-	@userName VARCHAR(50), 
-	@phoneNumber VARCHAR(50),
-	@passwordHash VARCHAR(MAX)
-AS
-BEGIN
-	UPDATE ApplicationUsers 
-		SET VerificationToken = @verificationToken, 
-			VerificationTokenExpirationDate = @verificationTokenExpirationDate,
-			IsConfirmed = @isConfirmed, UserName = @userName, 
-			PhoneNumber = @phoneNumber,
-			PasswordHash = @passwordHash,
-			Completed = 1
-	WHERE Id = @identifier AND Completed = 0
-END
-GO
-
+GO 
 
 CREATE OR ALTER PROCEDURE user_getUserByCode_S  
 	@uniqueCode VARCHAR(MAX) 
@@ -71,7 +21,23 @@ BEGIN
 		ur.RoleId 
 	FROM ApplicationUsers AS au
 	INNER JOIN UserRoles AS ur ON ur.UserId = au.Id 
-	WHERE au.VerificationCode = @uniqueCode AND au.Completed = 0
+	WHERE au.VerificationCode = @uniqueCode 
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE user_getUserLessById_S  
+	@userId INT
+AS
+BEGIN  
+	SELECT 
+		au.Id, 
+		au.VerificationCode,
+		au.Email,
+		ur.RoleId 
+	FROM ApplicationUsers AS au
+	INNER JOIN UserRoles AS ur ON ur.UserId = au.Id 
+	WHERE au.Id = @userId
 END
 GO
 
@@ -103,10 +69,10 @@ BEGIN
 			BEGIN
 				INSERT INTO ApplicationUsers(IsConfirmed,
 							UserName, Email, PhoneNumber, PasswordHash, VerificationToken, 
-							VerificationTokenExpirationDate, ResetToken, ResetTokenExpirationDate, Completed) 
+							VerificationTokenExpirationDate, ResetToken, ResetTokenExpirationDate) 
 					VALUES (@isConfirmed, @userName, 
 							@email, @phoneNumber, @passwordHash, @verificationToken, 
-							@verificationTokenExpirationDate, NULL, NULL, 1) 
+							@verificationTokenExpirationDate, NULL, NULL) 
 				
 					SET @newIdentity = CAST(SCOPE_IDENTITY() AS INT)
 			

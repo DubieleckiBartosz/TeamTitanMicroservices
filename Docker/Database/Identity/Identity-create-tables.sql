@@ -14,8 +14,7 @@ BEGIN
 			VerificationCode VARCHAR(MAX) NULL, 
 			ResetToken VARCHAR(MAX) NULL,
 			ResetTokenExpirationDate DATETIME NULL,
-			UniqueUserCode VARCHAR(MAX) NULL, 
-			Completed BIT DEFAULT 0,
+			UniqueUserCode VARCHAR(MAX) NULL,  
 			Created DATETIME NOT NULL DEFAULT GETDATE(),
 			Modified DATETIME NOT NULL DEFAULT GETDATE()
 		)
