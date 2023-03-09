@@ -188,7 +188,7 @@ public class User : Entity, IAggregateRoot
     {
         var activeRefreshToken = RefreshTokens?.FirstOrDefault(_ => _.IsActive);
         return activeRefreshToken;
-    }
+    } 
 
     public RefreshToken AddNewRefreshToken(string newRefreshToken)
     {
