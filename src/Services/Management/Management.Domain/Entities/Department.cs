@@ -26,4 +26,17 @@ public class Department : Entity
         //Validation
         Employees.Add(newEmployee);
     }
+
+    public void RemoveEmployee(int employeeId)
+    {
+        var employee = this.FindEmployee(employeeId);
+        if (employee == null)
+        {
+
+        }
+
+        Employees.Remove(employee);
+    }
+
+    private Employee? FindEmployee(int employeeId) => Employees.FirstOrDefault(_ => _.Id == employeeId);
 }
