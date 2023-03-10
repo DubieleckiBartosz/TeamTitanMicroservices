@@ -1,5 +1,8 @@
-﻿namespace Calculator.Application.Features.Account.Commands.ActivateAccount;
+﻿using MediatR;
+using Shared.Implementations.Abstractions;
 
-public record ActivateAccountCommand(Guid AccountId)
+namespace Calculator.Application.Features.Account.Commands.ActivateAccount;
+
+public record ActivateAccountCommand(Guid AccountId) : ICommand<Unit>
 {
 }

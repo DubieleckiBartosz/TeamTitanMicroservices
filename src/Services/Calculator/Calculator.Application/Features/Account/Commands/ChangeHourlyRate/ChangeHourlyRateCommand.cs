@@ -1,5 +1,8 @@
-﻿namespace Calculator.Application.Features.Account.Commands.ChangeHourlyRate;
+﻿using MediatR;
+using Shared.Implementations.Abstractions;
 
-public record ChangeHourlyRateCommand(decimal NewHourlyRate, Guid AccountId)
+namespace Calculator.Application.Features.Account.Commands.ChangeHourlyRate;
+
+public record ChangeHourlyRateCommand(decimal NewHourlyRate, Guid AccountId) : ICommand<Unit>
 {
 }

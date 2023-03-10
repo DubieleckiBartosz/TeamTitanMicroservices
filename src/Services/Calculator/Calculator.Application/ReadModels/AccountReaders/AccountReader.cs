@@ -35,7 +35,7 @@ public class AccountReader : IRead
     }
     public static AccountReader Create(NewAccountInitiated @event)
     {
-        return new AccountReader(@event.AccountId, @event.AccountExternal, @event.DepartmentCode, @event.CreatedBy);
+        return new AccountReader(@event.AccountId, @event.AccountCode, @event.DepartmentCode, @event.CreatedBy);
     }
     public AccountReader DataCompleted(AccountDataCompleted @event)
     {

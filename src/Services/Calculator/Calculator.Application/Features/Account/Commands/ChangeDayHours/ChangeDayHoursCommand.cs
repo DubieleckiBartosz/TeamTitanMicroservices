@@ -1,5 +1,8 @@
-﻿namespace Calculator.Application.Features.Account.Commands.ChangeDayHours;
+﻿using MediatR;
+using Shared.Implementations.Abstractions;
 
-public record ChangeDayHoursCommand(int NewWorkDayHours, Guid AccountId)
+namespace Calculator.Application.Features.Account.Commands.ChangeDayHours;
+
+public record ChangeDayHoursCommand(int NewWorkDayHours, Guid AccountId) : ICommand<Unit>
 {
 }

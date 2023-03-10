@@ -16,12 +16,12 @@ public class Account : Aggregate
     /// <summary>
     /// Init account
     /// </summary>
-    /// <param name="accountOwnerExternalId"></param>
+    /// <param name="accountOwnerCode"></param>
     /// <param name="departmentCode"></param>
     /// <param name="creator"></param>
-    private Account(string accountOwnerExternalId, string departmentCode, string creator)
+    private Account(string accountOwnerCode, string departmentCode, string creator)
     { 
-        var @event = NewAccountInitiated.Create(departmentCode, accountOwnerExternalId, creator, Guid.NewGuid());
+        var @event = NewAccountInitiated.Create(departmentCode, accountOwnerCode, creator, Guid.NewGuid());
         Apply(@event);
         this.Enqueue(@event);
     }
@@ -58,9 +58,9 @@ public class Account : Aggregate
         WorkDays = new List<WorkDay>();
     }
 
-    public static Account Create(string departmentCode, string accountOwnerExternalId, string createdBy)
+    public static Account Create(string departmentCode, string accountOwnerCode, string createdBy)
     {
-        return new Account(accountOwnerExternalId, departmentCode, createdBy);
+        return new Account(accountOwnerCode, departmentCode, createdBy);
     }
 
     public void CompleteAccount(CountingType countingType, int workDayHours, decimal? overtimeRate, decimal? hourlyRate)
@@ -195,7 +195,7 @@ public class Account : Aggregate
     private void Initiated(NewAccountInitiated @event)
     {
         Id = @event.AccountId;
-        Details = AccountDetails.Init(@event.AccountExternal, @event.DepartmentCode, @event.CreatedBy);
+        Details = AccountDetails.Init(@event.AccountCode, @event.DepartmentCode, @event.CreatedBy);
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
     }
