@@ -1,5 +1,6 @@
 ﻿using Shared.Domain.Base;
 using Shared.Implementations.Core.Exceptions;
+using Shared.Implementations.Snapshot;
 
 namespace Shared.Implementations.EventStore.Repositories;
 
@@ -7,19 +8,29 @@ public class Repository<TAggregate> : IRepository<TAggregate> where TAggregate :
 {
     private readonly IEventStore _eventStore;
     private readonly IEventBus _eventBus;
+    private readonly ISnapshotStore _snapshotStore;
 
-    public Repository(IEventStore eventStore, IEventBus eventBus)
+    public Repository(IEventStore eventStore, IEventBus eventBus, ISnapshotStore snapshotStore)
     {
         _eventStore = eventStore ?? throw new ArgumentNullException(nameof(eventStore));
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+        _snapshotStore = snapshotStore ?? throw new ArgumentNullException(nameof(snapshotStore));
     }
 
+    public async Task<TAggregate?> GetAggregateFromSnapshotAsync(Guid id) 
+    {
+        var snapshotState = await _snapshotStore.GetLastSnapshotAsync(id);
+        var result = await _eventStore.AggregateFromSnapshotAsync<TAggregate>(id, snapshotState);
+
+        return result;
+    }
+     
     public async Task<TAggregate> GetAsync(Guid id)
     {
         var result = await _eventStore.AggregateStreamAsync<TAggregate>(id);
         return result;
     }
-
+   
     public async Task AddAsync(TAggregate aggregate)
     {
         await _eventStore.StoreAsync(aggregate, null);

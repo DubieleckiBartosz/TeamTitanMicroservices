@@ -37,7 +37,11 @@ public class PieceworkProduct : Aggregate
         this.Apply(@event);
         this.Enqueue(@event);
     }
-     
+    public override Aggregate? FromSnapshot(ISnapshot snapshot)
+    {
+        return null;
+    }
+
     protected override void When(IEvent @event)
     {
         switch (@event)

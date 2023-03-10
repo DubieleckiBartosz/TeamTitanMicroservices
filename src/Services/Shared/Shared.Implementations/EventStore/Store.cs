@@ -69,7 +69,7 @@ public class Store : IStore
     }
 
 
-    public async Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid aggregateId, long? version = null, DateTime? createdUtc = null)
+    public async Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid aggregateId, long? startVersion = null, long? version = null, DateTime? createdUtc = null)
     {
         var filterBuilder = Builders<StreamState>.Filter;
         var filter = filterBuilder.Eq(e => e.StreamId, aggregateId);
@@ -82,6 +82,11 @@ public class Store : IStore
         if (version.HasValue)
         {
             filter &= filterBuilder.Eq(e => e.Version, version.Value);
+        }
+
+        if (startVersion.HasValue)
+        {
+            filter &= filterBuilder.Gte(e => e.Version, startVersion.Value);
         }
 
         var sort = Builders<StreamState>.Sort.Ascending(e => e.Version);

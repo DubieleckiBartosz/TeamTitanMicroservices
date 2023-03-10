@@ -1,6 +1,7 @@
 ﻿using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
 using Shared.Implementations.Projection;
+using Shared.Implementations.Snapshot;
 
 namespace Shared.Implementations.EventStore;
 
@@ -9,6 +10,8 @@ public interface IEventStore
     Task<TAggregate> AggregateStreamAsync<TAggregate>(Guid streamId, long? atStreamVersion = null,
         DateTime? atTimestamp = null) where TAggregate : Aggregate;
 
+    Task<TAggregate?> AggregateFromSnapshotAsync<TAggregate>(Guid streamId, SnapshotState? snapshotState)
+        where TAggregate : Aggregate;
     Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid streamId, long? atStreamVersion = null,
         DateTime? atTimestamp = null);
 

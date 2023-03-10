@@ -6,10 +6,9 @@ namespace Shared.Domain.Base;
 public abstract class Aggregate
 {
     public Guid Id { get; protected set; }
-    public int Version { get; protected set; } 
+    public int Version { get; protected set; }
 
-    [JsonIgnore]
-    private readonly Queue<IEvent>? _uncommittedEvents = new Queue<IEvent>();
+    [JsonIgnore] private readonly Queue<IEvent>? _uncommittedEvents = new Queue<IEvent>();
 
     public IReadOnlyList<IEvent> DequeueUncommittedEvents()
     {
@@ -26,6 +25,7 @@ public abstract class Aggregate
 
         return dequeuedEvents.AsReadOnly();
     }
+
     protected abstract void When(IEvent @event);
 
     protected void Enqueue(IEvent @event)
@@ -33,8 +33,11 @@ public abstract class Aggregate
         Version++;
         _uncommittedEvents?.Enqueue(@event);
     }
+
     public void Apply(IEvent @event)
     {
         When(@event);
     }
+
+    public abstract Aggregate? FromSnapshot(ISnapshot snapshot);
 }

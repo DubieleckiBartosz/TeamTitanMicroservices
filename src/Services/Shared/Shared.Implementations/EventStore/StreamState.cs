@@ -1,6 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using Shared.Implementations.Types;
+﻿using Shared.Implementations.Types;
 
 namespace Shared.Implementations.EventStore;
 
@@ -20,10 +18,8 @@ public class StreamState : IIdentifier
     public StreamState()
     {
     }
-
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
-    public Guid Id { get; private set; }
+     
+    public Guid Id { get; private set; } 
     public Guid StreamId { get; set; }
     public string EventType { get; set; }
     public string StreamType { get; set; }

@@ -4,6 +4,7 @@ namespace Shared.Implementations.EventStore.Repositories;
 
 public interface IRepository<TAggregate> where TAggregate : Aggregate
 {
+    Task<TAggregate?> GetAggregateFromSnapshotAsync(Guid id);
     Task<TAggregate> GetAsync(Guid id);
     Task AddAsync(TAggregate aggregate);
     Task AddAndPublishAsync(TAggregate aggregate);

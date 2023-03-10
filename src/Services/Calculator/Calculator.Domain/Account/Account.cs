@@ -13,6 +13,10 @@ public class Account : Aggregate
     public List<ProductItem> ProductItems { get; private set; } = new List<ProductItem>();
     public List<WorkDay> WorkDays { get; private set; } = new List<WorkDay>();
 
+    public Account()
+    {
+    }
+
     /// <summary>
     /// Init account
     /// </summary>
@@ -131,7 +135,7 @@ public class Account : Aggregate
     {
         return AccountSnapshot.Create(this.Id, this.Version).Set(this);
     }
-    public Account? FromSnapshot(ISnapshot? snapshot)
+    public override Account? FromSnapshot(ISnapshot? snapshot)
     {
         var snapshotAccount = (AccountSnapshot?)snapshot;
         if (snapshotAccount == null || snapshotAccount.State == null || snapshotAccount.State?.Details == null)
