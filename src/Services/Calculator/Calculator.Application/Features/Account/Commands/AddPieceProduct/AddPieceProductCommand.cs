@@ -1,5 +1,8 @@
-﻿namespace Calculator.Application.Features.Account.Commands.AddPieceProduct;
+﻿using MediatR;
+using Shared.Implementations.Abstractions;
 
-public record AddPieceProductCommand(Guid PieceworkProductId, decimal Quantity, decimal CurrentPrice, Guid AccountId)
+namespace Calculator.Application.Features.Account.Commands.AddPieceProduct;
+
+public record AddPieceProductCommand(Guid PieceworkProductId, decimal Quantity, decimal CurrentPrice, Guid AccountId) : ICommand<Unit>
 {
 }

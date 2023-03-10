@@ -1,5 +1,12 @@
-﻿namespace Calculator.Application.Features.Account.Commands.AddPieceProduct;
+﻿using MediatR;
+using Shared.Implementations.Abstractions;
 
-public class AddPieceProductHandler
+namespace Calculator.Application.Features.Account.Commands.AddPieceProduct;
+
+public class AddPieceProductHandler : ICommandHandler<AddPieceProductCommand, Unit>
 {
+    public Task<Unit> Handle(AddPieceProductCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

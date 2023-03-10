@@ -1,5 +1,8 @@
-﻿namespace Calculator.Application.Features.Account.Commands.ChangeOvertimeRate;
+﻿using MediatR;
+using Shared.Implementations.Abstractions;
 
-public record ChangeOvertimeRateCommand(decimal NewOvertimeRate, Guid AccountId)
+namespace Calculator.Application.Features.Account.Commands.ChangeOvertimeRate;
+
+public record ChangeOvertimeRateCommand(decimal NewOvertimeRate, Guid AccountId) : ICommand<Unit>
 {
 }

@@ -1,5 +1,8 @@
-﻿namespace Calculator.Application.Features.Account.Commands.InitiationAccount;
+﻿using MediatR;
+using Shared.Implementations.Abstractions;
 
-public record InitiationAccountCommand(string DepartmentCode, string AccountOwnerExternalId)
+namespace Calculator.Application.Features.Account.Commands.InitiationAccount;
+
+public record InitiationAccountCommand(string DepartmentCode, string AccountOwnerCode, string Creator) : ICommand<Unit>
 {
 }
