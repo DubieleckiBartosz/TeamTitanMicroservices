@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
+using Shared.Implementations.Validators;
 
 namespace Calculator.Application.Features.Account.Commands.ChangeOvertimeRate;
 
@@ -13,8 +14,16 @@ public class ChangeOvertimeRateHandler : ICommandHandler<ChangeOvertimeRateComma
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     } 
 
-    public Task<Unit> Handle(ChangeOvertimeRateCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ChangeOvertimeRateCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var account = await _repository.GetAsync(request.AccountId);
+
+        account.CheckAndThrowWhenNull("Account");
+
+        account.UpdateOvertimeRate(request.NewOvertimeRate);
+
+        await _repository.UpdateAsync(account);
+
+        return Unit.Value;
     }
 }
