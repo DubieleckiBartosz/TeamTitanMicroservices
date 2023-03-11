@@ -5,10 +5,14 @@ namespace Calculator.Domain.Account;
 
 public class AccountState
 {
-    public AccountDetails Details { get; } 
-    public List<ProductItem> ProductItems { get; }
-    public List<WorkDay> WorkDays { get; }
-
+    public AccountDetails Details { get; private set; } //Setter for serializer
+    public List<ProductItem> ProductItems { get; private set; } //Setter for serializer
+    public List<WorkDay> WorkDays { get; private set; } //Setter for serializer
+    
+    //Constructor for serializer
+    public AccountState()
+    {
+    }
     private AccountState(string accountOwnerExternalId, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate)

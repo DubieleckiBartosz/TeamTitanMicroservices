@@ -101,6 +101,11 @@ public class BonusProgram : Aggregate
         }
     }
 
+    public override Aggregate? FromSnapshot(ISnapshot snapshot)
+    {
+        return null;
+    }
+
     private void BonusCreated(NewBonusProgramCreated @event)
     {
         Id = @event.BonusId;

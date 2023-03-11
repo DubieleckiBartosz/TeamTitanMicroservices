@@ -35,6 +35,18 @@ public static class BaseSerialize
 
         return data;
     }
+     
+    public static TResponse? DeserializeSnapshot<TResponse>(this string snapshotData) where TResponse : ISnapshot
+    {
+        var data = JsonConvert.DeserializeObject<TResponse>(snapshotData, new JsonSerializerSettings
+        {
+            ContractResolver = new PrivateResolver(),
+            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+            TypeNameHandling = TypeNameHandling.All
+        });
+
+        return data;
+    }
 
     public static IEvent? DeserializeQueueEvent(this string queueData, Assembly assembly, string queueKey)
     {

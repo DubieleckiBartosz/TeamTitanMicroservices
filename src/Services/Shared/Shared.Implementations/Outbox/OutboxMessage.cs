@@ -1,4 +1,5 @@
-﻿using Shared.Implementations.Types;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Shared.Implementations.Types;
 
 namespace Shared.Implementations.Outbox;
 
@@ -17,8 +18,9 @@ public class OutboxMessage : IIdentifier
         Created = DateTime.UtcNow;
     }
 
-    public Guid Id { get; private set; }
-    public DateTime Created { get; private set; }
+    [BsonId] 
+    public Guid Id { get; set; }
+    public DateTime Created { get; set; }
     public string Type { get; set; }
     public string Data { get; set; }
     public string? QueueKey { get; set; }

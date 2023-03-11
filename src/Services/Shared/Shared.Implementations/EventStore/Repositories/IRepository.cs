@@ -1,9 +1,11 @@
-﻿using Shared.Domain.Base;
+﻿using Shared.Domain.Abstractions;
+using Shared.Domain.Base;
 
 namespace Shared.Implementations.EventStore.Repositories;
 
 public interface IRepository<TAggregate> where TAggregate : Aggregate
 {
+    Task<TAggregate?> GetAggregateFromSnapshotAsync<TSnapshot>(Guid id) where TSnapshot : ISnapshot;
     Task<TAggregate> GetAsync(Guid id);
     Task AddAsync(TAggregate aggregate);
     Task AddAndPublishAsync(TAggregate aggregate);

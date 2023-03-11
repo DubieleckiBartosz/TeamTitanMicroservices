@@ -5,18 +5,23 @@ namespace Calculator.Domain.Account;
 
 public class AccountDetails
 {
-    public string AccountOwner { get; }
-    public string DepartmentCode { get; }
+    public string AccountOwner { get; private set; } //Setter for serializer
+    public string DepartmentCode { get; private set; } //Setter for serializer
     public CountingType CountingType { get; private set; }
     public AccountStatus AccountStatus { get; private set; }
     public string? ActivatedBy { get; private set; }
-    public string CreatedBy { get; }
+    public string CreatedBy { get; private set; } //Setter for serializer
     public string? DeactivatedBy { get; private set; }
     public bool IsActive { get; private set; }
     public int WorkDayHours { get; private set; }
     public decimal? HourlyRate { get; private set; }
     public decimal? OvertimeRate { get; private set; }
- 
+
+    //Constructor for serializer
+    public AccountDetails()
+    {
+    }
+
     private AccountDetails(string accountOwner, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate)

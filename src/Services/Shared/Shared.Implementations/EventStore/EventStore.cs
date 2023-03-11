@@ -3,6 +3,7 @@ using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Projection;
+using Shared.Implementations.Snapshot;
 using Shared.Implementations.Tools;
 
 namespace Shared.Implementations.EventStore;
@@ -60,7 +61,34 @@ public class EventStore : IEventStore
     public async Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid streamId, long? atStreamVersion = null,
         DateTime? atTimestamp = null)
     {
-        return await _store.GetEventsAsync(streamId, atStreamVersion, atTimestamp);
+        return await _store.GetEventsAsync(streamId, version: atStreamVersion, createdUtc: atTimestamp);
+    }
+
+    public async Task<TAggregate?> AggregateFromSnapshotAsync<TAggregate, TSnapshot>(Guid streamId,
+        SnapshotState? snapshotState)
+        where TAggregate : Aggregate
+        where TSnapshot : ISnapshot
+    {
+        var aggregate = (TAggregate) Activator.CreateInstance(typeof(TAggregate), true)!;
+
+        if (snapshotState != null)
+        {
+            var resultSnapshot = snapshotState.SnapshotData.DeserializeSnapshot<TSnapshot>();
+            var response = aggregate.FromSnapshot(resultSnapshot!);
+            var events = await _store.GetEventsAsync(streamId, snapshotState.CurrentVersion);
+            if (response == null || (events == null || !events.Any()))
+            {
+                return response as TAggregate;
+            }
+
+            response = this.ReadEvents(response, events!);
+
+            return response as TAggregate;
+        }
+        else
+        {
+            return await this.AggregateStreamAsync<TAggregate>(streamId); 
+        } 
     }
 
     public async Task<TAggregate> AggregateStreamAsync<TAggregate>(Guid streamId, long? atStreamVersion = null,
@@ -73,22 +101,9 @@ public class EventStore : IEventStore
         if (events == null || !events.Any())
         {
             return aggregate;
-        }
+        } 
 
-        var version = 0;
-        foreach (var @event in events)
-        {
-            var data = @event.StreamData.DeserializeEvent();
-
-            if (data == null)
-            {
-                continue;
-            }
-
-            aggregate.Apply(data);
-            aggregate.SetNewValue(nameof(aggregate.Version), ++version);
-        }
-
+        aggregate = this.ReadEvents(aggregate, events);
         return aggregate;
     }
 
@@ -128,6 +143,23 @@ public class EventStore : IEventStore
         {
             await projection.Handle(@event, ct);
         }
+    }
+
+    private TAggregate ReadEvents<TAggregate>(TAggregate aggregate, IReadOnlyList<StreamState> events)
+        where TAggregate : Aggregate
+    {
+        var version = 0;
+        foreach (var @event in events)
+        {
+            var data = @event.StreamData.DeserializeEvent();
+
+            if (data == null) continue;
+
+            aggregate.Apply(data);
+            aggregate.SetNewValue(nameof(aggregate.Version), ++version);
+        }
+
+        return aggregate;
     }
 
 }

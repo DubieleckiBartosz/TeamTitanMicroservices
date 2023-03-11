@@ -1,0 +1,14 @@
+{
+  "MongoOutboxOptions": {
+    "DeleteAfter": false,
+    "CollectionName": "Messages",
+    "DatabaseName": "TeamTitanDatabase",
+    "ConnectionString": "mongodb://rootuser:rootpass@localhost:27018"
+  },
+  "RabbitOptions": {
+    "User": "guest",
+    "Host": "rabbitmq",
+    "Port": "5672",
+    "Password": "guest"
+  }
+}

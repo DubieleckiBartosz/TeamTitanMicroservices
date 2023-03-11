@@ -7,7 +7,9 @@ public class ProductItem
     //that's why we keep the price
     public decimal CurrentPrice { get; }
     public decimal Quantity { get; }
-
+    public ProductItem()
+    {
+    }
     private ProductItem(Guid pieceworkProductId, decimal quantity, decimal currentPrice)
     {
         PieceworkProductId = pieceworkProductId;

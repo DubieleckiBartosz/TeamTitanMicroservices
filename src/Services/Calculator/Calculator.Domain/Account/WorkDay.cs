@@ -8,6 +8,10 @@ public class WorkDay
     public bool IsDayOff { get; }
     public string CreatedBy { get; }
 
+    public WorkDay()
+    {
+    }
+
     private WorkDay(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy)
     {
         Date = date;

@@ -21,6 +21,7 @@ using Shared.Implementations.Services;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Shared.Implementations.EventStore.Repositories;
+using Shared.Implementations.Snapshot;
 
 namespace Shared.Implementations;
 
@@ -67,6 +68,8 @@ public static class SharedConfigurations
         services.AddScoped<IEventStore, EventStore.EventStore>(_ =>
             new EventStore.EventStore(_.GetService<IStore>() ?? throw new ArgumentNullException(nameof(IStore)),
                 projectionFunc?.Invoke(_)));
+        services.AddScoped<ISnapshotStore, SnapshotStore>();
+
         services.AddScoped<IOutboxListener, OutboxListener>();
         services.AddScoped<IOutboxStore, OutboxStore>();
         services.AddScoped<IRabbitEventListener, RabbitEventListener>();

@@ -1,4 +1,6 @@
-﻿namespace Shared.Implementations.Types;
+﻿using MongoDB.Bson;
+
+namespace Shared.Implementations.Types;
 
 public interface IIdentifier
 {
