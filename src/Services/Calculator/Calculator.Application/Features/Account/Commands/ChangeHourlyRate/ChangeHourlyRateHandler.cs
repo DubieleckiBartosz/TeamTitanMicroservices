@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
+using Shared.Implementations.Validators;
 
 namespace Calculator.Application.Features.Account.Commands.ChangeHourlyRate;
 
@@ -13,8 +14,16 @@ public class ChangeHourlyRateHandler : ICommandHandler<ChangeHourlyRateCommand, 
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
-    public Task<Unit> Handle(ChangeHourlyRateCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ChangeHourlyRateCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var account = await _repository.GetAsync(request.AccountId);
+
+        account.CheckAndThrowWhenNull("Account");
+
+        account.UpdateHourlyRate(request.NewHourlyRate);
+
+        await _repository.UpdateAsync(account);
+
+        return Unit.Value;
     }
 }

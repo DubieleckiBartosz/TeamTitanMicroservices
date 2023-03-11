@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
+using Shared.Implementations.Validators;
 
 namespace Calculator.Application.Features.Account.Commands.AddPieceProduct;
 
@@ -13,8 +14,20 @@ public class AddPieceProductHandler : ICommandHandler<AddPieceProductCommand, Un
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
-    public Task<Unit> Handle(AddPieceProductCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AddPieceProductCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var account = await _repository.GetAsync(request.AccountId);
+
+        account.CheckAndThrowWhenNull("Account");
+
+        var pieceworkProductId = request.PieceworkProductId;
+        var quantity = request.Quantity;
+        var currentPrice = request.CurrentPrice;
+
+        account.AddNewPieceProductItem(pieceworkProductId, quantity, currentPrice);
+
+        await _repository.UpdateAsync(account);
+
+        return Unit.Value;
     }
 }

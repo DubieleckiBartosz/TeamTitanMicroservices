@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
+using Shared.Implementations.Validators;
 
 namespace Calculator.Application.Features.Account.Commands.CompleteData;
 
@@ -13,8 +14,21 @@ public class CompleteAccountDataHandler : ICommandHandler<CompleteAccountDataCom
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
-    public Task<Unit> Handle(CompleteAccountDataCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CompleteAccountDataCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var account = await _repository.GetAsync(request.AccountId);
+        
+        account.CheckAndThrowWhenNull("Account");
+
+        var countingType = request.CountingType;
+        var workDayHours = request.WorkDayHours;
+        var overtimeRate = request.OvertimeRate;
+        var hourlyRate = request.HourlyRate;
+
+        account.CompleteAccount(countingType, workDayHours, overtimeRate, hourlyRate);
+
+        await _repository.UpdateAsync(account);
+
+        return Unit.Value;
     }
 }
