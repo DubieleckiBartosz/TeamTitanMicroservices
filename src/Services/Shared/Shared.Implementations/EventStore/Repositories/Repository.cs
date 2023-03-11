@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Base;
+﻿using Shared.Domain.Abstractions;
+using Shared.Domain.Base;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Snapshot;
 
@@ -17,14 +18,15 @@ public class Repository<TAggregate> : IRepository<TAggregate> where TAggregate :
         _snapshotStore = snapshotStore ?? throw new ArgumentNullException(nameof(snapshotStore));
     }
 
-    public async Task<TAggregate?> GetAggregateFromSnapshotAsync(Guid id) 
+
+    public async Task<TAggregate?> GetAggregateFromSnapshotAsync<TSnapshot>(Guid id) where TSnapshot : ISnapshot
     {
         var snapshotState = await _snapshotStore.GetLastSnapshotAsync(id);
-        var result = await _eventStore.AggregateFromSnapshotAsync<TAggregate>(id, snapshotState);
+        var result = await _eventStore.AggregateFromSnapshotAsync<TAggregate, TSnapshot>(id, snapshotState);
 
         return result;
     }
-     
+
     public async Task<TAggregate> GetAsync(Guid id)
     {
         var result = await _eventStore.AggregateStreamAsync<TAggregate>(id);

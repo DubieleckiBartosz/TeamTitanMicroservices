@@ -25,16 +25,11 @@ public class Store : IStore
             Builders<BsonDocument>.IndexKeys.Ascending("Version")
         );
 
-        var indexOptions = new CreateIndexOptions() { Unique = true };
+        var indexOptions = new CreateIndexOptions() { Unique = false };
         var indexModel = new CreateIndexModel<BsonDocument>(indexDefinition, indexOptions);
 
         await eventsCollection.Indexes.CreateOneAsync(indexModel);
-
-        var dummyDocument = new BsonDocument();
-        await eventsCollection.InsertOneAsync(dummyDocument);
-        await eventsCollection.DeleteOneAsync(dummyDocument);
-
-
+           
         var streamId = stream.StreamId;
         var streamType = stream.StreamType;
 
@@ -51,14 +46,15 @@ public class Store : IStore
             var newVersion = streamVersion.HasValue ? streamVersion.Value + 1 : 1;
             var eventDocument = new BsonDocument
             {
-                {"Id", stream.Id},
-                {"StreamId", streamId},
-                {"Data", stream.StreamData},
-                {"Type", streamType},
+                {"_id", stream.Id.ToString()},
+                {"StreamId", streamId.ToString()},
+                {"StreamData", stream.StreamData},
+                {"StreamType", streamType},
+                {"EventType", stream.EventType},
                 {"Version", newVersion},
                 {"Created", DateTime.UtcNow}
             };
-
+             
             await eventsCollection.InsertOneAsync(eventDocument);
         }
 
@@ -69,34 +65,73 @@ public class Store : IStore
     }
 
 
+    //public async Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid aggregateId, long? startVersion = null, long? version = null, DateTime? createdUtc = null)
+    //{
+    //    var filterBuilder = Builders<StreamState>.Filter;
+    //    var filter = filterBuilder.Eq(e => e.StreamId, aggregateId);
+
+    //    if (createdUtc.HasValue)
+    //    {
+    //        filter &= filterBuilder.Lte(e => e.Created, createdUtc.Value);
+    //    }
+
+    //    if (version.HasValue)
+    //    {
+    //        filter &= filterBuilder.Eq(e => e.Version, version.Value);
+    //    }
+
+    //    if (startVersion.HasValue)
+    //    {
+    //        filter &= filterBuilder.Gte(e => e.Version, startVersion.Value);
+    //    }
+
+    //    var sort = Builders<StreamState>.Sort.Ascending(e => e.Version);
+
+
+    //    var events = await _database.GetCollection<StreamState>(CollectionName)
+    //        .Find(filter)
+    //        .Sort(sort)
+    //        .ToListAsync();
+
+    //    return events?.AsReadOnly();
+    //}
+
     public async Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid aggregateId, long? startVersion = null, long? version = null, DateTime? createdUtc = null)
     {
-        var filterBuilder = Builders<StreamState>.Filter;
-        var filter = filterBuilder.Eq(e => e.StreamId, aggregateId);
+        var filterBuilder = Builders<BsonDocument>.Filter;
+        var filter = filterBuilder.Eq("StreamId", aggregateId.ToString());
 
         if (createdUtc.HasValue)
         {
-            filter &= filterBuilder.Lte(e => e.Created, createdUtc.Value);
+            filter &= filterBuilder.Lte("Created", createdUtc.Value);
         }
 
         if (version.HasValue)
         {
-            filter &= filterBuilder.Eq(e => e.Version, version.Value);
+            filter &= filterBuilder.Eq("Version", version.Value);
         }
 
         if (startVersion.HasValue)
         {
-            filter &= filterBuilder.Gte(e => e.Version, startVersion.Value);
+            filter &= filterBuilder.Gte("Version", startVersion.Value);
         }
 
-        var sort = Builders<StreamState>.Sort.Ascending(e => e.Version);
-         
+        var sort = Builders<BsonDocument>.Sort.Ascending("Version");
 
-        var events = await _database.GetCollection<StreamState>(CollectionName)
+
+        var bsonEvents = await _database.GetCollection<BsonDocument>(CollectionName)
             .Find(filter)
             .Sort(sort)
             .ToListAsync();
 
-        return events?.AsReadOnly();
-    }
+        var response = new List<StreamState>();
+        foreach (var @event in bsonEvents)
+        {
+            var result = StreamState.Deserialize(@event);
+            response.Add(result);
+        }
+       
+
+        return response?.AsReadOnly();
+    } 
 }

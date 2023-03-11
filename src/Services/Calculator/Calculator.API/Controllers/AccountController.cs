@@ -1,5 +1,6 @@
 ﻿using Calculator.Application.Features.Account.Commands.InitiationAccount;
 using Calculator.Domain.Account;
+using Calculator.Domain.Account.Snapshots;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Shared.Implementations.Abstractions;
@@ -29,14 +30,14 @@ public class AccountController : BaseController
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> TestMongo([FromRoute]Guid id)
+    public async Task<IActionResult> TestMongo([FromRoute] Guid id)
     {
         var result = await _repository.GetAsync(id);
         var resultSnapshot = result.CreateSnapshot();
         var serialize = JsonConvert.SerializeObject(resultSnapshot);
         await _store.AddAsync(new SnapshotState(id, resultSnapshot.Version, resultSnapshot.GetType().ToString(), serialize));
 
-        var resultFromSn = await _repository.GetAggregateFromSnapshotAsync(id);
+        var resultFromSn = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(id);
         return Ok(resultFromSn);
     }
 }

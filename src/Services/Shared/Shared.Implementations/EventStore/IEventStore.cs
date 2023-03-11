@@ -10,9 +10,12 @@ public interface IEventStore
     Task<TAggregate> AggregateStreamAsync<TAggregate>(Guid streamId, long? atStreamVersion = null,
         DateTime? atTimestamp = null) where TAggregate : Aggregate;
 
-    Task<TAggregate?> AggregateFromSnapshotAsync<TAggregate>(Guid streamId, SnapshotState? snapshotState)
-        where TAggregate : Aggregate;
-    Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid streamId, long? atStreamVersion = null,
+    Task<TAggregate?> AggregateFromSnapshotAsync<TAggregate, TSnapshot>(Guid streamId,
+        SnapshotState? snapshotState)
+        where TAggregate : Aggregate
+        where TSnapshot : ISnapshot;
+    
+        Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid streamId, long? atStreamVersion = null,
         DateTime? atTimestamp = null);
 
     Task AppendEventAsync<TAggregate>(Guid streamId, IEvent @event, long? expectedVersion = null,

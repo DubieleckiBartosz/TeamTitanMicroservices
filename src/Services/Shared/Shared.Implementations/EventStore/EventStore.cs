@@ -64,14 +64,16 @@ public class EventStore : IEventStore
         return await _store.GetEventsAsync(streamId, version: atStreamVersion, createdUtc: atTimestamp);
     }
 
-    public async Task<TAggregate?> AggregateFromSnapshotAsync<TAggregate>(Guid streamId, SnapshotState? snapshotState)
+    public async Task<TAggregate?> AggregateFromSnapshotAsync<TAggregate, TSnapshot>(Guid streamId,
+        SnapshotState? snapshotState)
         where TAggregate : Aggregate
+        where TSnapshot : ISnapshot
     {
         var aggregate = (TAggregate) Activator.CreateInstance(typeof(TAggregate), true)!;
 
         if (snapshotState != null)
         {
-            var resultSnapshot = snapshotState.SnapshotData.DeserializeSnapshot();
+            var resultSnapshot = snapshotState.SnapshotData.DeserializeSnapshot<TSnapshot>();
             var response = aggregate.FromSnapshot(resultSnapshot!);
             var events = await _store.GetEventsAsync(streamId, snapshotState.CurrentVersion);
             if (response == null || (events == null || !events.Any()))

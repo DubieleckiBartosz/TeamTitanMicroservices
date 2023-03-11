@@ -35,9 +35,10 @@ public static class BaseSerialize
 
         return data;
     }
-    public static ISnapshot? DeserializeSnapshot(this string snapshotData)
+     
+    public static TResponse? DeserializeSnapshot<TResponse>(this string snapshotData) where TResponse : ISnapshot
     {
-        var data = JsonConvert.DeserializeObject<ISnapshot>(snapshotData, new JsonSerializerSettings
+        var data = JsonConvert.DeserializeObject<TResponse>(snapshotData, new JsonSerializerSettings
         {
             ContractResolver = new PrivateResolver(),
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,

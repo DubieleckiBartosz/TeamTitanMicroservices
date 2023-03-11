@@ -4,9 +4,14 @@ namespace Calculator.Domain.Account.Snapshots;
 
 public class AccountSnapshot : ISnapshot
 {
-    public Guid AccountId { get; }
-    public int Version { get; private set; }
+    public Guid AccountId { get; private set; } //Setter for serializer
+    public int Version { get; private set; } //Setter for serializer
     public AccountState? State { get; private set; }
+    
+    //Constructor for serializer
+    public AccountSnapshot()
+    {
+    }
 
     private AccountSnapshot(Guid accountId, int version)
     {

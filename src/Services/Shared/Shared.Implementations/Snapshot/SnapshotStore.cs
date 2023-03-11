@@ -25,15 +25,16 @@ public class SnapshotStore : ISnapshotStore
             Builders<BsonDocument>.IndexKeys.Ascending("CurrentVersion")
         );
 
-        var indexOptions = new CreateIndexOptions {Unique = true};
+        var indexOptions = new CreateIndexOptions() { Unique = false };
+
         var indexModel = new CreateIndexModel<BsonDocument>(indexDefinition, indexOptions);
 
         await collection.Indexes.CreateOneAsync(indexModel);
 
         var newSnapshot = new BsonDocument
         {
-            {"Id", state.Id},
-            {"AggregateId", state.AggregateId},
+            {"_id", state.Id.ToString()},
+            {"AggregateId", state.AggregateId.ToString()},
             {"CurrentVersion", state.CurrentVersion},
             {"SnapshotData", state.SnapshotData},
             {"SnapshotType", state.SnapshotType},
@@ -41,15 +42,20 @@ public class SnapshotStore : ISnapshotStore
         };
 
         await collection.InsertOneAsync(newSnapshot);
-    }
+    } 
 
     public async Task<SnapshotState?> GetLastSnapshotAsync(Guid aggregateId)
     {
-        var snapshot = await _database.GetCollection<SnapshotState>(CollectionName)
-            .Find(x => x.AggregateId == aggregateId)
-            .SortByDescending(x => x.CurrentVersion)
+        var filterBuilder = Builders<BsonDocument>.Filter;
+        var filter = filterBuilder.Eq("AggregateId", aggregateId.ToString());
+        var sort = Builders<BsonDocument>.Sort.Descending("CurrentVersion");
+
+        var bson = await _database.GetCollection<BsonDocument>(CollectionName)
+            .Find(filter)
+            .Sort(sort)
             .FirstOrDefaultAsync();
 
-        return snapshot;
+        var response = SnapshotState.Deserialize(bson);
+        return response;
     }
 }
