@@ -19,7 +19,8 @@ public class WorkDayReader
         CreatedBy = createdBy;
     }
 
-    public static WorkDayReader Create(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy, Guid accountId)
+    public static WorkDayReader Create(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy,
+        Guid accountId)
     {
         return new WorkDayReader(date, hoursWorked, overtime, isDayOff, createdBy, accountId);
     }

@@ -37,7 +37,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account.AccountActivated(@event);
-        await _accountRepository.UpdateDataAsync(account);
+        await _accountRepository.UpdateStatusToActiveAsync(account);
 
     }
 
@@ -66,7 +66,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account.AccountDeactivated(@event);
-        await _accountRepository.UpdateDataAsync(account);
+        await _accountRepository.UpdateStatusToDeactivateAsync(account);
     }
 
     private async Task Handle(CountingTypeChanged @event, CancellationToken cancellationToken = default)
@@ -80,7 +80,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account.CountingTypeUpdated(@event);
-        await _accountRepository.UpdateDataAsync(account);
+        await _accountRepository.UpdateCountingTypeAsync(account);
     }
 
     private async Task Handle(DayHoursChanged @event, CancellationToken cancellationToken = default)
@@ -94,7 +94,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account.WorkDayHoursUpdated(@event);
-        await _accountRepository.UpdateDataAsync(account);
+        await _accountRepository.UpdateWorkDayHoursAsync(account);
     }
 
     private async Task Handle(HourlyRateChanged @event, CancellationToken cancellationToken = default)
@@ -108,7 +108,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account.HourlyRateUpdated(@event);
-        await _accountRepository.UpdateDataAsync(account);
+        await _accountRepository.UpdateHourlyRateAsync(account);
     }
 
     private async Task Handle(NewAccountInitiated @event, CancellationToken cancellationToken = default)
@@ -133,7 +133,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account.OvertimeRateUpdated(@event);
-        await _accountRepository.UpdateDataAsync(account);
+        await _accountRepository.UpdateOvertimeRateAsync(account);
     }
 
     private async Task Handle(PieceProductAdded @event, CancellationToken cancellationToken = default)
@@ -147,7 +147,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account.NewPieceProductItemAdded(@event);
-        await _accountRepository.UpdateDataAsync(account);
+        await _accountRepository.AddProductItemAsync(account);
     }
 
     private async Task Handle(WorkDayAdded @event, CancellationToken cancellationToken = default)
@@ -162,7 +162,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account.NewWorkDayAdded(@event);
-        await _accountRepository.UpdateDataAsync(account);
+        await _accountRepository.AddNewWorkDayAsync(account);
     }
 
     private void CheckAccount(AccountReader account)

@@ -112,4 +112,13 @@ public class AccountReader : IRead
         
         return this;
     }
+
+    public ProductItemReader? GetLastProductItem()
+    {
+        return this.ProductItems.LastOrDefault();
+    }
+    public WorkDayReader? GetLastWorkDay()
+    {
+        return this.WorkDays.LastOrDefault();
+    }
 }
