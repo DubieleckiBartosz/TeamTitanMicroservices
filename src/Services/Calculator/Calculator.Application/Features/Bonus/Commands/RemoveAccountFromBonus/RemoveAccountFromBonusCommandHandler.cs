@@ -2,6 +2,7 @@
 using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
+using Shared.Implementations.Validators;
 
 namespace Calculator.Application.Features.Bonus.Commands.RemoveAccountFromBonus;
 
@@ -14,8 +15,18 @@ public class RemoveAccountFromBonusCommandHandler : ICommandHandler<RemoveAccoun
         _repository = repository;
     }
 
-    public Task<Unit> Handle(RemoveAccountFromBonusCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RemoveAccountFromBonusCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var bonus = await _repository.GetAsync(request.BonusProgram);
+
+        bonus.CheckAndThrowWhenNull("Bonus program");
+
+        var account = request.Account;
+
+        bonus.RemoveAccountFromBonus(account);
+
+        await _repository.UpdateAsync(bonus);
+
+        return Unit.Value;
     }
 }

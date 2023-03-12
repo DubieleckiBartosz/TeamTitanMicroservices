@@ -15,7 +15,7 @@
     <Folder Include="Features\Bonus\Queries\" />
     <Folder Include="Features\Product\Commands\" />
     <Folder Include="Features\Product\Queries\" />
-    <Folder Include="Parameters\" />
+    <Folder Include="Parameters\Account\" />
   </ItemGroup>
 
 </Project>
