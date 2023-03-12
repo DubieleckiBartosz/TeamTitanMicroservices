@@ -1,4 +1,5 @@
 ﻿using Calculator.Domain.BonusProgram.Events;
+using Shared.Domain.Tools;
 using Shared.Implementations.Projection;
 
 namespace Calculator.Application.ReadModels.BonusReaders;
@@ -11,8 +12,7 @@ public class BonusProgramReader : IRead
     public string CompanyCode { get; private set; }
     public DateTime? Expires { get; private set; }
     public string Reason { get; private set; }
-    public Dictionary<string, BonusRecipientReader>? Departments { get; private set; }
-    public Dictionary<string, BonusRecipientReader>? Accounts { get; private set; }
+    public List<BonusReader>? Bonuses { get; private set; }
 
     public BonusProgramReader(Guid bonusProgramId, decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
     {
@@ -22,103 +22,47 @@ public class BonusProgramReader : IRead
         this.CompanyCode = companyCode;
         this.Expires = expires;
         this.Reason = reason;
-        Departments = new Dictionary<string, BonusRecipientReader>();
-        Accounts = new Dictionary<string, BonusRecipientReader>();
+        this.Bonuses = new List<BonusReader>();
+
     }
     public static BonusProgramReader BonusCreate(NewBonusProgramCreated @event)
     {
         return new BonusProgramReader(@event.BonusId, @event.BonusAmount, @event.CreatedBy, @event.CompanyCode,
             @event.Expires, @event.Reason);
-    }
-    public BonusProgramReader DepartmentToBonusAdded(BonusDepartmentAdded @event)
+    } 
+
+    public BonusProgramReader RecipientToBonusProgramAdded(BonusRecipientAdded @event)
     {
-        if (Departments == null)
+        if (Bonuses == null)
         {
-            Departments = new Dictionary<string, BonusRecipientReader>();
+            Bonuses = new List<BonusReader>();
         }
 
-        if (Departments.TryGetValue(@event.Department, out var department))
-        {
-            department.AddNewBonus(@event.Creator);
-            Departments[@event.Department] = department;
-        }
-        else
-        {
-            var newDepartmentBonus = BonusRecipientReader.Create();
-            newDepartmentBonus.AddNewBonus(@event.Creator);
-
-            Departments.Add(@event.Department, newDepartmentBonus);
-        }
+        var newBonus = BonusReader.Create(@event.Creator, @event.BonusCode, @event.Recipient, @event.GroupBonus);
+        Bonuses!.Add(newBonus);
 
         return this;
     }
 
-    public BonusProgramReader AccountToBonusAdded(BonusAccountAdded @event)
+    public BonusProgramReader RecipientFromBonusProgramCanceled(BonusRecipientCanceled @event)
     {
-        if (Accounts == null)
-        {
-            Accounts = new Dictionary<string, BonusRecipientReader>();
-        }
+        var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == @event.BonusCode);
 
-        if (Accounts.TryGetValue(@event.Account, out var account))
+        if (Bonuses != null && bonus != null)
         {
-            account.AddNewBonus(@event.Creator);
-            Accounts[@event.Account] = account;
-        }
-        else
-        {
-            var newAccountBonus = BonusRecipientReader.Create();
-            newAccountBonus.AddNewBonus(@event.Creator);
-
-            Accounts.Add(@event.Account, newAccountBonus);
+            Bonuses.Replace(bonus, bonus.AsCanceled());
         }
 
         return this;
     }
+     
 
-    public BonusProgramReader DepartmentFromBonusRemoved(DepartmentRemoved @event)
+    public BonusReader GetBonusByCode(string code)
     {
-        if (Departments != null && Departments.TryGetValue(@event.Department, out var departmentBonus))
-        {
-            departmentBonus.CancelBonus();
-            if (departmentBonus.Count == 0)
-            {
-                Departments.Remove(@event.Department);
-            }
-            else
-            {
-                Departments[@event.Department] = departmentBonus;
-            }
-        }
-
-        return this;
+        return Bonuses!.First(_ => _.BonusCode == code);
     }
-
-    public BonusProgramReader AccountFromBonusRemoved(AccountRemoved @event)
+    public BonusReader GetBonusByRecipient(string recipient)
     {
-        if (Accounts != null && Accounts.TryGetValue(@event.Account, out var accountBonus))
-        {
-            accountBonus.CancelBonus();
-            if (accountBonus.Count == 0)
-            {
-                Accounts.Remove(@event.Account);
-            }
-            else
-            {
-                Accounts[@event.Account] = accountBonus;
-            }
-        }
-
-        return this;
-    }
-
-    public BonusRecipientReader GetDepartmentByCode(string code)
-    {
-        return Departments![code];
-    }
-
-    public BonusRecipientReader GetAccountByCode(string code)
-    {
-        return Accounts![code];
-    }
+        return Bonuses!.First(_ => _.Recipient == recipient);
+    } 
 }

@@ -18,7 +18,7 @@ public class ChangeOvertimeRateHandler : ICommandHandler<ChangeOvertimeRateComma
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNull("Recipient");
 
         account.UpdateOvertimeRate(request.NewOvertimeRate);
 

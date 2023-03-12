@@ -18,7 +18,7 @@ public class CompleteAccountDataHandler : ICommandHandler<CompleteAccountDataCom
     {
         var account = await _repository.GetAsync(request.AccountId);
         
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNull("Recipient");
 
         var countingType = request.CountingType;
         var workDayHours = request.WorkDayHours;

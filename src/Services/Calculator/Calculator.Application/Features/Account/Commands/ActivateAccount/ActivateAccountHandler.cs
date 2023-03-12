@@ -20,7 +20,7 @@ public class ActivateAccountHandler : ICommandHandler<ActivateAccountCommand, Un
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNull("Recipient");
 
         var userCode = _currentUser.VerificationCode!;
         account.ActiveAccount(userCode);

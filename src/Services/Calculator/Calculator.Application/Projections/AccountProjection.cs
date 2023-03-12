@@ -169,7 +169,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
     { 
         if (account == null)
         {
-            throw new NotFoundException("Account cannot be null.", "Account not found");
+            throw new NotFoundException("Recipient cannot be null.", "Recipient not found");
         } 
     }
 }

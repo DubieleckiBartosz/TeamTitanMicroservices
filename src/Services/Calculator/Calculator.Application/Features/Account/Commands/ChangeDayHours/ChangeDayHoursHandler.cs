@@ -18,7 +18,7 @@ public class ChangeDayHoursHandler : ICommandHandler<ChangeDayHoursCommand, Unit
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNull("Recipient");
 
         account.UpdateWorkDayHours(request.NewWorkDayHours);
 

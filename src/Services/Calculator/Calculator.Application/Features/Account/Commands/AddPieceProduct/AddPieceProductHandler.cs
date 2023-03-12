@@ -18,7 +18,7 @@ public class AddPieceProductHandler : ICommandHandler<AddPieceProductCommand, Un
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNull("Recipient");
 
         var pieceworkProductId = request.PieceworkProductId;
         var quantity = request.Quantity;

@@ -13,7 +13,7 @@ public class BonusProgramRepository : BaseRepository<BonusProgramRepository>, IB
     {
     }
 
-    public Task<BonusProgramReader> GetBonusProgramWithDepartmentsByIdAsync(Guid bonusProgramId)
+    public Task<BonusProgramReader> GetBonusProgramByIdAsync(Guid bonusProgramId)
     {
         throw new NotImplementedException();
     }
@@ -32,70 +32,44 @@ public class BonusProgramRepository : BaseRepository<BonusProgramRepository>, IB
     {
         var parameters = new DynamicParameters();
      
-        parameters.Add("@bonusId", bonusProgram.Id);
+        parameters.Add("@bonusId", bonusProgram.Id); 
         parameters.Add("@bonusAmount", bonusProgram.BonusAmount);
         parameters.Add("@createdBy", bonusProgram.CreatedBy);
         parameters.Add("@companyCode", bonusProgram.CompanyCode);
         parameters.Add("@expires", bonusProgram.Expires);
         parameters.Add("@reason", bonusProgram.Reason);
 
-        await ExecuteAsync("bonus_createNew_I", parameters, CommandType.StoredProcedure);
+        await ExecuteAsync("program_createNew_I", parameters, CommandType.StoredProcedure);
     }
 
-    public async Task UpdateOrInsertBonusProgramDepartmentAsync(BonusProgramReader bonusProgram)
-    {
-        var departmentCode = bonusProgram.Departments!.Keys.Last();
-        var value = bonusProgram.Departments[departmentCode];
-        var count = value.Count;
-        var bonusValue = value.Bonuses.Last();
+    public async Task AddBonusRecipientAsync(BonusProgramReader bonusProgram)
+    { 
+        var bonusValue = bonusProgram.Bonuses!.Last();
         
         var parameters = new DynamicParameters();  
         
         parameters.Add("@bonusId", bonusProgram.Id);
-        parameters.Add("@department", departmentCode);
-        parameters.Add("@count", count);
+        parameters.Add("@recipientCode", bonusValue.Recipient);
+        parameters.Add("@groupBonus", bonusValue.GroupBonus);
         parameters.Add("@creator", bonusValue.Creator);
         parameters.Add("@canceled", bonusValue.Canceled);
         parameters.Add("@settled", bonusValue.Settled);
         parameters.Add("@created", bonusValue.Created);
 
-        await ExecuteAsync("bonus_department_U", parameters, CommandType.StoredProcedure);
+        await ExecuteAsync("bonus_createNew_I", parameters, CommandType.StoredProcedure);
     }
 
-    public async Task UpdateBonusProgramDepartmentAsync(BonusProgramReader bonusProgram)
+    public async Task UpdateBonusRecipientAsync(BonusProgramReader bonusProgram)
     {
-        var parameters = new DynamicParameters();
-        
-
-        await ExecuteAsync("bonus_department_U", parameters, CommandType.StoredProcedure);
-    }
-
-    public async Task UpdateOrInsertBonusProgramAccountAsync(BonusProgramReader bonusProgram)
-    {
-        var accountCode = bonusProgram.Accounts!.Keys.Last();
-        var value = bonusProgram.Accounts[accountCode];
-        var count = value.Count;
-        var bonusValue = value.Bonuses.Last();
+        var bonusValue = bonusProgram.Bonuses!.Last();
 
         var parameters = new DynamicParameters();
 
-        parameters.Add("@bonusId", bonusProgram.Id);
-        parameters.Add("@account", accountCode);
-        parameters.Add("@count", count);
-        parameters.Add("@creator", bonusValue.Creator);
+        parameters.Add("@bonusId", bonusValue.Id);   
         parameters.Add("@canceled", bonusValue.Canceled);
-        parameters.Add("@settled", bonusValue.Settled);
-        parameters.Add("@created", bonusValue.Created);
+        parameters.Add("@settled", bonusValue.Settled); 
 
-        await ExecuteAsync("bonus_account_U", parameters, CommandType.StoredProcedure);
-    }
-
-    public async Task UpdateBonusProgramAccount(string account, int count, )
-    { 
-        var parameters = new DynamicParameters();
-        
-
-        await ExecuteAsync("bonus_account_U", parameters, CommandType.StoredProcedure);
+        await ExecuteAsync("bonus_finish_U", parameters, CommandType.StoredProcedure);
     }
 
     public async Task ClearOldBonusProgramsAsync(List<Guid> programs)
