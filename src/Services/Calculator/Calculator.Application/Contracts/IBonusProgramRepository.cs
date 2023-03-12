@@ -8,6 +8,8 @@ public interface IBonusProgramRepository
     Task<BonusProgramReader> GetBonusProgramWithAccountsByIdAsync(Guid bonusProgramId);
     Task<BonusProgramReader> GetBonusProgramDetailsByIdAsync(Guid bonusProgramId);
     Task AddNewBonusProgramAsync(BonusProgramReader bonusProgram);
-    Task UpdateBonusProgramDepartments(BonusProgramReader bonusProgram);
+    Task UpdateOrInsertBonusProgramDepartmentAsync(BonusProgramReader bonusProgram);
+    Task UpdateOrInsertBonusProgramAccountAsync(BonusProgramReader bonusProgram);
+    Task UpdateBonusProgramDepartmentAsync(BonusProgramReader bonusProgram);
     Task UpdateBonusProgramAccounts(BonusProgramReader bonusProgram);
 }

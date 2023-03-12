@@ -1,5 +1,4 @@
-﻿using Calculator.Domain.BonusProgram;
-using Calculator.Domain.BonusProgram.Events;
+﻿using Calculator.Domain.BonusProgram.Events;
 using Shared.Implementations.Projection;
 
 namespace Calculator.Application.ReadModels.BonusReaders;
@@ -12,8 +11,8 @@ public class BonusProgramReader : IRead
     public string CompanyCode { get; private set; }
     public DateTime? Expires { get; private set; }
     public string Reason { get; private set; }
-    public Dictionary<string, BonusCountRecipient>? Departments { get; private set; }
-    public Dictionary<string, BonusCountRecipient>? Accounts { get; private set; }
+    public Dictionary<string, BonusRecipientReader>? Departments { get; private set; }
+    public Dictionary<string, BonusRecipientReader>? Accounts { get; private set; }
 
     public BonusProgramReader(Guid bonusProgramId, decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
     {
@@ -23,8 +22,8 @@ public class BonusProgramReader : IRead
         this.CompanyCode = companyCode;
         this.Expires = expires;
         this.Reason = reason;
-        Departments = new Dictionary<string, BonusCountRecipient>();
-        Accounts = new Dictionary<string, BonusCountRecipient>();
+        Departments = new Dictionary<string, BonusRecipientReader>();
+        Accounts = new Dictionary<string, BonusRecipientReader>();
     }
     public static BonusProgramReader BonusCreate(NewBonusProgramCreated @event)
     {
@@ -35,7 +34,7 @@ public class BonusProgramReader : IRead
     {
         if (Departments == null)
         {
-            Departments = new Dictionary<string, BonusCountRecipient>();
+            Departments = new Dictionary<string, BonusRecipientReader>();
         }
 
         if (Departments.TryGetValue(@event.Department, out var department))
@@ -45,7 +44,7 @@ public class BonusProgramReader : IRead
         }
         else
         {
-            var newDepartmentBonus = BonusCountRecipient.Create();
+            var newDepartmentBonus = BonusRecipientReader.Create();
             newDepartmentBonus.AddNewBonus(@event.Creator);
 
             Departments.Add(@event.Department, newDepartmentBonus);
@@ -58,7 +57,7 @@ public class BonusProgramReader : IRead
     {
         if (Accounts == null)
         {
-            Accounts = new Dictionary<string, BonusCountRecipient>();
+            Accounts = new Dictionary<string, BonusRecipientReader>();
         }
 
         if (Accounts.TryGetValue(@event.Account, out var account))
@@ -68,7 +67,7 @@ public class BonusProgramReader : IRead
         }
         else
         {
-            var newAccountBonus = BonusCountRecipient.Create();
+            var newAccountBonus = BonusRecipientReader.Create();
             newAccountBonus.AddNewBonus(@event.Creator);
 
             Accounts.Add(@event.Account, newAccountBonus);
@@ -111,5 +110,15 @@ public class BonusProgramReader : IRead
         }
 
         return this;
+    }
+
+    public BonusRecipientReader GetDepartmentByCode(string code)
+    {
+        return Departments![code];
+    }
+
+    public BonusRecipientReader GetAccountByCode(string code)
+    {
+        return Accounts![code];
     }
 }

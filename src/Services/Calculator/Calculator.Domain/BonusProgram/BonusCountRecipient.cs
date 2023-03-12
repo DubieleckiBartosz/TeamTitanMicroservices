@@ -8,10 +8,12 @@ public class BonusCountRecipient
     private BonusCountRecipient()
     {
     }
+
     public static BonusCountRecipient Create()
     {
         return new BonusCountRecipient();
     }
+
     public void AddNewBonus(string creator)
     {
         var bonus = Bonus.Create(creator); 

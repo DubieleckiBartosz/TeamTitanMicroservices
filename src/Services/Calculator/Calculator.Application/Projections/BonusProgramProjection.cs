@@ -45,7 +45,7 @@ public class BonusProgramProjection : ReadModelAction<BonusProgramProjection>
         this.CheckBonusProgram(bonusProgram);
 
         bonusProgram.AccountToBonusAdded(@event);
-        await _bonusProgramRepository.UpdateBonusProgramAccounts(bonusProgram);
+        await _bonusProgramRepository.UpdateOrInsertBonusProgramAccountAsync(bonusProgram);
     }
     public async Task Handle(BonusDepartmentAdded @event, CancellationToken cancellationToken = default)
     {
@@ -58,7 +58,7 @@ public class BonusProgramProjection : ReadModelAction<BonusProgramProjection>
         this.CheckBonusProgram(bonusProgram);
 
         bonusProgram.DepartmentToBonusAdded(@event);
-        await _bonusProgramRepository.UpdateBonusProgramDepartments(bonusProgram);
+        await _bonusProgramRepository.UpdateOrInsertBonusProgramDepartmentAsync(bonusProgram);
     }
     public async Task Handle(DepartmentRemoved @event, CancellationToken cancellationToken = default)
     {
@@ -71,7 +71,7 @@ public class BonusProgramProjection : ReadModelAction<BonusProgramProjection>
         this.CheckBonusProgram(bonusProgram);
 
         bonusProgram.DepartmentFromBonusRemoved(@event);
-        await _bonusProgramRepository.UpdateBonusProgramDepartments(bonusProgram);
+        await _bonusProgramRepository.UpdateBonusProgramDepartmentAsync(bonusProgram);
     }
     public async Task Handle(NewBonusProgramCreated @event, CancellationToken cancellationToken = default)
     {
