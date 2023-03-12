@@ -4,7 +4,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
 using Shared.Implementations.Validators;
 
-namespace Calculator.Application.Features.Bonus.Commands.CancelDepartmentBonus;
+namespace Calculator.Application.Features.Bonus.Commands.CancelBonusRecipient;
 
 public class CancelBonusRecipientCommandHandler : ICommandHandler<CancelBonusRecipientCommand, Unit>
 {

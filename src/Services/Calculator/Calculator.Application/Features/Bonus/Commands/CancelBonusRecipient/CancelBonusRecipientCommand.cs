@@ -2,7 +2,7 @@
 using MediatR;
 using Shared.Implementations.Abstractions;
 
-namespace Calculator.Application.Features.Bonus.Commands.CancelDepartmentBonus;
+namespace Calculator.Application.Features.Bonus.Commands.CancelBonusRecipient;
 
 public record CancelBonusRecipientCommand(Guid BonusProgram, string RecipientCode, string BonusCode) : ICommand<Unit>
 {
