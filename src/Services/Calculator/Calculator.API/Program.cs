@@ -1,5 +1,12 @@
+using Calculator.API.Configurations;
 using Calculator.Application;
+using Calculator.Application.Contracts;
+using Calculator.Application.Projections;
+using Calculator.Infrastructure.Configurations;
+using Serilog;
 using Shared.Implementations;
+using Shared.Implementations.Core;
+using Shared.Implementations.Logging;
 using Shared.Implementations.Projection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,15 +23,27 @@ builder.Configuration.AddJsonFile(Path.Combine(commonFolder, "SharedSettings.jso
 
 // Add services to the container.
 
+builder.GetDependencyInjectionInfrastructure();
+
 builder.EventStoreConfiguration(_ => new List<IProjection>()
-{
-    
+{    
+    new AccountProjection(_.GetService<IAccountRepository>()!),
+    new BonusProgramProjection(_.GetService<IBonusProgramRepository>()!)
 }, typeof(AssemblyCalculatorApplicationReference), typeof(AssemblySharedImplementationsReference)).RegisterBackgroundProcess();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+
+var issuer = builder.Configuration["JwtSettings:Issuer"];
+var audience = builder.Configuration["JwtSettings:Audience"];
+var key = builder.Configuration["JwtSettings:Key"];
+
+builder.Services.RegisterJwtBearer(issuer, audience, key);
+
+builder.Host.UseSerilog((ctx, lc) => lc.LogConfigurationService());
+builder.GetSwaggerConfiguration();
 
 var app = builder.Build();
 app.SubscribeEvents();
@@ -36,8 +55,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCustomExceptionHandler(_ => 0, ErrorHandlingMiddleware.GetBaseErrorResponse);
+
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

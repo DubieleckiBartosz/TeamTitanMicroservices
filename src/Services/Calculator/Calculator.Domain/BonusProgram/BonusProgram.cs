@@ -16,6 +16,10 @@ public class BonusProgram : Aggregate
     public Dictionary<string, BonusCountRecipient>? Departments { get; private set; }
     public Dictionary<string, BonusCountRecipient>? Accounts { get; private set; }
 
+    public BonusProgram()
+    {
+    }
+
     private BonusProgram(decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
     { 
         var @event = NewBonusProgramCreated.Create(bonusAmount, createdBy, companyCode, expires,
@@ -24,6 +28,14 @@ public class BonusProgram : Aggregate
         Apply(@event);
         this.Enqueue(@event);
     }
+
+    public static BonusProgram Create(decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
+    {
+        var newBonus = new BonusProgram(bonusAmount, createdBy, companyCode, expires, reason);
+
+        return newBonus;
+    }
+
     public void AddDepartmentToBonus(string creator, string department)
     { 
         var @event = BonusDepartmentAdded.Create(creator, department, this.Id);

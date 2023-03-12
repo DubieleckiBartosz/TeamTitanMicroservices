@@ -1,21 +1,33 @@
 ﻿using Calculator.Domain.BonusProgram;
-using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
+using Shared.Implementations.Services;
 
 namespace Calculator.Application.Features.Bonus.Commands.AddBonusProgram;
 
-public class AddBonusProgramCommandHandler : ICommandHandler<AddBonusProgramCommand, Unit>
+public class AddBonusProgramCommandHandler : ICommandHandler<AddBonusProgramCommand, Guid>
 {
     private readonly IRepository<BonusProgram> _repository;
+    private readonly ICurrentUser _currentUser;
 
-    public AddBonusProgramCommandHandler(IRepository<BonusProgram> repository)
+    public AddBonusProgramCommandHandler(IRepository<BonusProgram> repository, ICurrentUser currentUser)
     {
-        _repository = repository;
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
     }
 
-    public Task<Unit> Handle(AddBonusProgramCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(AddBonusProgramCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var bonusAmount = request.BonusAmount;
+        var createdBy = _currentUser.VerificationCode!;
+        var companyCode = request.CompanyCode; 
+        var expires = request.Expires;
+        var reason = request.Reason;
+
+        var newBonus = BonusProgram.Create(bonusAmount, createdBy, companyCode, expires, reason);
+
+        await _repository.AddAsync(newBonus);
+
+        return newBonus.Id;
     }
 }

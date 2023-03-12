@@ -2,7 +2,7 @@
 
 namespace Shared.Implementations.Projection;
 
-public class Projection
+public class Projection : IProjection
 {
     private readonly Dictionary<Type, Func<IEvent, CancellationToken, Task>> _handlers = new();
 
