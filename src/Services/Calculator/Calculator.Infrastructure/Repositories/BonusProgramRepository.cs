@@ -5,9 +5,9 @@ using Shared.Implementations.Logging;
 
 namespace Calculator.Infrastructure.Repositories;
 
-public class BonusProgramProgramRepository : BaseRepository<BonusProgramProgramRepository>, IBonusProgramRepository
+public class BonusProgramRepository : BaseRepository<BonusProgramRepository>, IBonusProgramRepository
 {
-    public BonusProgramProgramRepository(string dbConnection, ILoggerManager<BonusProgramProgramRepository> loggerManager) : base(dbConnection, loggerManager)
+    public BonusProgramRepository(string dbConnection, ILoggerManager<BonusProgramRepository> loggerManager) : base(dbConnection, loggerManager)
     {
     }
 
