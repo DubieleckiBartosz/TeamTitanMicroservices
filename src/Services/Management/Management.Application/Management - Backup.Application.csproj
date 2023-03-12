@@ -10,8 +10,8 @@
     <Folder Include="Features\Company\Commands\" />
     <Folder Include="Features\Contract\Commands\" />
     <Folder Include="Features\DayOffRequest\Commands\" />
-    <Folder Include="Features\Department\Commands\" />
-    <Folder Include="Features\Department\Queries\" />
+    <Folder Include="Features\Recipient\Commands\" />
+    <Folder Include="Features\Recipient\Queries\" />
     <Folder Include="Features\Employee\Commands\" />
     <Folder Include="Features\Employee\Queries\" />
   </ItemGroup>

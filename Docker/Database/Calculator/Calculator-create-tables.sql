@@ -50,25 +50,17 @@ BEGIN
 ) 
 END
 
---BonusRecipients table
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='BonusRecipients' and xtype='U')
-BEGIN
-	CREATE TABLE BonusRecipients(
-	Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL DEFAULT NEWID(), 
-	RecipientCode VARCHAR(MAX) NOT NULL, --maybe by accountId?
-	BonusProgramId UNIQUEIDENTIFIER NOT NULL REFERENCES BonusPrograms(Id), 
-	[Count] INT NULL
-) 
-END
-
 --Bonuses table
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Bonuses' and xtype='U')
 BEGIN
 	CREATE TABLE Bonuses(
 	Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL DEFAULT NEWID(), 
-	BonusRecipientId UNIQUEIDENTIFIER NOT NULL REFERENCES BonusRecipients(Id), 
+	BonusProgramId UNIQUEIDENTIFIER NOT NULL REFERENCES BonusPrograms(Id), 
+	GroupBonus BIT NOT NULL,
+	BonusCode VARCHAR(12) NOT NULL,
 	Creator VARCHAR(MAX) NOT NULL,
 	Settled BIT NOT NULL DEFAULT 0,
+	Canceled BIT NOT NULL DEFAULT 0,
 	Created DATETIME DEFAULT GETDATE(),
 	Modified DATETIME DEFAULT GETDATE(), 
 ) 

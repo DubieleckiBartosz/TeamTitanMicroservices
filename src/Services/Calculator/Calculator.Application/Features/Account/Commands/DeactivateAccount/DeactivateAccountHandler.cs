@@ -17,7 +17,7 @@ public class DeactivateAccountHandler : ICommandHandler<DeactivateAccountCommand
     public async Task<Unit> Handle(DeactivateAccountCommand request, CancellationToken cancellationToken)
     {
         var account = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
-        account.CheckAndThrowWhenNull("Account"); 
+        account.CheckAndThrowWhenNull("Recipient"); 
 
         account!.DeactivateAccount(request.DeactivateBy);
         await _repository.UpdateAsync(account);

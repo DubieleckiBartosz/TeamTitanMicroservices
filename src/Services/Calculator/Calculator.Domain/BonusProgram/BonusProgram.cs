@@ -1,113 +1,97 @@
 ﻿using System.Net;
 using Calculator.Domain.BonusProgram.Events;
+using Calculator.Domain.BonusProgram.Generators;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
 using Shared.Domain.DomainExceptions;
+using Shared.Domain.Tools;
 
 namespace Calculator.Domain.BonusProgram;
 
 public class BonusProgram : Aggregate
-{ 
+{
     public decimal BonusAmount { get; private set; }
     public string CreatedBy { get; private set; }
     public string CompanyCode { get; private set; }
     public DateTime? Expires { get; private set; }
     public string Reason { get; private set; }
-    public Dictionary<string, BonusCountRecipient>? Departments { get; private set; }
-    public Dictionary<string, BonusCountRecipient>? Accounts { get; private set; }
+    public List<Bonus>? Bonuses { get; private set; } 
 
     public BonusProgram()
     {
     }
 
     private BonusProgram(decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
-    { 
+    {
         var @event = NewBonusProgramCreated.Create(bonusAmount, createdBy, companyCode, expires,
             reason, Guid.NewGuid());
 
         Apply(@event);
-        this.Enqueue(@event);
+        Enqueue(@event);
     }
 
-    public static BonusProgram Create(decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
+    public static BonusProgram Create(decimal bonusAmount, string createdBy, string companyCode, DateTime? expires,
+        string reason)
     {
         var newBonus = new BonusProgram(bonusAmount, createdBy, companyCode, expires, reason);
 
         return newBonus;
     }
-
-    public void AddDepartmentToBonus(string creator, string department)
-    { 
-        var @event = BonusDepartmentAdded.Create(creator, department, this.Id);
-        Apply(@event);
-        this.Enqueue(@event);
-    }
-
-    public void AddAccountToBonus(string creator, string account)
-    { 
-        var @event = BonusAccountAdded.Create(creator, account, this.Id);
-        Apply(@event);
-        this.Enqueue(@event);
-    }
-
-    public void RemoveDepartmentFromBonus(string department)
+      
+    public void AddRecipientToBonus(string creator, string recipient, bool group)
     {
-        if (Departments == null)
+        var repeat = true;
+        var bonusCode = string.Empty;
+        while (repeat)
         {
-            throw new BusinessException("Dictionary is NULL", "Department dictionary is NULL.",
+            bonusCode = BonusCodeGenerator.GenerateBonusCode(Id.ToString(), group ? "DEP" : "ACC");
+            var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == bonusCode);
+
+            if (bonus == null)
+            {
+                repeat = false;
+            }
+        } 
+
+        var @event = BonusRecipientAdded.Create(creator, recipient, Id, bonusCode, group);
+        Apply(@event);
+        Enqueue(@event);
+    }
+
+    public void CancelBonusRecipient(string recipient, string bonusCode)
+    {
+        if (Bonuses == null)
+        {
+            throw new BusinessException("List is NULL", "List of recipients is NULL.",
                 HttpStatusCode.NotFound);
         }
 
-        if (!Departments.TryGetValue(department, out var departmentValue))
+        var bonus = Bonuses.FirstOrDefault(_ => _.Recipient == recipient);
+        if (bonus == null)
         {
-            throw new BusinessException("Department is NULL", "Department is not assigned to the program.",
+            throw new BusinessException("Bonus recipient is NULL", "Recipient is not assigned to the program.",
                 HttpStatusCode.NotFound);
         }
 
-        var @event = DepartmentRemoved.Create(department, this.Id);
+        var @event = BonusRecipientCanceled.Create(recipient, this.Id, bonusCode);
 
         Apply(@event);
         this.Enqueue(@event); 
     }
-
-    public void RemoveAccountFromBonus(string account)
-    {
-        if (Accounts == null)
-        {
-            throw new BusinessException("Dictionary is NULL", "Account dictionary is NULL.", HttpStatusCode.NotFound);
-        }
-
-        if (!Accounts.TryGetValue(account, out var accountValue))
-        {
-            throw new BusinessException("Account is NULL", "Account is not assigned to the program.",
-                HttpStatusCode.NotFound);
-        }
-
-        var @event = AccountRemoved.Create(account, this.Id);
-
-        Apply(@event);
-        this.Enqueue(@event); 
-    }
-
+     
     protected override void When(IEvent @event)
     {
         switch (@event)
         {
-            case BonusAccountAdded e:
-                this.AccountToBonusAdded(e);
-                break;
-            case BonusDepartmentAdded e:
-                this.DepartmentToBonusAdded(e);
+            case BonusRecipientAdded e:
+                this.RecipientToBonusProgramAdded(e); 
                 break;
             case NewBonusProgramCreated e:
                 this.BonusCreated(e);
                 break;
-            case DepartmentRemoved e:
-                this.DepartmentFromBonusRemoved(e);
-                break;
-            case AccountRemoved e: 
-                this.AccountFromBonusRemoved(e);
-                break;
+            case BonusRecipientCanceled e:
+                this.RecipientFromBonusProgramCanceled(e);
+                break; 
             default:
                 break;
         }
@@ -126,81 +110,27 @@ public class BonusProgram : Aggregate
         CompanyCode = @event.CompanyCode;
         Expires = @event.Expires;
         Reason = @event.Reason;
-        Departments = new Dictionary<string, BonusCountRecipient>();
-        Accounts = new Dictionary<string, BonusCountRecipient>();
-    }
-    private void DepartmentToBonusAdded(BonusDepartmentAdded @event)
+        Bonuses = new List<Bonus>();
+    } 
+
+    private void RecipientToBonusProgramAdded(BonusRecipientAdded @event)
     {
-        if (Departments == null)
+        if (Bonuses == null)
         {
-            Departments = new Dictionary<string, BonusCountRecipient>();
+            Bonuses = new List<Bonus>();
         }
-
-        if (Departments.TryGetValue(@event.Department, out var department))
-        {
-            department.AddNewBonus(@event.Creator);
-            Departments[@event.Department] = department;
-        }
-        else
-        {
-            var newDepartmentBonus = BonusCountRecipient.Create();
-            newDepartmentBonus.AddNewBonus(@event.Creator);
-
-            Departments.Add(@event.Department, newDepartmentBonus);
-        }
+        
+        var newBonus = Bonus.Create(@event.Creator, @event.BonusCode, @event.Recipient, @event.GroupBonus);
+        Bonuses!.Add(newBonus);
     }
 
-    private void AccountToBonusAdded(BonusAccountAdded @event)
+    private void RecipientFromBonusProgramCanceled(BonusRecipientCanceled @event)
     {
-        if (Accounts == null)
-        {
-            Accounts = new Dictionary<string, BonusCountRecipient>();
-        }
+        var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == @event.BonusCode);
 
-        if (Accounts.TryGetValue(@event.Account, out var account))
+        if (Bonuses != null && bonus != null)
         {
-            account.AddNewBonus(@event.Creator);
-            Accounts[@event.Account] = account;
-        }
-        else
-        {
-            var newAccountBonus = BonusCountRecipient.Create();
-            newAccountBonus.AddNewBonus(@event.Creator);
-
-            Accounts.Add(@event.Account, newAccountBonus);
-        }
-    }
-
-    private void DepartmentFromBonusRemoved(DepartmentRemoved @event)
-    {
-        if (Departments != null && Departments.TryGetValue(@event.Department, out var departmentBonus))
-        {
-            departmentBonus.CancelBonus();
-            if (departmentBonus.Count == 0)
-            {
-                Departments.Remove(@event.Department);
-            }
-            else
-            {
-                Departments[@event.Department] = departmentBonus;
-            }
+            Bonuses.Replace(bonus, bonus.AsCanceled());
         } 
-    }
-
-    private void AccountFromBonusRemoved(AccountRemoved @event)
-    {  
-        if (Accounts != null && Accounts.TryGetValue(@event.Account, out var accountBonus))
-        {
-            accountBonus.CancelBonus();
-            if (accountBonus.Count == 0)
-            {
-                Accounts.Remove(@event.Account);
-            }
-            else
-            {
-                Accounts[@event.Account] = accountBonus;
-            }
-        } 
-    }
-
+    } 
 }

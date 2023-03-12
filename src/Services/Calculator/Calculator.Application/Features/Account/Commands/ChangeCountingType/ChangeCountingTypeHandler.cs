@@ -18,7 +18,7 @@ public class ChangeCountingTypeHandler : ICommandHandler<ChangeCountingTypeComma
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNull("Recipient");
 
         account.UpdateCountingType(request.NewCountingType);
 
