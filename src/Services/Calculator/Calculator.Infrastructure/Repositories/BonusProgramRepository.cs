@@ -13,26 +13,43 @@ public class BonusProgramRepository : BaseRepository<BonusProgramRepository>, IB
     {
     }
 
-    public Task<BonusProgramReader> GetBonusProgramByIdAsync(Guid bonusProgramId)
+    public async Task<BonusProgramReader?> GetBonusProgramByIdAsync(Guid bonusProgramId)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+        parameters.Add("@bonusId", bonusProgramId);
+
+        var result =
+            await QueryAsync<BonusProgramReader>("program_getBaseData_S", parameters, CommandType.StoredProcedure);
+
+        return result?.FirstOrDefault();
     }
 
-    public Task<BonusProgramReader> GetBonusProgramWithAccountsByIdAsync(Guid bonusProgramId)
+    public async Task<BonusProgramReader?> GetBonusProgramDetailsByIdAsync(Guid bonusProgramId)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+        parameters.Add("@bonusId", bonusProgramId);
+
+        var result =
+            await QueryAsync<BonusProgramReader>("program_getWithDetails_S", parameters, CommandType.StoredProcedure);
+
+        return result?.FirstOrDefault();
     }
 
-    public Task<BonusProgramReader> GetBonusProgramDetailsByIdAsync(Guid bonusProgramId)
+    public async Task TaskGetBonusesByRecipientCode(string recipientCode)
     {
-        throw new NotImplementedException();
+        //[TODO]
+        var parameters = new DynamicParameters();
+        parameters.Add("@recipientCode", recipientCode);
+
+        var result =
+            await QueryAsync<BonusProgramReader>("bonus_getByRecipientCode_S", parameters, CommandType.StoredProcedure);
     }
 
     public async Task AddNewBonusProgramAsync(BonusProgramReader bonusProgram)
     {
         var parameters = new DynamicParameters();
-     
-        parameters.Add("@bonusId", bonusProgram.Id); 
+
+        parameters.Add("@bonusId", bonusProgram.Id);
         parameters.Add("@bonusAmount", bonusProgram.BonusAmount);
         parameters.Add("@createdBy", bonusProgram.CreatedBy);
         parameters.Add("@companyCode", bonusProgram.CompanyCode);
@@ -72,7 +89,7 @@ public class BonusProgramRepository : BaseRepository<BonusProgramRepository>, IB
         await ExecuteAsync("bonus_finish_U", parameters, CommandType.StoredProcedure);
     }
 
-    public async Task ClearOldBonusProgramsAsync(List<Guid> programs)
+    public async Task ClearOldBonusProgramsAsync()
     {
         var parameters = new DynamicParameters();
         await ExecuteAsync("bonus_clear_D", parameters, CommandType.StoredProcedure);
