@@ -4,6 +4,7 @@ namespace Calculator.Application.Contracts;
 
 public interface IAccountRepository
 {
+    Task<AccountReader> GetAccountsBySearchAsync();
     Task<AccountReader> GetAccountByIdAsync(Guid accountId);
     Task<AccountReader> GetAccountByIdWithWorkDaysAsync(Guid accountId);
     Task<AccountReader> GetAccountByIdWithProductsAsync(Guid accountId);

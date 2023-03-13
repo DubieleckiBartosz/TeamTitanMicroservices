@@ -32,6 +32,7 @@ public class AccountReader : IRead
         AccountOwner = accountOwner;
         DepartmentCode = departmentCode;
         CreatedBy = createdBy;
+        IsActive = false;
     }
     public static AccountReader Create(NewAccountInitiated @event)
     {
