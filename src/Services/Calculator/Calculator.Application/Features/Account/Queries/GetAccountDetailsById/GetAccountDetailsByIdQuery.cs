@@ -1,5 +1,5 @@
 ﻿namespace Calculator.Application.Features.Account.Queries.GetAccountDetailsById;
 
-public record GetAccountDetailsByIdQuery
+public record GetAccountDetailsByIdQuery(Guid accountId)
 {
 }

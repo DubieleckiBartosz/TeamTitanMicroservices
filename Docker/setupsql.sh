@@ -5,7 +5,10 @@ SCRIPTS[0]="$SQL_CMD $CONN_STRING -d master -i Identity-create-db.sql"
 SCRIPTS[1]="$SQL_CMD $CONN_STRING -d TeamTitanIdentity -i Identity-create-tables.sql"   
 SCRIPTS[2]="$SQL_CMD $CONN_STRING -d TeamTitanIdentity -i Identity-create-storedProcedures.sql" 
 SCRIPTS[3]="$SQL_CMD $CONN_STRING -d TeamTitanIdentityTests -i Identity-create-tables.sql" 
-SCRIPTS[4]="$SQL_CMD $CONN_STRING -d TeamTitanIdentityTests -i Identity-create-storedProcedures.sql" 
+SCRIPTS[4]="$SQL_CMD $CONN_STRING -d TeamTitanIdentityTests -i Identity-create-storedProcedures.sql"
+SCRIPTS[5]="$SQL_CMD $CONN_STRING -d master -i Calculator-create-db.sql" 
+SCRIPTS[6]="$SQL_CMD $CONN_STRING -d TeamTitanCalculator -i Calculator-create-tables.sql" 
+SCRIPTS[7]="$SQL_CMD $CONN_STRING -d TeamTitanCalculator -i Calculator-create-storedProcedures.sql"
 
 for ((i = 0; i < ${#SCRIPTS[@]}; i++))
 do   

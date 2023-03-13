@@ -11,6 +11,9 @@ ENV ACCEPT_EULA=Y
 COPY ./Database/Identity/Identity-create-db.sql ./
 COPY ./Database/Identity/Identity-create-tables.sql ./
 COPY ./Database/Identity/Identity-create-storedProcedures.sql ./ 
+COPY ./Database/Calculator/Calculator-create-db.sql ./
+COPY ./Database/Calculator/Calculator-create-tables.sql ./
+COPY ./Database/Calculator/Calculator-create-storedProcedures.sql ./ 
 COPY entrypoint.sh ./
 COPY setupsql.sh ./
 

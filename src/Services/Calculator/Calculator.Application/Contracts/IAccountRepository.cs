@@ -4,11 +4,11 @@ namespace Calculator.Application.Contracts;
 
 public interface IAccountRepository
 {
-    Task<AccountReader> GetAccountsBySearchAsync();
-    Task<AccountReader> GetAccountByIdAsync(Guid accountId);
-    Task<AccountReader> GetAccountByIdWithWorkDaysAsync(Guid accountId);
-    Task<AccountReader> GetAccountByIdWithProductsAsync(Guid accountId);
-    Task<AccountReader> GetAccountDetailsByIdAsync(Guid accountId);
+    Task<AccountReader?> GetAccountsBySearchAsync();
+    Task<AccountReader?> GetAccountByIdAsync(Guid accountId);
+    Task<AccountReader?> GetAccountByIdWithWorkDaysAsync(Guid accountId);
+    Task<AccountReader?> GetAccountByIdWithProductsAsync(Guid accountId);
+    Task<AccountReader?> GetAccountDetailsByIdAsync(Guid accountId);
     Task AddAsync(AccountReader accountReader);
     Task UpdateDataAsync(AccountReader accountReader);
     Task UpdateStatusToDeactivateAsync(AccountReader accountReader);

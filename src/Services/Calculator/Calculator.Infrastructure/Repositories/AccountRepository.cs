@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Calculator.Application.Contracts;
 using Calculator.Application.ReadModels.AccountReaders;
+using Calculator.Infrastructure.DataAccessObjects;
 using Dapper;
 using Shared.Implementations.Dapper;
 using Shared.Implementations.Logging;
@@ -13,29 +14,93 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
     {
     }
 
-    public async Task<AccountReader> GetAccountsBySearchAsync()
+    public async Task<AccountReader?> GetAccountsBySearchAsync()
     {
         throw new NotImplementedException();
     }
 
-    public async Task<AccountReader> GetAccountByIdAsync(Guid accountId)
+    public async Task<AccountReader?> GetAccountByIdAsync(Guid accountId)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountId);
+
+        var result = await QueryAsync<AccountDao>("account_getById_S", parameters, CommandType.StoredProcedure);
+
+        return result?.FirstOrDefault()?.Map();
     }
 
-    public async Task<AccountReader> GetAccountByIdWithWorkDaysAsync(Guid accountId)
+    public async Task<AccountReader?> GetAccountByIdWithWorkDaysAsync(Guid accountId)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountId);
+
+        var dict = new Dictionary<Guid, AccountDao>();
+        var result = (await QueryAsync<AccountDao, WorkDayDao, AccountDao>(
+            "account_getByIdWithWorkDays_s", (a, w) =>
+            {
+                if (!dict.TryGetValue(a.Id, out var value))
+                {
+                    value = a;
+                    dict.Add(a.Id, value);
+                }
+
+                value.WorkDays.Add(w);
+
+                return value;
+            }, "Id,Id", parameters, CommandType.StoredProcedure)).FirstOrDefault();
+
+        return result?.Map();
     }
 
-    public async Task<AccountReader> GetAccountByIdWithProductsAsync(Guid accountId)
+    public async Task<AccountReader?> GetAccountByIdWithProductsAsync(Guid accountId)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountId);
+
+        var dict = new Dictionary<Guid, AccountDao>();
+        var result = (await QueryAsync<AccountDao, ProductItemDao, AccountDao>(
+            "account_getByIdWithProducts_s", (a, p) =>
+            {
+                if (!dict.TryGetValue(a.Id, out var value))
+                {
+                    value = a;
+                    dict.Add(a.Id, value);
+                }
+
+                value.ProductItems.Add(p);
+
+                return value;
+            }, "Id,Id", parameters, CommandType.StoredProcedure)).FirstOrDefault();
+
+        return result?.Map();
     }
 
-    public async Task<AccountReader> GetAccountDetailsByIdAsync(Guid accountId)
+    public async Task<AccountReader?> GetAccountDetailsByIdAsync(Guid accountId)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountId);
+
+        var dict = new Dictionary<Guid, AccountDao>();
+        var result = (await QueryAsync<AccountDao, WorkDayDao, ProductItemDao, AccountDao>(
+            "account_getDetailsById_s", (a, w, p) =>
+            {
+                if (!dict.TryGetValue(a.Id, out var value))
+                {
+                    value = a;
+                    dict.Add(a.Id, value);
+                }
+
+                value.WorkDays.Add(w);
+                value.ProductItems.Add(p);
+
+                return value;
+            }, "Id,Id,Id", parameters, CommandType.StoredProcedure)).FirstOrDefault();
+
+        return result?.Map();
     }
 
     public async Task AddAsync(AccountReader accountReader)

@@ -9,6 +9,15 @@ public class WorkDayReader
     public bool IsDayOff { get; }
     public string CreatedBy { get; }
 
+    /// <summary>
+    /// For logic 
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="hoursWorked"></param>
+    /// <param name="overtime"></param>
+    /// <param name="isDayOff"></param>
+    /// <param name="createdBy"></param>
+    /// <param name="accountId"></param>
     private WorkDayReader(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy, Guid accountId)
     {
         AccountId = accountId;

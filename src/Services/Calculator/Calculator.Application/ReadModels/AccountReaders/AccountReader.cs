@@ -21,11 +21,57 @@ public class AccountReader : IRead
     public decimal? OvertimeRate { get; private set; }
     public List<ProductItemReader> ProductItems { get; private set; } = new List<ProductItemReader>();
     public List<WorkDayReader> WorkDays { get; private set; } = new List<WorkDayReader>();
-
+    /// <summary>
+    /// For instance creation
+    /// </summary>
     internal AccountReader()
     {
     }
 
+    /// <summary>
+    /// For load
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="accountOwner"></param>
+    /// <param name="departmentCode"></param>
+    /// <param name="countingType"></param>
+    /// <param name="accountStatus"></param>
+    /// <param name="activatedBy"></param>
+    /// <param name="createdBy"></param>
+    /// <param name="deactivatedBy"></param>
+    /// <param name="isActive"></param>
+    /// <param name="workDayHours"></param>
+    /// <param name="hourlyRate"></param>
+    /// <param name="overtimeRate"></param>
+    /// <param name="productItems"></param>
+    /// <param name="workDays"></param>
+    private AccountReader(Guid id, string accountOwner, string departmentCode, CountingType countingType,
+        AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, List<ProductItemReader> productItems, List<WorkDayReader> workDays)
+    {
+        Id = id;
+        AccountOwner = accountOwner;
+        DepartmentCode = departmentCode;
+        CountingType = countingType;
+        AccountStatus = accountStatus;
+        ActivatedBy = activatedBy;
+        CreatedBy = createdBy;
+        DeactivatedBy = deactivatedBy;
+        IsActive = isActive;
+        WorkDayHours = workDayHours;
+        HourlyRate = hourlyRate;
+        OvertimeRate = overtimeRate;
+        ProductItems = productItems;
+        WorkDays = workDays;
+    }
+
+    /// <summary>
+    /// For logic
+    /// </summary>
+    /// <param name="accountId"></param>
+    /// <param name="accountOwner"></param>
+    /// <param name="departmentCode"></param>
+    /// <param name="createdBy"></param>
     private AccountReader(Guid accountId, string accountOwner, string departmentCode, string createdBy)
     {
         Id = accountId;
@@ -34,10 +80,22 @@ public class AccountReader : IRead
         CreatedBy = createdBy;
         IsActive = false;
     }
+
     public static AccountReader Create(NewAccountInitiated @event)
     {
         return new AccountReader(@event.AccountId, @event.AccountCode, @event.DepartmentCode, @event.CreatedBy);
     }
+
+    public static AccountReader Load(Guid id, string accountOwner, string departmentCode, CountingType countingType,
+        AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, List<ProductItemReader> productItems,
+        List<WorkDayReader> workDays)
+    {
+        return new AccountReader(id, accountOwner, departmentCode, countingType,
+            accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
+            workDayHours, hourlyRate, overtimeRate, productItems, workDays);
+    }
+
     public AccountReader DataCompleted(AccountDataCompleted @event)
     {
         CountingType = @event.CountingType;
