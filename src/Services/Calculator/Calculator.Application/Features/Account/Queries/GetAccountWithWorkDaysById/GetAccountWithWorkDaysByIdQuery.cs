@@ -1,5 +1,5 @@
 ﻿namespace Calculator.Application.Features.Account.Queries.GetAccountWithWorkDaysById;
 
-public class GetAccountWithWorkDaysByIdQuery
+public record GetAccountWithWorkDaysByIdQuery(Guid accountId) 
 {
 }

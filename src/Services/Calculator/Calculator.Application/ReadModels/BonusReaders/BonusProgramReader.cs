@@ -7,29 +7,61 @@ namespace Calculator.Application.ReadModels.BonusReaders;
 public class BonusProgramReader : IRead
 {
     public Guid Id { get; }
-    public decimal BonusAmount { get; private set; }
-    public string CreatedBy { get; private set; }
-    public string CompanyCode { get; private set; }
-    public DateTime? Expires { get; private set; }
-    public string Reason { get; private set; }
+    public decimal BonusAmount { get; }
+    public string CreatedBy { get; }
+    public string CompanyCode { get; }
+    public DateTime? Expires { get; }
+    public string Reason { get; }
     public List<BonusReader>? Bonuses { get; private set; }
-
-    public BonusProgramReader(Guid bonusProgramId, decimal bonusAmount, string createdBy, string companyCode, DateTime? expires, string reason)
+    
+    /// <summary>
+    /// For logic
+    /// </summary>
+    /// <param name="bonusProgramId"></param>
+    /// <param name="bonusAmount"></param>
+    /// <param name="createdBy"></param>
+    /// <param name="companyCode"></param>
+    /// <param name="expires"></param>
+    /// <param name="reason"></param>
+    private BonusProgramReader(Guid bonusProgramId, decimal bonusAmount, string createdBy, string companyCode,
+        DateTime? expires, string reason)
     {
-        this.Id = bonusProgramId;
-        this.BonusAmount = bonusAmount;
-        this.CreatedBy = createdBy;
-        this.CompanyCode = companyCode;
-        this.Expires = expires;
-        this.Reason = reason;
-        this.Bonuses = new List<BonusReader>();
-
+        Id = bonusProgramId;
+        BonusAmount = bonusAmount;
+        CreatedBy = createdBy;
+        CompanyCode = companyCode;
+        Expires = expires;
+        Reason = reason;
+        Bonuses = new List<BonusReader>();
     }
+
+    /// <summary>
+    /// For load
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="bonusAmount"></param>
+    /// <param name="createdBy"></param>
+    /// <param name="companyCode"></param>
+    /// <param name="expires"></param>
+    /// <param name="reason"></param>
+    /// <param name="bonuses"></param>
+    private BonusProgramReader(Guid id, decimal bonusAmount, string createdBy, string companyCode, DateTime? expires,
+        string reason, List<BonusReader>? bonuses) : this(id, bonusAmount, createdBy, companyCode, expires, reason)
+    {
+        Bonuses = bonuses;
+    }
+
+    public static BonusProgramReader Load(Guid id, decimal bonusAmount, string createdBy, string companyCode, DateTime? expires,
+        string reason, List<BonusReader>? bonuses)
+    {
+        return new BonusProgramReader(id, bonusAmount, createdBy, companyCode, expires, reason, bonuses);
+    }
+
     public static BonusProgramReader BonusCreate(NewBonusProgramCreated @event)
     {
         return new BonusProgramReader(@event.BonusId, @event.BonusAmount, @event.CreatedBy, @event.CompanyCode,
             @event.Expires, @event.Reason);
-    } 
+    }
 
     public BonusProgramReader RecipientToBonusProgramAdded(BonusRecipientAdded @event)
     {

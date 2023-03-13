@@ -11,6 +11,13 @@ public class BonusReader
     public bool Canceled { get; private set; }
     public DateTime Created { get; }
 
+    /// <summary>
+    ///     For logic
+    /// </summary>
+    /// <param name="creator"></param>
+    /// <param name="bonusCode"></param>
+    /// <param name="recipient"></param>
+    /// <param name="groupBonus"></param>
     private BonusReader(string creator, string bonusCode, string recipient, bool groupBonus)
     {
         GroupBonus = groupBonus;
@@ -20,6 +27,33 @@ public class BonusReader
         Canceled = false;
         Created = DateTime.UtcNow;
         Creator = creator;
+    }
+
+    /// <summary>
+    ///     For load
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="bonusCode"></param>
+    /// <param name="groupBonus"></param>
+    /// <param name="recipient"></param>
+    /// <param name="creator"></param>
+    /// <param name="settled"></param>
+    /// <param name="canceled"></param>
+    /// <param name="created"></param>
+    private BonusReader(Guid id, string bonusCode, bool groupBonus, string recipient, string creator, bool settled,
+        bool canceled, DateTime created) : this(creator, bonusCode, recipient, groupBonus)
+    {
+        Id = id;
+        Settled = settled;
+        Canceled = canceled;
+        Created = created;
+    }
+
+    public static BonusReader Load(Guid id, string bonusCode, bool groupBonus, string recipient, string creator,
+        bool settled,
+        bool canceled, DateTime created)
+    {
+        return new BonusReader(id, bonusCode, groupBonus, recipient, creator, settled, canceled, created);
     }
 
     public static BonusReader Create(string creator, string bonusCode, string recipient, bool groupBonus)
