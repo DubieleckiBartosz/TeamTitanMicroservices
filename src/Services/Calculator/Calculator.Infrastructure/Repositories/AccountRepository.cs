@@ -13,22 +13,27 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
     {
     }
 
-    public Task<AccountReader> GetAccountByIdAsync(Guid accountId)
+    public async Task<AccountReader> GetAccountsBySearchAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<AccountReader> GetAccountByIdWithWorkDaysAsync(Guid accountId)
+    public async Task<AccountReader> GetAccountByIdAsync(Guid accountId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<AccountReader> GetAccountByIdWithProductsAsync(Guid accountId)
+    public async Task<AccountReader> GetAccountByIdWithWorkDaysAsync(Guid accountId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<AccountReader> GetAccountDetailsByIdAsync(Guid accountId)
+    public async Task<AccountReader> GetAccountByIdWithProductsAsync(Guid accountId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<AccountReader> GetAccountDetailsByIdAsync(Guid accountId)
     {
         throw new NotImplementedException();
     }
@@ -40,8 +45,8 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@accountId", accountReader.Id);
         parameters.Add("@departmentCode", accountReader.DepartmentCode);
         parameters.Add("@accountOwner", accountReader.AccountOwner);
-        parameters.Add("@createdBy", accountReader.CreatedBy);
-        parameters.Add("@accountId", accountReader.Id);
+        parameters.Add("@createdBy", accountReader.CreatedBy); 
+        parameters.Add("@isActive", accountReader.IsActive); 
 
         await ExecuteAsync("account_createNew_I", parameters, CommandType.StoredProcedure);
     }
@@ -50,24 +55,24 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
     {
         var parameters = new DynamicParameters();
 
-        parameters.Add("@accountId", accountReader.Id);
-        parameters.Add("@countingType", accountReader.ActivatedBy);
+        parameters.Add("@accountId", accountReader.Id); 
         parameters.Add("@isActive", accountReader.IsActive);
-        parameters.Add("@workDayHours", accountReader.WorkDayHours);
-        parameters.Add("@overtimeRate", accountReader.OvertimeRate);
-        parameters.Add("@hourlyRate", accountReader.HourlyRate);
+        parameters.Add("@deactivatedBy", accountReader.DeactivatedBy);
+        parameters.Add("@accountStatus", (int) accountReader.AccountStatus); 
 
         await ExecuteAsync("account_statusDeactivate_U", parameters, CommandType.StoredProcedure);
     }
 
     public async Task UpdateDataAsync(AccountReader accountReader)
     {
-        var parameters = new DynamicParameters();
+        var parameters = new DynamicParameters(); 
 
         parameters.Add("@accountId", accountReader.Id);
-        parameters.Add("@deactivatedBy", accountReader.DeactivatedBy);
-        parameters.Add("@accountStatus", accountReader.AccountStatus);
-        parameters.Add("@isActive", accountReader.IsActive);
+        parameters.Add("@countingType", (int) accountReader.CountingType);
+        parameters.Add("@status", (int) accountReader.AccountStatus);
+        parameters.Add("@workDayHours", accountReader.WorkDayHours);
+        parameters.Add("@overtimeRate", accountReader.OvertimeRate);
+        parameters.Add("@hourlyRate", accountReader.HourlyRate);
 
         await ExecuteAsync("account_completeData_U", parameters, CommandType.StoredProcedure);
     }

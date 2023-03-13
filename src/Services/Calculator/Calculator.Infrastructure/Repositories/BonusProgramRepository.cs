@@ -67,6 +67,7 @@ public class BonusProgramRepository : BaseRepository<BonusProgramRepository>, IB
         
         parameters.Add("@bonusId", bonusProgram.Id);
         parameters.Add("@recipientCode", bonusValue.Recipient);
+        parameters.Add("@bonusCode", bonusValue.BonusCode);
         parameters.Add("@groupBonus", bonusValue.GroupBonus);
         parameters.Add("@creator", bonusValue.Creator);
         parameters.Add("@canceled", bonusValue.Canceled);
