@@ -46,9 +46,10 @@ public class Account : Aggregate
     /// <param name="workDayHours"></param>
     /// <param name="hourlyRate"></param>
     /// <param name="overtimeRate"></param>
+    /// <param name="balance"></param>
     private Account(Guid accountId, int version, string accountOwnerExternalId, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
     {
         Id = accountId;
         Version = version;
@@ -56,7 +57,7 @@ public class Account : Aggregate
             accountOwnerExternalId, departmentCode,
             countingType, accountStatus, activatedBy, 
             createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate); 
+            workDayHours, hourlyRate, overtimeRate, balance); 
 
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
@@ -124,9 +125,16 @@ public class Account : Aggregate
         this.Enqueue(@event);
     }
 
-    public void AddNewPieceProductItem(Guid pieceworkProductId, decimal quantity, decimal currentPrice)
+    public void AddNewPieceProductItem(Guid pieceworkProductId, decimal quantity, decimal currentPrice, DateTime? date)
     {
-        var @event = PieceProductAdded.Create(pieceworkProductId, quantity, currentPrice, this.Id);
+        var @event = PieceProductAdded.Create(pieceworkProductId, quantity, currentPrice, this.Id, date);
+        Apply(@event);
+        this.Enqueue(@event);
+    }
+    
+    public void Settlement()
+    {
+        var @event = AccountSettled.Create(this.Id, Details.Balance);
         Apply(@event);
         this.Enqueue(@event);
     }
@@ -135,6 +143,7 @@ public class Account : Aggregate
     {
         return AccountSnapshot.Create(this.Id, this.Version).Set(this);
     }
+
     public override Account? FromSnapshot(ISnapshot? snapshot)
     {
         var snapshotAccount = (AccountSnapshot?)snapshot;
@@ -157,7 +166,8 @@ public class Account : Aggregate
             details.IsActive,
             details.WorkDayHours, 
             details.HourlyRate,
-            details.OvertimeRate);
+            details.OvertimeRate,
+            details.Balance);
     }
     protected override void When(IEvent @event)
     {
@@ -192,13 +202,16 @@ public class Account : Aggregate
             case CountingTypeChanged e:
                 this.CountingTypeUpdated(e);
                 break;
+            case AccountSettled e:
+                this.Settlement(e);
+                break;
             default:
                 break;
         }
     }
     private void Initiated(NewAccountInitiated @event)
     {
-        Id = @event.AccountId;
+        Id = @event.AccountId; 
         Details = AccountDetails.Init(@event.AccountCode, @event.DepartmentCode, @event.CreatedBy);
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
@@ -243,11 +256,27 @@ public class Account : Aggregate
     {
         var workDay = WorkDay.Create(@event.Date, @event.HoursWorked, @event.Overtime, @event.IsDayOff, @event.CreatedBy);
         WorkDays.Add(workDay);
+
+        if (@event.IsDayOff)
+        {
+            return;
+        }
+
+        Details.IncreaseBalance(@event);
     }
 
     private void NewPieceProductItemAdded(PieceProductAdded @event)
     {
-        var pieceProduct = ProductItem.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice);
+        var pieceProduct =
+            ProductItem.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice, @event.Date);
+
         ProductItems.Add(pieceProduct);
+
+        Details.IncreaseBalance(@event);
+    }
+
+    private void Settlement(AccountSettled @event)
+    { 
+        Details.ClearBalance(); 
     }
 }

@@ -4,6 +4,8 @@ public class Bonus
 {
     public string BonusCode { get; }
     public bool GroupBonus { get; }
+
+    //Department or individual employee
     public string Recipient { get; }
     public string Creator { get; }
     public bool Settled { get; private set; }

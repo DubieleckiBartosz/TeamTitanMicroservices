@@ -8,6 +8,7 @@ namespace Calculator.Application.ReadModels.AccountReaders;
 public class AccountReader : IRead
 {
     public Guid Id { get; }
+    public decimal Balance { get; init; }
     public string AccountOwner { get; }
     public string DepartmentCode { get; }
     public CountingType CountingType { get; private set; }
@@ -43,11 +44,13 @@ public class AccountReader : IRead
     /// <param name="workDayHours"></param>
     /// <param name="hourlyRate"></param>
     /// <param name="overtimeRate"></param>
+    /// <param name="balance"></param>
     /// <param name="productItems"></param>
     /// <param name="workDays"></param>
     private AccountReader(Guid id, string accountOwner, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, List<ProductItemReader> productItems, List<WorkDayReader> workDays)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance,
+        List<ProductItemReader> productItems, List<WorkDayReader> workDays)
     {
         Id = id;
         AccountOwner = accountOwner;
@@ -61,6 +64,7 @@ public class AccountReader : IRead
         WorkDayHours = workDayHours;
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
+        Balance = balance;
         ProductItems = productItems;
         WorkDays = workDays;
     }
@@ -79,6 +83,7 @@ public class AccountReader : IRead
         DepartmentCode = departmentCode;
         CreatedBy = createdBy;
         IsActive = false;
+        Balance = 0;
     }
 
     public static AccountReader Create(NewAccountInitiated @event)
@@ -88,12 +93,12 @@ public class AccountReader : IRead
 
     public static AccountReader Load(Guid id, string accountOwner, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, List<ProductItemReader> productItems,
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, List<ProductItemReader> productItems,
         List<WorkDayReader> workDays)
     {
         return new AccountReader(id, accountOwner, departmentCode, countingType,
             accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, productItems, workDays);
+            workDayHours, hourlyRate, overtimeRate, balance, productItems, workDays);
     }
 
     public AccountReader DataCompleted(AccountDataCompleted @event)
@@ -166,9 +171,10 @@ public class AccountReader : IRead
 
     public AccountReader NewPieceProductItemAdded(PieceProductAdded @event)
     {
-        var pieceProduct = ProductItemReader.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice, this.Id);
-        ProductItems.Add(pieceProduct); 
-        
+        var pieceProduct = ProductItemReader.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice, Id,
+            @event.Date);
+        ProductItems.Add(pieceProduct);
+
         return this;
     }
 
