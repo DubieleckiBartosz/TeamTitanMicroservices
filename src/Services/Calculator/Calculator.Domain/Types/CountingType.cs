@@ -3,6 +3,6 @@
 public enum CountingType
 { 
     Piecework = 1,
-    ForAnHour = 2,
-    FixedWork = 3
+    ForAnHour = 2, 
+    FixedSalary = 3
 }

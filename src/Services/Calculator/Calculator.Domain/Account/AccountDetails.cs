@@ -1,10 +1,13 @@
-﻿using Calculator.Domain.Statuses;
+﻿using Calculator.Domain.Account.Events;
+using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
+using Shared.Domain.Abstractions;
 
 namespace Calculator.Domain.Account;
 
 public class AccountDetails
 {
+    public decimal Balance { get; private set; } 
     public string AccountOwner { get; private set; } //Setter for serializer
     public string DepartmentCode { get; private set; } //Setter for serializer
     public CountingType CountingType { get; private set; }
@@ -24,7 +27,7 @@ public class AccountDetails
 
     private AccountDetails(string accountOwner, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
     {
         AccountOwner = accountOwner;
         DepartmentCode = departmentCode;
@@ -37,6 +40,7 @@ public class AccountDetails
         WorkDayHours = workDayHours;
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
+        Balance = balance;
     }
 
     /// <summary>
@@ -47,6 +51,7 @@ public class AccountDetails
     /// <param name="createdBy"></param>
     private AccountDetails(string accountOwner, string departmentCode, string createdBy)
     {
+        Balance = 0;
         AccountOwner = accountOwner;
         DepartmentCode = departmentCode;
         CreatedBy = createdBy;
@@ -66,15 +71,16 @@ public class AccountDetails
     /// <param name="workDayHours"></param>
     /// <param name="hourlyRate"></param>
     /// <param name="overtimeRate"></param>
+    /// <param name="balance"></param>
     /// <returns></returns>
     public static AccountDetails CreateAccountDetails(string accountExternalId, string departmentCode,
         CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
     {
         return new AccountDetails(accountExternalId, departmentCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate);
+            workDayHours, hourlyRate, overtimeRate, balance);
     }
 
     /// <summary>
@@ -91,15 +97,16 @@ public class AccountDetails
     /// <param name="workDayHours"></param>
     /// <param name="hourlyRate"></param>
     /// <param name="overtimeRate"></param>
+    /// <param name="balance"></param>
     /// <returns></returns>
     public static AccountDetails LoadAccountDetails(string accountExternalId, string departmentCode,
         CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
     {
         return new AccountDetails(accountExternalId, departmentCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate);
+            workDayHours, hourlyRate, overtimeRate, balance);
     }
 
     public static AccountDetails Init(string accountOwnerExternalId, string departmentCode, string createdBy)
@@ -157,5 +164,59 @@ public class AccountDetails
     {
         //Validation
         CountingType = countingType; 
+    } 
+    
+    public void IncreaseBalance(IEvent @event)
+    {
+        var value = 0.0m;
+         
+        if (CountingType == CountingType.Piecework)
+        {
+            if (@event is PieceProductAdded productItem)
+            {
+                value = productItem.Quantity * productItem.CurrentPrice;
+            }
+        }
+
+        if (CountingType == CountingType.ForAnHour)
+        {
+            if (@event is WorkDayAdded workDay)
+            {
+                value = workDay.HoursWorked * HourlyRate!.Value + workDay.Overtime * (HourlyRate ?? 0);
+            } 
+        }
+         
+        //Validation
+        Balance += value; 
+    }
+
+    public void DecreaseBalance(IEvent @event)
+    {
+        var value = 0.0m;
+
+        if (CountingType == CountingType.Piecework)
+        {
+            if (@event is PieceProductAdded productItem)
+            {
+                value = productItem.Quantity * productItem.CurrentPrice;
+            }
+        }
+
+        if (CountingType == CountingType.ForAnHour)
+        {
+            if (@event is WorkDayAdded workDay)
+            {
+                value = workDay.HoursWorked * HourlyRate!.Value + workDay.Overtime * (HourlyRate ?? 0);
+            }
+        }
+
+        //Validation
+        Balance += value;
+    }
+
+    public void ClearBalance()
+    {
+        //Validation
+        Balance = 0; 
     } 
 }

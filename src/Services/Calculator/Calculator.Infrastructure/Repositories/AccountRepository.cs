@@ -221,4 +221,14 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
 
         await ExecuteAsync("product_createPieceworkProductItem_I", parameters, CommandType.StoredProcedure);
     }
+
+    public async Task UpdateAccountProductItemsAsync(AccountReader accountReader)
+    {
+        var productReader = accountReader.ProductItems.Select(_ => _.PieceworkProductId).ToList();
+        var parameters = new DynamicParameters();
+
+        //[TODO]
+
+        await ExecuteAsync("product_productItemsAsConsidered_U", parameters, CommandType.StoredProcedure);
+    }
 }
