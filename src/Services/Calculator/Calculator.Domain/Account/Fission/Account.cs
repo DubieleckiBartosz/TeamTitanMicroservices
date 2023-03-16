@@ -18,43 +18,43 @@ public partial class Account
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
     }
-    public void DataCompleted(AccountDataCompleted @event)
+    internal void DataCompleted(AccountDataCompleted @event)
     {
         Details.AssignData(@event.CountingType, @event.Status, false,
             @event.WorkDayHours, @event.HourlyRate, @event.OvertimeRate, @event.ExpirationDate);
     }
 
-    public void AccountActivated(AccountActivated @event)
+    internal void AccountActivated(AccountActivated @event)
     {
         Details.Activate(@event.ActivatedBy);
     }
 
-    public void AccountDeactivated(AccountDeactivated @event)
+    internal void AccountDeactivated(AccountDeactivated @event)
     {
         Details.Deactivate(@event.DeactivatedBy);
     }
 
-    public void WorkDayHoursUpdated(DayHoursChanged @event)
+    internal void WorkDayHoursUpdated(DayHoursChanged @event)
     {
         Details.UpdateWorkDayHours(@event.NewWorkDayHours);
     }
 
-    public void HourlyRateUpdated(HourlyRateChanged @event)
+    internal void HourlyRateUpdated(HourlyRateChanged @event)
     {
         Details.UpdateHourlyRate(@event.NewHourlyRate);
     }
 
-    public void OvertimeRateUpdated(OvertimeRateChanged @event)
+    internal void OvertimeRateUpdated(OvertimeRateChanged @event)
     {
         Details.UpdateOvertimeRate(@event.NewOvertimeRate);
     }
 
-    public void CountingTypeUpdated(CountingTypeChanged @event)
+    internal void CountingTypeUpdated(CountingTypeChanged @event)
     {
         Details.UpdateCountingType(@event.NewCountingType);
     }
 
-    public void NewWorkDayAdded(WorkDayAdded @event)
+    internal void NewWorkDayAdded(WorkDayAdded @event)
     {
         var workDay = WorkDay.Create(@event.Date, @event.HoursWorked, @event.Overtime, @event.IsDayOff, @event.CreatedBy);
         WorkDays.Add(workDay);
@@ -67,7 +67,7 @@ public partial class Account
         Details.IncreaseBalance(@event);
     }
 
-    public void NewPieceProductItemAdded(PieceProductAdded @event)
+    internal void NewPieceProductItemAdded(PieceProductAdded @event)
     {
         var pieceProduct =
             ProductItem.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice, @event.Date);
@@ -77,13 +77,13 @@ public partial class Account
         Details.IncreaseBalance(@event);
     }
 
-    public void BonusToAccountAdded(BonusAdded @event)
+    internal void BonusToAccountAdded(BonusAdded @event)
     {
         var newBonus = Bonus.Create(@event.Creator, @event.BonusCode);
         Bonuses!.Add(newBonus);
     }
 
-    public void AccountBonusCanceled(BonusCanceled @event)
+    internal void AccountBonusCanceled(BonusCanceled @event)
     {
         var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == @event.BonusCode);
 
@@ -93,7 +93,7 @@ public partial class Account
         }
     }
 
-    public void Settlement(AccountSettled @event)
+    internal void Settlement(AccountSettled @event)
     {
         Details.ClearBalance();
     }
