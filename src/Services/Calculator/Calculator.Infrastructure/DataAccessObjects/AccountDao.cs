@@ -19,6 +19,7 @@ public class AccountDao
     public int WorkDayHours { get; init; }
     public decimal? HourlyRate { get; init; }
     public decimal? OvertimeRate { get; init; }
+    public DateTime? ExpirationDate { get; init; }
     public List<ProductItemDao> ProductItems { get; init; } = new();
     public List<WorkDayDao> WorkDays { get; init; } = new();
     public List<BonusDao> Bonuses { get; init; } = new();
@@ -37,6 +38,6 @@ public class AccountDao
 
         return AccountReader.Load(Id, AccountOwner, DepartmentCode, CountingType,
             AccountStatus, ActivatedBy, CreatedBy, DeactivatedBy, IsActive,
-            WorkDayHours, HourlyRate, OvertimeRate, Balance, products, workDays, bonuses);
+            WorkDayHours, HourlyRate, OvertimeRate, Balance, ExpirationDate, products, workDays, bonuses);
     }
 }

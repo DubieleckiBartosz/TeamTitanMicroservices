@@ -39,7 +39,7 @@ CREATE OR ALTER PROCEDURE account_completeData_U
 AS
 BEGIN 
 	UPDATE Accounts SET 
-		ExpirationDate = @expirationDate
+		ExpirationDate = @expirationDate,
 		CountingType = @countingType,
 		AccountStatus = @status,
 		WorkDayHours = @workDayHours,
