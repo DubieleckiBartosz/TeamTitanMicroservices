@@ -158,6 +158,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         var parameters = new DynamicParameters(); 
 
         parameters.Add("@accountId", accountReader.Id);
+        parameters.Add("@expirationDate", accountReader.ExpirationDate);
         parameters.Add("@countingType", (int) accountReader.CountingType);
         parameters.Add("@status", (int) accountReader.AccountStatus);
         parameters.Add("@workDayHours", accountReader.WorkDayHours);

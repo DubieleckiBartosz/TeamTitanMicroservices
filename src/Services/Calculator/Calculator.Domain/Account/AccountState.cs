@@ -16,11 +16,11 @@ public class AccountState
 
     private AccountState(string accountOwnerExternalId, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expiration)
     {
         Details = AccountDetails.CreateAccountDetails(accountOwnerExternalId, departmentCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance);
+            workDayHours, hourlyRate, overtimeRate, balance, expiration);
 
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
@@ -32,6 +32,6 @@ public class AccountState
         return new AccountState(details.AccountOwner, details.DepartmentCode,
             details.CountingType, details.AccountStatus, details.ActivatedBy, details.CreatedBy, details.DeactivatedBy,
             details.IsActive,
-            details.WorkDayHours, details.HourlyRate, details.OvertimeRate, details.Balance);
+            details.WorkDayHours, details.HourlyRate, details.OvertimeRate, details.Balance, details.ExpirationDate);
     }
 }

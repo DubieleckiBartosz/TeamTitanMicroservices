@@ -18,17 +18,33 @@ public class AccountDetails
     public bool IsActive { get; private set; }
     public int WorkDayHours { get; private set; }
     public decimal? HourlyRate { get; private set; }
-    public decimal? OvertimeRate { get; private set; }
-    //new
-    public DateTime ExpirationDate { get; private set; }
+    public decimal? OvertimeRate { get; private set; } 
+    public DateTime? ExpirationDate { get; private set; }
+
     //Constructor for serializer
     public AccountDetails()
     {
     }
 
+    /// <summary>
+    /// For logic
+    /// </summary>
+    /// <param name="accountOwner"></param>
+    /// <param name="departmentCode"></param>
+    /// <param name="countingType"></param>
+    /// <param name="accountStatus"></param>
+    /// <param name="activatedBy"></param>
+    /// <param name="createdBy"></param>
+    /// <param name="deactivatedBy"></param>
+    /// <param name="isActive"></param>
+    /// <param name="workDayHours"></param>
+    /// <param name="hourlyRate"></param>
+    /// <param name="overtimeRate"></param>
+    /// <param name="balance"></param>
+    /// <param name="expirationDate"></param>
     private AccountDetails(string accountOwner, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate)
     {
         AccountOwner = accountOwner;
         DepartmentCode = departmentCode;
@@ -42,6 +58,7 @@ public class AccountDetails
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
         Balance = balance;
+        ExpirationDate = expirationDate;
     }
 
     /// <summary>
@@ -77,11 +94,11 @@ public class AccountDetails
     public static AccountDetails CreateAccountDetails(string accountExternalId, string departmentCode,
         CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate)
     {
         return new AccountDetails(accountExternalId, departmentCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance);
+            workDayHours, hourlyRate, overtimeRate, balance, expirationDate);
     }
 
     /// <summary>
@@ -99,15 +116,16 @@ public class AccountDetails
     /// <param name="hourlyRate"></param>
     /// <param name="overtimeRate"></param>
     /// <param name="balance"></param>
+    /// <param name="expirationDate"></param>
     /// <returns></returns>
     public static AccountDetails LoadAccountDetails(string accountExternalId, string departmentCode,
         CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate)
     {
         return new AccountDetails(accountExternalId, departmentCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance);
+            workDayHours, hourlyRate, overtimeRate, balance, expirationDate);
     }
 
     public static AccountDetails Init(string accountOwnerExternalId, string departmentCode, string createdBy)
@@ -117,7 +135,8 @@ public class AccountDetails
 
     public void AssignData(CountingType countingType,
         AccountStatus accountStatus, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate)
+        int workDayHours, decimal? hourlyRate, 
+        decimal? overtimeRate, DateTime? expirationDate)
     {          
         //Validation
         CountingType = countingType;
@@ -126,6 +145,7 @@ public class AccountDetails
         WorkDayHours = workDayHours;
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
+        ExpirationDate = expirationDate;
     }
 
     public void UpdateWorkDayHours(int newWorkDayHours)
@@ -193,26 +213,7 @@ public class AccountDetails
 
     public void DecreaseBalance(IEvent @event)
     {
-        var value = 0.0m;
-
-        if (CountingType == CountingType.Piecework)
-        {
-            if (@event is PieceProductAdded productItem)
-            {
-                value = productItem.Quantity * productItem.CurrentPrice;
-            }
-        }
-
-        if (CountingType == CountingType.ForAnHour)
-        {
-            if (@event is WorkDayAdded workDay)
-            {
-                value = workDay.HoursWorked * HourlyRate!.Value + workDay.Overtime * (HourlyRate ?? 0);
-            }
-        }
-
-        //Validation
-        Balance += value;
+   
     }
 
     public void ClearBalance()
