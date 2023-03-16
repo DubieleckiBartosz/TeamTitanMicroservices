@@ -19,6 +19,7 @@ public class EmployeeContract : Entity
     public int FreeDaysPerYear { get; }
     public string BankAccountNumber { get; }
     public bool PaidIntoAccount { get; }
+    //payment date
     public string CreatedBy { get; }
 
     private EmployeeContract(int departmentId, string position,

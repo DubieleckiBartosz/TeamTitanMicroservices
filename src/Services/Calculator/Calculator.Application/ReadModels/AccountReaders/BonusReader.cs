@@ -1,11 +1,9 @@
-﻿namespace Calculator.Application.ReadModels.BonusReaders;
+﻿namespace Calculator.Application.ReadModels.AccountReaders;
 
 public class BonusReader
 {
     public Guid Id { get; }
-    public string BonusCode { get; }
-    public bool GroupBonus { get; }
-    public string Recipient { get; }
+    public string BonusCode { get; } 
     public string Creator { get; }
     public bool Settled { get; private set; }
     public bool Canceled { get; private set; }
@@ -16,12 +14,8 @@ public class BonusReader
     /// </summary>
     /// <param name="creator"></param>
     /// <param name="bonusCode"></param>
-    /// <param name="recipient"></param>
-    /// <param name="groupBonus"></param>
-    private BonusReader(string creator, string bonusCode, string recipient, bool groupBonus)
-    {
-        GroupBonus = groupBonus;
-        Recipient = recipient;
+    private BonusReader(string creator, string bonusCode)
+    { 
         BonusCode = bonusCode;
         Settled = false;
         Canceled = false;
@@ -34,14 +28,12 @@ public class BonusReader
     /// </summary>
     /// <param name="id"></param>
     /// <param name="bonusCode"></param>
-    /// <param name="groupBonus"></param>
-    /// <param name="recipient"></param>
     /// <param name="creator"></param>
     /// <param name="settled"></param>
     /// <param name="canceled"></param>
     /// <param name="created"></param>
-    private BonusReader(Guid id, string bonusCode, bool groupBonus, string recipient, string creator, bool settled,
-        bool canceled, DateTime created) : this(creator, bonusCode, recipient, groupBonus)
+    private BonusReader(Guid id, string bonusCode, string creator, bool settled,
+        bool canceled, DateTime created) : this(creator, bonusCode)
     {
         Id = id;
         Settled = settled;
@@ -49,16 +41,16 @@ public class BonusReader
         Created = created;
     }
 
-    public static BonusReader Load(Guid id, string bonusCode, bool groupBonus, string recipient, string creator,
+    public static BonusReader Load(Guid id, string bonusCode, string creator,
         bool settled,
         bool canceled, DateTime created)
     {
-        return new BonusReader(id, bonusCode, groupBonus, recipient, creator, settled, canceled, created);
+        return new BonusReader(id, bonusCode, creator, settled, canceled, created);
     }
 
-    public static BonusReader Create(string creator, string bonusCode, string recipient, bool groupBonus)
+    public static BonusReader Create(string creator, string bonusCode)
     {
-        return new BonusReader(creator, bonusCode, recipient, groupBonus);
+        return new BonusReader(creator, bonusCode);
     }
 
     public BonusReader AsSettled()

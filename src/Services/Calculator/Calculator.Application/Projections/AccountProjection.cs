@@ -24,6 +24,8 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.Projects<OvertimeRateChanged>(Handle);
         this.Projects<PieceProductAdded>(Handle);
         this.Projects<WorkDayAdded>(Handle);
+        this.Projects<BonusAdded>(Handle);
+        this.Projects<BonusCanceled>(Handle);
     }
 
     private async Task Handle(AccountActivated @event, CancellationToken cancellationToken = default)
@@ -36,7 +38,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
         this.CheckAccount(account);
 
-        account.AccountActivated(@event);
+        account!.AccountActivated(@event);
         await _accountRepository.UpdateStatusToActiveAsync(account);
 
     }
@@ -51,7 +53,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
         this.CheckAccount(account);
 
-        account.DataCompleted(@event);
+        account!.DataCompleted(@event);
         await _accountRepository.UpdateDataAsync(account);
     }
 
@@ -65,7 +67,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
         this.CheckAccount(account);
 
-        account.AccountDeactivated(@event);
+        account!.AccountDeactivated(@event);
         await _accountRepository.UpdateStatusToDeactivateAsync(account);
     }
 
@@ -79,7 +81,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
         this.CheckAccount(account);
 
-        account.CountingTypeUpdated(@event);
+        account!.CountingTypeUpdated(@event);
         await _accountRepository.UpdateCountingTypeAsync(account);
     }
 
@@ -93,7 +95,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
         this.CheckAccount(account);
 
-        account.WorkDayHoursUpdated(@event);
+        account!.WorkDayHoursUpdated(@event);
         await _accountRepository.UpdateWorkDayHoursAsync(account);
     }
 
@@ -107,7 +109,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
         this.CheckAccount(account);
 
-        account.HourlyRateUpdated(@event);
+        account!.HourlyRateUpdated(@event);
         await _accountRepository.UpdateHourlyRateAsync(account);
     }
 
@@ -132,7 +134,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
         this.CheckAccount(account);
 
-        account.OvertimeRateUpdated(@event);
+        account!.OvertimeRateUpdated(@event);
         await _accountRepository.UpdateOvertimeRateAsync(account);
     }
 
@@ -146,7 +148,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
         this.CheckAccount(account);
 
-        account.NewPieceProductItemAdded(@event);
+        account!.NewPieceProductItemAdded(@event);
         await _accountRepository.AddProductItemAsync(account);
     }
 
@@ -161,15 +163,43 @@ public class AccountProjection : ReadModelAction<AccountReader>
 
         this.CheckAccount(account);
 
-        account.NewWorkDayAdded(@event);
+        account!.NewWorkDayAdded(@event);
         await _accountRepository.AddNewWorkDayAsync(account);
     }
 
-    private void CheckAccount(AccountReader account)
+    public async Task Handle(BonusAdded @event, CancellationToken cancellationToken = default)
+    {
+        if (@event == null)
+        {
+            throw new ArgumentNullException(nameof(@event));
+        }
+
+        var account = await _accountRepository.GetAccountByIdWithBonusesAsync(@event.AccountId);
+        this.CheckAccount(account);
+
+        account!.BonusToAccountAdded(@event);
+        await _accountRepository.AddBonusAsync(account);
+    }
+
+    public async Task Handle(BonusCanceled @event, CancellationToken cancellationToken = default)
+    {
+        if (@event == null)
+        {
+            throw new ArgumentNullException(nameof(@event));
+        }
+
+        var account = await _accountRepository.GetAccountByIdWithBonusesAsync(@event.AccountId);
+        this.CheckAccount(account);
+
+        var bonusCanceled = account!.AccountBonusCanceled(@event);
+        await _accountRepository.UpdateBonusAccountAsync(bonusCanceled, account);
+    }
+
+    private void CheckAccount(AccountReader? account)
     { 
         if (account == null)
         {
-            throw new NotFoundException("Recipient cannot be null.", "Recipient not found");
+            throw new NotFoundException("Account cannot be null.", "Account not found");
         } 
     }
 }
