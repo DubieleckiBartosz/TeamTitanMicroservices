@@ -9,8 +9,7 @@ public static class DependencyInjectionInfrastructure
 {
     public static WebApplicationBuilder GetDependencyInjectionInfrastructure(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-        builder.Services.AddScoped<IBonusProgramRepository, BonusProgramRepository>();
+        builder.Services.AddScoped<IAccountRepository, AccountRepository>(); 
         return builder;
     }
 }

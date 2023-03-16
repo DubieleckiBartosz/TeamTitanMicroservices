@@ -1,47 +1,3 @@
---BONUS
-CREATE OR ALTER PROCEDURE program_createNew_I
-	@bonusId UNIQUEIDENTIFIER,
-	@bonusAmount DECIMAL,
-	@createdBy VARCHAR(MAX),
-	@companyCode VARCHAR(MAX),
-	@expires DATETIME,
-	@reason VARCHAR(MAX)
-AS
-BEGIN
-	INSERT INTO BonusPrograms(Id, BonusAmount, CreatedBy, CompanyCode, Expires, Reason)
-	VALUES(@bonusId, @bonusAmount, @createdBy, @companyCode, @expires, @reason)
-END
-GO 
-
-CREATE OR ALTER PROCEDURE bonus_createNew_I
-	@bonusId UNIQUEIDENTIFIER,
-	@recipientCode VARCHAR(MAX),
-	@bonusCode VARCHAR(12),
-	@groupBonus BIT,
-	@creator VARCHAR(MAX),
-	@canceled BIT = 0,
-	@settled BIT = 0,
-	@created DATETIME
-AS
-BEGIN 
-	INSERT INTO Bonuses(BonusProgramId, Recipient, BonusCode, GroupBonus, Creator, Canceled, Settled, Created)
-	VALUES(@bonusId, @recipientCode, @bonusCode, @groupBonus, @creator, @canceled, @settled, @created)
-END
-GO
-
-CREATE OR ALTER PROCEDURE bonus_finish_U
-	@bonusId UNIQUEIDENTIFIER,
-	@canceled BIT,
-	@settled BIT
-AS
-BEGIN 
-	UPDATE Bonuses SET 
-		Settled = @settled,
-		Canceled = @canceled
-	WHERE Id = @bonusId		
-END
-GO
-
 --ACCOUNT
 
 CREATE OR ALTER PROCEDURE account_createNew_I
@@ -152,23 +108,141 @@ CREATE OR ALTER PROCEDURE day_createWorkDay_I
 	@hoursWorked INT,
 	@overtime INT,
 	@isDayOff BIT,
-	@createdBy VARCHAR(MAX)
+	@createdBy VARCHAR(MAX),
+	@balance DECIMAL
 AS
 BEGIN  
-	INSERT INTO WorkDays(AccountId, [Date] ,HoursWorked ,Overtime ,IsDayOff ,CreatedBy)
-	VALUES (@accountId, @date, @hoursWorked, @overtime, @isDayOff, @createdBy)
+	BEGIN TRY  
+		BEGIN TRANSACTION;
+			
+			UPDATE Accounts SET Balance = @balance
+			WHERE Id = @accountId;
+
+			INSERT INTO WorkDays(AccountId, [Date] ,HoursWorked ,Overtime ,IsDayOff ,CreatedBy)
+			VALUES (@accountId, @date, @hoursWorked, @overtime, @isDayOff, @createdBy)
+	
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH
 END
 GO
 
 
-CREATE OR ALTER PROCEDURE product_createPieceworkProductItem_I
+CREATE OR ALTER PROCEDURE product_createPieceworkProductItem_I 
 	@pieceworkProductId UNIQUEIDENTIFIER, 
 	@quantity DECIMAL,
 	@currentPrice DECIMAL,
-	@accountId UNIQUEIDENTIFIER
+	@date DateTime,
+	@isConsidered BIT,
+	@accountId UNIQUEIDENTIFIER,
+	@balance DECIMAL
 AS
 BEGIN  
-	INSERT INTO ProductItems(PieceworkProductId, Quantity, CurrentPrice, AccountId)
-	VALUES(@pieceworkProductId, @quantity, @currentPrice, @accountId)
+	BEGIN TRY  
+		BEGIN TRANSACTION;
+
+			UPDATE Accounts SET Balance = @balance
+			WHERE Id = @accountId;
+
+			INSERT INTO ProductItems(PieceworkProductId, Quantity, CurrentPrice, AccountId, [Date], IsConsidered)
+			VALUES(@pieceworkProductId, @quantity, @currentPrice, @accountId, @date, @isConsidered)
+	
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH 
+END
+GO 
+
+CREATE OR ALTER PROCEDURE bonus_createNew_I
+	@accountId UNIQUEIDENTIFIER,
+	@bonusCode VARCHAR(12),  
+	@creator VARCHAR(MAX),
+	@canceled BIT = 0,
+	@settled BIT = 0,
+	@created DATETIME,
+	@balance DECIMAL
+AS
+BEGIN 
+		BEGIN TRY  
+		BEGIN TRANSACTION;
+			
+			UPDATE Accounts SET Balance = @balance
+			WHERE Id = @accountId;
+			
+			INSERT INTO Bonuses(AccountId, BonusCode, Creator, Canceled, Settled, Created)
+			VALUES(@accountId, @bonusCode, @creator, @canceled, @settled, @created)
+	
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE account_finishBonusLife_U 
+	@accountId UNIQUEIDENTIFIER,
+	@bonusCode VARCHAR(12),
+	@canceled BIT,
+	@settled BIT,
+	@balance DECIMAL
+AS
+BEGIN 
+		BEGIN TRY  
+		BEGIN TRANSACTION;
+
+			UPDATE Accounts SET Balance = @balance
+			WHERE Id = @accountId;
+
+			UPDATE Bonuses SET 
+				Settled = @settled,
+				Canceled = @canceled
+			WHERE BonusCode = @bonusCode
+	
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH
 END
 GO

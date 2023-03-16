@@ -30,6 +30,31 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         return result?.FirstOrDefault()?.Map();
     }
 
+    public async Task<AccountReader?> GetAccountByIdWithBonusesAsync(Guid accountId)
+    {
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountId);
+
+        var dict = new Dictionary<Guid, AccountDao>();
+
+        var result = (await QueryAsync<AccountDao, BonusDao, AccountDao>(
+            "account_getByIdWithBonuses_S", (a, b) =>
+            {
+                if (!dict.TryGetValue(a.Id, out var value))
+                {
+                    value = a;
+                    dict.Add(a.Id, value);
+                }
+
+                value.Bonuses.Add(b);
+
+                return value;
+            }, "Id,Id", parameters, CommandType.StoredProcedure)).FirstOrDefault(); 
+
+        return result?.Map();
+    } 
+     
     public async Task<AccountReader?> GetAccountByIdWithWorkDaysAsync(Guid accountId)
     {
         var parameters = new DynamicParameters();
@@ -199,6 +224,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         var workDayReader = accountReader.GetLastWorkDay()!;
         var parameters = new DynamicParameters();
 
+        parameters.Add("@balance", accountReader.Balance);
         parameters.Add("@date", workDayReader.Date);
         parameters.Add("@hoursWorked", workDayReader.HoursWorked);
         parameters.Add("@overtime", workDayReader.Overtime);
@@ -210,16 +236,65 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
     }
 
     public async Task AddProductItemAsync(AccountReader accountReader)
-    {
+    { 
         var productReader = accountReader.GetLastProductItem()!;
         var parameters = new DynamicParameters();
 
+        parameters.Add("@balance", accountReader.Balance);
         parameters.Add("@pieceworkProductId", productReader.PieceworkProductId);
         parameters.Add("@quantity", productReader.Quantity);
         parameters.Add("@currentPrice", productReader.CurrentPrice);
+        parameters.Add("@date", productReader.Date);
+        parameters.Add("@isConsidered", productReader.IsConsidered);
         parameters.Add("@accountId", accountReader.Id);
 
         await ExecuteAsync("product_createPieceworkProductItem_I", parameters, CommandType.StoredProcedure);
+    }
+
+    public async Task AddBonusAsync(AccountReader account)
+    {
+        var bonusValue = account.Bonuses!.Last();
+
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", account.Id);
+        parameters.Add("@balance", account.Balance);
+        parameters.Add("@bonusCode", bonusValue.BonusCode);
+        parameters.Add("@creator", bonusValue.Creator);
+        parameters.Add("@canceled", bonusValue.Canceled);
+        parameters.Add("@settled", bonusValue.Settled);
+        parameters.Add("@created", bonusValue.Created);
+
+        await ExecuteAsync("account_createNewBonus_I", parameters, CommandType.StoredProcedure);
+    }
+
+    public async Task UpdateBonusAccountAsync(BonusReader bonusValue, AccountReader account)
+    {
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", account.Id);
+        parameters.Add("@balance", account.Balance);
+        parameters.Add("@bonusCode", bonusValue.BonusCode);
+        parameters.Add("@canceled", bonusValue.Canceled);
+        parameters.Add("@settled", bonusValue.Settled);
+
+        await ExecuteAsync("account_finishBonusLife_U", parameters, CommandType.StoredProcedure);
+    }
+
+    public async Task ClearOldBonusesAsync()
+    {
+        var parameters = new DynamicParameters();
+        await ExecuteAsync("account_bonusClear_D", parameters, CommandType.StoredProcedure);
+    }
+
+    public async Task ClearSettledAndCanceledBonusesAsync(DateTime dateStartCleaning)
+    {
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@dateStartCleaning", dateStartCleaning);
+
+
+        await ExecuteAsync("account_clearSettledAndCanceledBonuses_D", parameters, CommandType.StoredProcedure);
     }
 
     public async Task UpdateAccountProductItemsAsync(AccountReader accountReader)

@@ -1,9 +1,13 @@
 ﻿using Calculator.Domain.Account.Events;
+using Calculator.Domain.Account.Generators;
 using Calculator.Domain.Account.Snapshots;
 using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
+using Shared.Domain.DomainExceptions;
+using Shared.Domain.Tools;
+using System.Net;
 
 namespace Calculator.Domain.Account;
 
@@ -12,6 +16,8 @@ public class Account : Aggregate
     public AccountDetails Details { get; private set; }
     public List<ProductItem> ProductItems { get; private set; } = new List<ProductItem>();
     public List<WorkDay> WorkDays { get; private set; } = new List<WorkDay>();
+    public List<Settlement> Settlements { get; private set; } = new List<Settlement>();
+    public List<Bonus> Bonuses { get; private set; } = new List<Bonus>();
 
     public Account()
     {
@@ -139,6 +145,47 @@ public class Account : Aggregate
         this.Enqueue(@event);
     }
 
+    public void AddBonus(string creator, decimal amount)
+    {
+        var repeat = true;
+        var bonusCode = string.Empty;
+        while (repeat)
+        {
+            bonusCode = BonusCodeGenerator.GenerateBonusCode(Id.ToString(),"ACC");
+            var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == bonusCode);
+
+            if (bonus == null)
+            {
+                repeat = false;
+            }
+        }
+
+        var @event = BonusAdded.Create(amount, creator, Id, bonusCode);
+        Apply(@event);
+        Enqueue(@event);
+    }
+
+    public void CancelBonus(string bonusCode)
+    {
+        if (Bonuses == null)
+        {
+            throw new BusinessException("List is NULL", "List of bonuses is NULL.",
+                HttpStatusCode.NotFound);
+        }
+
+        var bonus = Bonuses.FirstOrDefault(_ => _.BonusCode == bonusCode);
+        if (bonus == null)
+        {
+            throw new BusinessException("Bonus is NULL", "Bonus not found in account.",
+                HttpStatusCode.NotFound);
+        }
+
+        var @event = BonusCanceled.Create(this.Id, bonusCode);
+
+        Apply(@event);
+        this.Enqueue(@event);
+    }
+
     public AccountSnapshot CreateSnapshot()
     {
         return AccountSnapshot.Create(this.Id, this.Version).Set(this);
@@ -192,6 +239,7 @@ public class Account : Aggregate
                 this.NewWorkDayAdded(e);
                 break;
             case OvertimeRateChanged e:
+                this.OvertimeRateUpdated(e);
                 break;
             case PieceProductAdded e:
                 this.NewPieceProductItemAdded(e);
@@ -204,6 +252,12 @@ public class Account : Aggregate
                 break;
             case AccountSettled e:
                 this.Settlement(e);
+                break;
+            case BonusAdded e:
+                this.BonusToAccountAdded(e);
+                break;
+            case BonusCanceled e:
+                this.AccountBonusCanceled(e);
                 break;
             default:
                 break;
@@ -273,6 +327,22 @@ public class Account : Aggregate
         ProductItems.Add(pieceProduct);
 
         Details.IncreaseBalance(@event);
+    }
+
+    private void BonusToAccountAdded(BonusAdded @event)
+    { 
+        var newBonus = Bonus.Create(@event.Creator, @event.BonusCode);
+        Bonuses!.Add(newBonus);
+    }
+
+    private void AccountBonusCanceled(BonusCanceled @event)
+    {
+        var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == @event.BonusCode);
+
+        if (Bonuses != null && bonus != null)
+        {
+            Bonuses.Replace(bonus, bonus.AsCanceled());
+        }
     }
 
     private void Settlement(AccountSettled @event)

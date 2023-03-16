@@ -1,21 +1,15 @@
-﻿namespace Calculator.Domain.BonusProgram;
+﻿namespace Calculator.Domain.Account;
 
 public class Bonus
 {
     public string BonusCode { get; }
-    public bool GroupBonus { get; }
-
-    //Department or individual employee
-    public string Recipient { get; }
     public string Creator { get; }
     public bool Settled { get; private set; }
     public bool Canceled { get; private set; }
     public DateTime Created { get; }
 
-    private Bonus(string creator, string bonusCode, string recipient, bool groupBonus)
+    private Bonus(string creator, string bonusCode)
     {
-        GroupBonus = groupBonus;
-        Recipient = recipient;
         BonusCode = bonusCode;
         Settled = false;
         Canceled = false;
@@ -23,9 +17,9 @@ public class Bonus
         Creator = creator;
     }
 
-    public static Bonus Create(string creator, string bonusCode, string recipient, bool groupBonus)
+    public static Bonus Create(string creator, string bonusCode)
     {
-        return new Bonus(creator, bonusCode, recipient, groupBonus);
+        return new Bonus(creator, bonusCode);
     }
 
     public Bonus AsSettled()

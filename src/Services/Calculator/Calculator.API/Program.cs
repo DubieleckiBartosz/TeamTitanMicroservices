@@ -27,8 +27,7 @@ builder.GetDependencyInjectionInfrastructure();
 
 builder.EventStoreConfiguration(_ => new List<IProjection>()
 {    
-    new AccountProjection(_.GetService<IAccountRepository>()!),
-    new BonusProgramProjection(_.GetService<IBonusProgramRepository>()!)
+    new AccountProjection(_.GetService<IAccountRepository>()!)
 }, typeof(AssemblyCalculatorApplicationReference), typeof(AssemblySharedImplementationsReference)).RegisterBackgroundProcess();
 
 builder.Services.AddControllers();

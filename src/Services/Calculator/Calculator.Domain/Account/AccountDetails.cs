@@ -6,7 +6,7 @@ using Shared.Domain.Abstractions;
 namespace Calculator.Domain.Account;
 
 public class AccountDetails
-{
+{ 
     public decimal Balance { get; private set; } 
     public string AccountOwner { get; private set; } //Setter for serializer
     public string DepartmentCode { get; private set; } //Setter for serializer
@@ -19,7 +19,8 @@ public class AccountDetails
     public int WorkDayHours { get; private set; }
     public decimal? HourlyRate { get; private set; }
     public decimal? OvertimeRate { get; private set; }
-
+    //new
+    public DateTime ExpirationDate { get; private set; }
     //Constructor for serializer
     public AccountDetails()
     {

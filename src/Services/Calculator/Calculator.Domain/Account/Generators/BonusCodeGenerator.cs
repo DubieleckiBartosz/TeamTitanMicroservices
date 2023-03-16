@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Calculator.Domain.BonusProgram.Generators;
+namespace Calculator.Domain.Account.Generators;
 
 public class BonusCodeGenerator
 {
