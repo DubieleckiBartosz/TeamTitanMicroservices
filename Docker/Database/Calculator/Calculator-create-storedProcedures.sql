@@ -34,10 +34,12 @@ CREATE OR ALTER PROCEDURE account_completeData_U
 	@status INT,
 	@workDayHours INT,
 	@overtimeRate DECIMAL NULL,
-	@hourlyRate DECIMAL NULL
+	@hourlyRate DECIMAL NULL,
+	@expirationDate DATETIME NULL
 AS
 BEGIN 
 	UPDATE Accounts SET 
+		ExpirationDate = @expirationDate
 		CountingType = @countingType,
 		AccountStatus = @status,
 		WorkDayHours = @workDayHours,

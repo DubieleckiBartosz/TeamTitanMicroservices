@@ -17,15 +17,16 @@ public class CompleteAccountDataHandler : ICommandHandler<CompleteAccountDataCom
     public async Task<Unit> Handle(CompleteAccountDataCommand request, CancellationToken cancellationToken)
     {
         var account = await _repository.GetAsync(request.AccountId);
-        
+
         account.CheckAndThrowWhenNull("Recipient");
 
         var countingType = request.CountingType;
         var workDayHours = request.WorkDayHours;
         var overtimeRate = request.OvertimeRate;
         var hourlyRate = request.HourlyRate;
+        var expirationDate = request.ExpirationDate;
 
-        account.CompleteAccount(countingType, workDayHours, overtimeRate, hourlyRate);
+        account.CompleteAccount(countingType, workDayHours, overtimeRate, hourlyRate, expirationDate);
 
         await _repository.UpdateAsync(account);
 

@@ -6,19 +6,15 @@ using Calculator.Domain.Types;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
 using Shared.Domain.DomainExceptions;
-using Shared.Domain.Tools;
 using System.Net;
 
 namespace Calculator.Domain.Account;
 
-public class Account : Aggregate
+public partial class Account : Aggregate
 {
-    public AccountDetails Details { get; private set; }
-    public List<ProductItem> ProductItems { get; private set; } = new List<ProductItem>();
-    public List<WorkDay> WorkDays { get; private set; } = new List<WorkDay>();
-    public List<Settlement> Settlements { get; private set; } = new List<Settlement>();
-    public List<Bonus> Bonuses { get; private set; } = new List<Bonus>();
-
+    /// <summary>
+    /// Constructor for serializer
+    /// </summary>
     public Account()
     {
     }
@@ -53,9 +49,10 @@ public class Account : Aggregate
     /// <param name="hourlyRate"></param>
     /// <param name="overtimeRate"></param>
     /// <param name="balance"></param>
+    /// <param name="expirationDate"></param>
     private Account(Guid accountId, int version, string accountOwnerExternalId, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate)
     {
         Id = accountId;
         Version = version;
@@ -63,7 +60,7 @@ public class Account : Aggregate
             accountOwnerExternalId, departmentCode,
             countingType, accountStatus, activatedBy, 
             createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance); 
+            workDayHours, hourlyRate, overtimeRate, balance, expirationDate); 
 
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
@@ -74,13 +71,16 @@ public class Account : Aggregate
         return new Account(accountOwnerCode, departmentCode, createdBy);
     }
 
-    public void CompleteAccount(CountingType countingType, int workDayHours, decimal? overtimeRate, decimal? hourlyRate)
+    public void CompleteAccount(CountingType countingType, int workDayHours, decimal? overtimeRate, decimal? hourlyRate,
+        DateTime? expirationDate)
     {
         var @event =
-            AccountDataCompleted.Create(countingType, AccountStatus.New, workDayHours, overtimeRate, hourlyRate, this.Id);
+            AccountDataCompleted.Create(countingType, AccountStatus.New, workDayHours, overtimeRate, hourlyRate, Id,
+                expirationDate);
         Apply(@event);
-        this.Enqueue(@event); 
+        Enqueue(@event);
     }
+
     public void ActiveAccount(string activateBy)
     {
         var @event =
@@ -214,7 +214,8 @@ public class Account : Aggregate
             details.WorkDayHours, 
             details.HourlyRate,
             details.OvertimeRate,
-            details.Balance);
+            details.Balance,
+            details.ExpirationDate);
     }
     protected override void When(IEvent @event)
     {
@@ -262,91 +263,5 @@ public class Account : Aggregate
             default:
                 break;
         }
-    }
-    private void Initiated(NewAccountInitiated @event)
-    {
-        Id = @event.AccountId; 
-        Details = AccountDetails.Init(@event.AccountCode, @event.DepartmentCode, @event.CreatedBy);
-        ProductItems = new List<ProductItem>();
-        WorkDays = new List<WorkDay>();
-    }
-    private void DataCompleted(AccountDataCompleted @event)
-    {
-        Details.AssignData(@event.CountingType, @event.Status, false,
-            @event.WorkDayHours, @event.HourlyRate, @event.OvertimeRate);
-    }
-
-    private void AccountActivated(AccountActivated @event)
-    {
-        Details.Activate(@event.ActivatedBy);
-    }
-
-    private void AccountDeactivated(AccountDeactivated @event)
-    {
-        Details.Deactivate(@event.DeactivatedBy);
-    }
-
-    private void WorkDayHoursUpdated(DayHoursChanged @event)
-    {
-        Details.UpdateWorkDayHours(@event.NewWorkDayHours);
-    }
-
-    private void HourlyRateUpdated(HourlyRateChanged @event)
-    {
-        Details.UpdateHourlyRate(@event.NewHourlyRate);
-    }
-
-    private void OvertimeRateUpdated(OvertimeRateChanged @event)
-    {
-        Details.UpdateOvertimeRate(@event.NewOvertimeRate);
-    }
-
-    private void CountingTypeUpdated(CountingTypeChanged @event)
-    {
-        Details.UpdateCountingType(@event.NewCountingType);
-    }
-
-    private void NewWorkDayAdded(WorkDayAdded @event)
-    {
-        var workDay = WorkDay.Create(@event.Date, @event.HoursWorked, @event.Overtime, @event.IsDayOff, @event.CreatedBy);
-        WorkDays.Add(workDay);
-
-        if (@event.IsDayOff)
-        {
-            return;
-        }
-
-        Details.IncreaseBalance(@event);
-    }
-
-    private void NewPieceProductItemAdded(PieceProductAdded @event)
-    {
-        var pieceProduct =
-            ProductItem.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice, @event.Date);
-
-        ProductItems.Add(pieceProduct);
-
-        Details.IncreaseBalance(@event);
-    }
-
-    private void BonusToAccountAdded(BonusAdded @event)
-    { 
-        var newBonus = Bonus.Create(@event.Creator, @event.BonusCode);
-        Bonuses!.Add(newBonus);
-    }
-
-    private void AccountBonusCanceled(BonusCanceled @event)
-    {
-        var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == @event.BonusCode);
-
-        if (Bonuses != null && bonus != null)
-        {
-            Bonuses.Replace(bonus, bonus.AsCanceled());
-        }
-    }
-
-    private void Settlement(AccountSettled @event)
-    { 
-        Details.ClearBalance(); 
-    }
+    } 
 }
