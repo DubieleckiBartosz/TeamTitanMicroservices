@@ -7,11 +7,18 @@ using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
 using Shared.Domain.DomainExceptions;
 using System.Net;
+using Shared.Domain.Tools;
 
 namespace Calculator.Domain.Account;
 
 public partial class Account : Aggregate
 {
+    public AccountDetails Details { get; private set; }
+    public List<ProductItem> ProductItems { get; private set; } = new List<ProductItem>();
+    public List<WorkDay> WorkDays { get; private set; } = new List<WorkDay>();
+    public List<Settlement> Settlements { get; private set; } = new List<Settlement>();
+    public List<Bonus> Bonuses { get; private set; } = new List<Bonus>();
+
     /// <summary>
     /// Constructor for serializer
     /// </summary>
@@ -263,5 +270,91 @@ public partial class Account : Aggregate
             default:
                 break;
         }
-    } 
+    }
+    public void Initiated(NewAccountInitiated @event)
+    {
+        Id = @event.AccountId;
+        Details = AccountDetails.Init(@event.AccountCode, @event.DepartmentCode, @event.CreatedBy);
+        ProductItems = new List<ProductItem>();
+        WorkDays = new List<WorkDay>();
+    }
+    private void DataCompleted(AccountDataCompleted @event)
+    {
+        Details.AssignData(@event.CountingType, @event.Status, false,
+            @event.WorkDayHours, @event.HourlyRate, @event.OvertimeRate, @event.ExpirationDate);
+    }
+
+    private void AccountActivated(AccountActivated @event)
+    {
+        Details.Activate(@event.ActivatedBy);
+    }
+
+    private void AccountDeactivated(AccountDeactivated @event)
+    {
+        Details.Deactivate(@event.DeactivatedBy);
+    }
+
+    private void WorkDayHoursUpdated(DayHoursChanged @event)
+    {
+        Details.UpdateWorkDayHours(@event.NewWorkDayHours);
+    }
+
+    private void HourlyRateUpdated(HourlyRateChanged @event)
+    {
+        Details.UpdateHourlyRate(@event.NewHourlyRate);
+    }
+
+    private void OvertimeRateUpdated(OvertimeRateChanged @event)
+    {
+        Details.UpdateOvertimeRate(@event.NewOvertimeRate);
+    }
+
+    private void CountingTypeUpdated(CountingTypeChanged @event)
+    {
+        Details.UpdateCountingType(@event.NewCountingType);
+    }
+
+    private void NewWorkDayAdded(WorkDayAdded @event)
+    {
+        var workDay = WorkDay.Create(@event.Date, @event.HoursWorked, @event.Overtime, @event.IsDayOff, @event.CreatedBy);
+        WorkDays.Add(workDay);
+
+        if (@event.IsDayOff)
+        {
+            return;
+        }
+
+        Details.IncreaseBalance(@event);
+    }
+
+    private void NewPieceProductItemAdded(PieceProductAdded @event)
+    {
+        var pieceProduct =
+            ProductItem.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice, @event.Date);
+
+        ProductItems.Add(pieceProduct);
+
+        Details.IncreaseBalance(@event);
+    }
+
+    private void BonusToAccountAdded(BonusAdded @event)
+    {
+        var newBonus = Bonus.Create(@event.Creator, @event.BonusCode);
+        Bonuses!.Add(newBonus);
+    }
+
+    private void AccountBonusCanceled(BonusCanceled @event)
+    {
+        var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == @event.BonusCode);
+
+        if (Bonuses != null && bonus != null)
+        {
+            Bonuses.Replace(bonus, bonus.AsCanceled());
+        }
+    }
+
+    private void Settlement(AccountSettled @event)
+    {
+        Details.ClearBalance();
+    }
 }

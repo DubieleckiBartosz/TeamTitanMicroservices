@@ -10,4 +10,8 @@
     <ProjectReference Include="..\..\Shared\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Account\Fission\" />
+  </ItemGroup>
+
 </Project>
