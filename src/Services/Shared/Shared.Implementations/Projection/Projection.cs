@@ -21,9 +21,5 @@ public class Projection : IProjection
 }
 
 public abstract class ReadModelAction<TEntity> : Projection where TEntity : class
-{
-    protected void Projects(Func<IEvent, CancellationToken, Task> handler)
-    {
-        Projects<IEvent>(handler);
-    }
+{ 
 }

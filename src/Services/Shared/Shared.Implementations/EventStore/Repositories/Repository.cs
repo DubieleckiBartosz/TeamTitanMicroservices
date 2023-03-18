@@ -1,4 +1,5 @@
-﻿using Shared.Domain.Abstractions;
+﻿using Newtonsoft.Json;
+using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Snapshot;
@@ -37,6 +38,22 @@ public class Repository<TAggregate> : IRepository<TAggregate> where TAggregate :
     {
         await _eventStore.StoreAsync(aggregate, null);
     }
+
+    public async Task AddWithSnapshotAsync<TSnapshot>(TAggregate aggregate)
+    {
+        //[TODO] move to the snapshot repo and optimize
+        await _eventStore.StoreAsync(aggregate, null);
+
+        var assemblyQualifiedName = typeof(TSnapshot).AssemblyQualifiedName!;
+        var snapshot = aggregate.CreateSnapshot();
+
+        var stream = new SnapshotState(aggregate.Id, aggregate.Version,
+            assemblyQualifiedName, JsonConvert.SerializeObject(snapshot,
+                new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }));
+         
+        await _snapshotStore.AddAsync(stream);
+    }
+
 
     public async Task AddAndPublishAsync(TAggregate aggregate)
     {

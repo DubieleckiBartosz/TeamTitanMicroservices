@@ -8,12 +8,11 @@ namespace Shared.Implementations.EventStore;
 public class Store : IStore
 {
     private const string CollectionName = "Events";
-    private readonly IMongoRepository<StreamState> _mongoRepository;
     private readonly IMongoDatabase _database;
     public Store(IMongoRepository<StreamState> mongoRepository)
     {
-        _mongoRepository = mongoRepository ?? throw new ArgumentNullException(nameof(mongoRepository));
-        _database = _mongoRepository.GetDatabase();
+        var mongoRepository1 = mongoRepository ?? throw new ArgumentNullException(nameof(mongoRepository));
+        _database = mongoRepository1!.GetDatabase()!;
     }
 
     public async Task AddAsync(StreamState stream, long? expectedVersion)
@@ -62,39 +61,7 @@ public class Store : IStore
         {
             throw new EventException("Expected version did not match the stream version!", "Bad Stream Version");
         }
-    }
-
-
-    //public async Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid aggregateId, long? startVersion = null, long? version = null, DateTime? createdUtc = null)
-    //{
-    //    var filterBuilder = Builders<StreamState>.Filter;
-    //    var filter = filterBuilder.Eq(e => e.StreamId, aggregateId);
-
-    //    if (createdUtc.HasValue)
-    //    {
-    //        filter &= filterBuilder.Lte(e => e.Created, createdUtc.Value);
-    //    }
-
-    //    if (version.HasValue)
-    //    {
-    //        filter &= filterBuilder.Eq(e => e.Version, version.Value);
-    //    }
-
-    //    if (startVersion.HasValue)
-    //    {
-    //        filter &= filterBuilder.Gte(e => e.Version, startVersion.Value);
-    //    }
-
-    //    var sort = Builders<StreamState>.Sort.Ascending(e => e.Version);
-
-
-    //    var events = await _database.GetCollection<StreamState>(CollectionName)
-    //        .Find(filter)
-    //        .Sort(sort)
-    //        .ToListAsync();
-
-    //    return events?.AsReadOnly();
-    //}
+    } 
 
     public async Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid aggregateId, long? startVersion = null, long? version = null, DateTime? createdUtc = null)
     {
