@@ -22,6 +22,8 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Shared.Implementations.EventStore.Repositories;
 using Shared.Implementations.Snapshot;
+using Hangfire;
+using Shared.Implementations.Background;
 
 namespace Shared.Implementations;
 
@@ -152,6 +154,22 @@ public static class SharedConfigurations
 
         requiredService?.Subscribe(assembly, type, queueName, routingKey);
 
+        return app;
+    }
+
+
+    public static WebApplicationBuilder GetHangfire(this WebApplicationBuilder builder, string? connection = null)
+    {
+        builder.GetBackgroundConnectionSettings(connection ??
+                                                builder.Configuration["ConnectionStrings:HangfireConnection"]);
+        return builder;
+    }
+
+
+    public static WebApplication RegisterBackgroundDashboard(this WebApplication app)
+    {
+        app.UseHangfireDashboard(); 
+        
         return app;
     }
 

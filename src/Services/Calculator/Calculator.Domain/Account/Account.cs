@@ -145,7 +145,7 @@ public partial class Account : Aggregate
         this.Enqueue(@event);
     }
     
-    public void Settlement()
+    public void AccountSettlement()
     {
         var @event = AccountSettled.Create(this.Id, Details.Balance);
         Apply(@event);
@@ -259,7 +259,7 @@ public partial class Account : Aggregate
                 this.CountingTypeUpdated(e);
                 break;
             case AccountSettled e:
-                this.Settlement(e);
+                this.Settled(e);
                 break;
             case BonusAdded e:
                 this.BonusToAccountAdded(e);
@@ -353,8 +353,12 @@ public partial class Account : Aggregate
         }
     }
 
-    private void Settlement(AccountSettled @event)
-    {
+    private void Settled(AccountSettled @event)
+    { 
+        var settlement = Settlement.Create(@event.Balance, Details.SettlementDayMonth);
+        
+        Settlements.Add(settlement);
+
         Details.ClearBalance();
     }
 }
