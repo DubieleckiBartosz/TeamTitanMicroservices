@@ -21,7 +21,7 @@ public class AddWorkDayHandler : ICommandHandler<AddWorkDayCommand, Unit>
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Recipient");
+        account.CheckAndThrowWhenNull("Account");
 
         var date = request.Date;
         var hoursWorked = request.HoursWorked;

@@ -5,12 +5,12 @@ using Shared.Domain.Abstractions;
 namespace Calculator.Domain.Account.Events;
 
 public record AccountDataCompleted(CountingType CountingType, AccountStatus Status, int WorkDayHours,
-    decimal? OvertimeRate, decimal? HourlyRate, Guid AccountId, DateTime? ExpirationDate) : IEvent
+    int SettlementDayMonth, Guid AccountId, DateTime? ExpirationDate) : IEvent
 {
     public static AccountDataCompleted Create(CountingType countingType, AccountStatus status, int workDayHours,
-        decimal? overtimeRate, decimal? hourlyRate, Guid accountId, DateTime? expirationDate)
+        int settlementDayMonth, Guid accountId, DateTime? expirationDate)
     {
-        return new AccountDataCompleted(countingType, status, workDayHours, overtimeRate, hourlyRate, accountId,
+        return new AccountDataCompleted(countingType, status, workDayHours, settlementDayMonth, accountId,
             expirationDate);
     }
 }

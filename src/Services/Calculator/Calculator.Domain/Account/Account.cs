@@ -11,7 +11,7 @@ using Shared.Domain.Tools;
 
 namespace Calculator.Domain.Account;
 
-public partial class Account : Aggregate
+public class Account : Aggregate
 {
     public AccountDetails Details { get; private set; }
     public List<ProductItem> ProductItems { get; private set; } = new List<ProductItem>();
@@ -57,9 +57,10 @@ public partial class Account : Aggregate
     /// <param name="overtimeRate"></param>
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
+    /// <param name="settlementDayMonth"></param>
     private Account(Guid accountId, int version, string accountOwnerExternalId, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int settlementDayMonth)
     {
         Id = accountId;
         Version = version;
@@ -67,7 +68,7 @@ public partial class Account : Aggregate
             accountOwnerExternalId, departmentCode,
             countingType, accountStatus, activatedBy, 
             createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance, expirationDate); 
+            workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth); 
 
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
@@ -78,11 +79,11 @@ public partial class Account : Aggregate
         return new Account(accountOwnerCode, departmentCode, createdBy);
     }
 
-    public void CompleteAccount(CountingType countingType, int workDayHours, decimal? overtimeRate, decimal? hourlyRate,
+    public void CompleteAccount(CountingType countingType, int workDayHours, int settlementDayMonth,
         DateTime? expirationDate)
     {
         var @event =
-            AccountDataCompleted.Create(countingType, AccountStatus.New, workDayHours, overtimeRate, hourlyRate, Id,
+            AccountDataCompleted.Create(countingType, AccountStatus.New, workDayHours, settlementDayMonth, Id,
                 expirationDate);
         Apply(@event);
         Enqueue(@event);
@@ -110,20 +111,6 @@ public partial class Account : Aggregate
         this.Enqueue(@event);
     }
 
-    public void UpdateHourlyRate(decimal newHourlyRate)
-    {
-        var @event = HourlyRateChanged.Create(newHourlyRate, this.Id);
-        Apply(@event);
-        this.Enqueue(@event);
-    }
-    
-    public void UpdateOvertimeRate(decimal newOvertimeRate)
-    {
-        var @event = OvertimeRateChanged.Create(newOvertimeRate, this.Id);
-        Apply(@event);
-        this.Enqueue(@event);
-    }
-    
     public void UpdateCountingType(CountingType newCountingType)
     {
         var @event = CountingTypeChanged.Create(newCountingType, this.Id);
@@ -148,6 +135,13 @@ public partial class Account : Aggregate
     public void AccountSettlement()
     {
         var @event = AccountSettled.Create(this.Id, Details.Balance);
+        Apply(@event);
+        this.Enqueue(@event);
+    }
+    
+    public void AccountUpdateFinancialData(decimal? overtimeRate, decimal? hourlyRate)
+    {
+        var @event = FinancialDataUpdated.Create(overtimeRate, hourlyRate, this.Id);
         Apply(@event);
         this.Enqueue(@event);
     }
@@ -222,7 +216,8 @@ public partial class Account : Aggregate
             details.HourlyRate,
             details.OvertimeRate,
             details.Balance,
-            details.ExpirationDate);
+            details.ExpirationDate,
+            details.SettlementDayMonth!.Value);
     }
     protected override void When(IEvent @event)
     {
@@ -233,6 +228,9 @@ public partial class Account : Aggregate
                 break;
             case AccountDataCompleted e:
                 this.DataCompleted(e);
+                break;
+            case FinancialDataUpdated e:
+                this.AccountFinancialDataUpdated(e);
                 break;
             case AccountActivated e:
                 this.AccountActivated(e);
@@ -281,8 +279,14 @@ public partial class Account : Aggregate
     private void DataCompleted(AccountDataCompleted @event)
     {
         Details.AssignData(@event.CountingType, @event.Status, false,
-            @event.WorkDayHours, @event.HourlyRate, @event.OvertimeRate, @event.ExpirationDate);
+            @event.WorkDayHours, @event.SettlementDayMonth, @event.ExpirationDate);
     }
+
+    public void AccountFinancialDataUpdated(FinancialDataUpdated @event)
+    {
+        Details.AssignFinancialData(@event.HourlyRate, @event.OvertimeRate);
+    }
+
 
     private void AccountActivated(AccountActivated @event)
     {
@@ -355,7 +359,7 @@ public partial class Account : Aggregate
 
     private void Settled(AccountSettled @event)
     { 
-        var settlement = Settlement.Create(@event.Balance, Details.SettlementDayMonth);
+        var settlement = Settlement.Create(@event.Balance, Details.SettlementDayMonth!.Value);
         
         Settlements.Add(settlement);
 

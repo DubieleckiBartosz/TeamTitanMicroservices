@@ -18,7 +18,7 @@ public class ChangeHourlyRateHandler : ICommandHandler<ChangeHourlyRateCommand, 
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Recipient");
+        account.CheckAndThrowWhenNull("Account");
 
         account.UpdateHourlyRate(request.NewHourlyRate);
 
