@@ -22,6 +22,7 @@ public class AccountReader : IRead
     public decimal? HourlyRate { get; private set; }
     public decimal? OvertimeRate { get; private set; }
     public DateTime? ExpirationDate { get; private set; }
+    public int? SettlementDayMonth { get; private set; }
 
     public List<ProductItemReader> ProductItems { get; private set; } = new List<ProductItemReader>();
     public List<WorkDayReader> WorkDays { get; private set; } = new List<WorkDayReader>();
@@ -51,12 +52,14 @@ public class AccountReader : IRead
     /// <param name="overtimeRate"></param>
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
+    /// <param name="settlementDayMonth"></param>
     /// <param name="productItems"></param>
     /// <param name="workDays"></param>
     /// <param name="bonuses"></param>
     private AccountReader(Guid id, string accountOwner, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate,
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, 
+        decimal balance, DateTime? expirationDate, int? settlementDayMonth,
         List<ProductItemReader> productItems, List<WorkDayReader> workDays, List<BonusReader> bonuses)
     {
         this.Id = id;
@@ -76,6 +79,7 @@ public class AccountReader : IRead
         this.WorkDays = workDays;
         this.Bonuses = bonuses;
         this.ExpirationDate = expirationDate;
+        this.SettlementDayMonth = settlementDayMonth;
     }
 
     /// <summary>
@@ -102,12 +106,13 @@ public class AccountReader : IRead
 
     public static AccountReader Load(Guid id, string accountOwner, string departmentCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate,
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth,
         List<ProductItemReader> productItems, List<WorkDayReader> workDays, List<BonusReader> bonuses)
     {
         return new AccountReader(id, accountOwner, departmentCode, countingType,
             accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance, expirationDate, productItems, workDays, bonuses);
+            workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth,
+            productItems, workDays, bonuses);
     }
 
     public AccountReader DataCompleted(AccountDataCompleted @event)
@@ -116,9 +121,16 @@ public class AccountReader : IRead
         AccountStatus = @event.Status;
         IsActive = false;
         WorkDayHours = @event.WorkDayHours;
+        SettlementDayMonth = @event.SettlementDayMonth; 
+        ExpirationDate = @event.ExpirationDate;
+
+        return this;
+    }
+
+    public AccountReader AssignFinancialData(FinancialDataUpdated @event)
+    { 
         HourlyRate = @event.HourlyRate;
         OvertimeRate = @event.OvertimeRate;
-        ExpirationDate = @event.ExpirationDate;
 
         return this;
     }

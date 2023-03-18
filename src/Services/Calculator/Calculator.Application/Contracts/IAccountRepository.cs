@@ -13,6 +13,7 @@ public interface IAccountRepository
     Task AddAsync(AccountReader accountReader);
     Task AddBonusAsync(AccountReader account);
     Task UpdateDataAsync(AccountReader accountReader);
+    Task UpdateFinancialDataAsync(AccountReader accountReader);
     Task UpdateBonusAccountAsync(BonusReader bonusValue, AccountReader account);
     Task UpdateStatusToDeactivateAsync(AccountReader accountReader);
     Task UpdateCountingTypeAsync(AccountReader accountReader);

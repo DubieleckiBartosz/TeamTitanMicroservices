@@ -162,10 +162,20 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@countingType", (int) accountReader.CountingType);
         parameters.Add("@status", (int) accountReader.AccountStatus);
         parameters.Add("@workDayHours", accountReader.WorkDayHours);
+        parameters.Add("@settlementDayMonth", accountReader.SettlementDayMonth);
+         
+        await ExecuteAsync("account_completeData_U", parameters, CommandType.StoredProcedure);
+    }
+
+    public async Task UpdateFinancialDataAsync(AccountReader accountReader)
+    {
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountReader.Id);
         parameters.Add("@overtimeRate", accountReader.OvertimeRate);
         parameters.Add("@hourlyRate", accountReader.HourlyRate);
 
-        await ExecuteAsync("account_completeData_U", parameters, CommandType.StoredProcedure);
+        await ExecuteAsync("account_financialData_U", parameters, CommandType.StoredProcedure);
     }
 
     public async Task UpdateCountingTypeAsync(AccountReader accountReader)
