@@ -40,4 +40,5 @@ public abstract class Aggregate
     }
 
     public abstract Aggregate? FromSnapshot(ISnapshot snapshot);
+    public abstract ISnapshot? CreateSnapshot();
 }

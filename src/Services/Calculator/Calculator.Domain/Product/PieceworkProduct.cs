@@ -13,6 +13,19 @@ public class PieceworkProduct : Aggregate
     public decimal PricePerUnit { get; private set; }
     public string CountedInUnit { get; private set; }
 
+    //Constructor for serialization
+    public PieceworkProduct()
+    {
+    }
+
+    /// <summary>
+    /// For logic
+    /// </summary>
+    /// <param name="companyCode"></param>
+    /// <param name="pricePerUnit"></param>
+    /// <param name="countedInUnit"></param>
+    /// <param name="productName"></param>
+    /// <param name="createdBy"></param>
     private PieceworkProduct(string companyCode, decimal pricePerUnit, string countedInUnit, string productName,
         string createdBy)
     {
@@ -30,6 +43,7 @@ public class PieceworkProduct : Aggregate
     {
         return new PieceworkProduct(companyCode, pricePerUnit, countedInUnit, productName, createdBy);
     }
+
     public void UpdatePrice(decimal newPrice)
     {
         var @event = ProductPriceUpdated.Create(newPrice, this.Id);
@@ -37,6 +51,12 @@ public class PieceworkProduct : Aggregate
         this.Apply(@event);
         this.Enqueue(@event);
     }
+
+    public override ISnapshot? CreateSnapshot()
+    {
+        return null;
+    }
+
     public override Aggregate? FromSnapshot(ISnapshot snapshot)
     {
         return null;
@@ -71,6 +91,5 @@ public class PieceworkProduct : Aggregate
         ProductName = @event.ProductName;
         CreatedBy = @event.CreatedBy;
         ProductCode = @event.ProductCode;
-    }
-
+    } 
 }

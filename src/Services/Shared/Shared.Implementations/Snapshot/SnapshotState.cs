@@ -16,7 +16,9 @@ public class SnapshotState : IIdentifier
         Created = DateTime.UtcNow;
     }
 
-    private SnapshotState(Guid id, Guid aggregateId, long currentVersion, string snapshotType, string snapshotData, DateTime created)
+    private SnapshotState(Guid id, Guid aggregateId, 
+        long currentVersion, string snapshotType, string snapshotData,
+        DateTime created)
     {
         Id = id;
         AggregateId = aggregateId;

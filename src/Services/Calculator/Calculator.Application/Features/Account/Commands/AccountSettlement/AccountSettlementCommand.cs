@@ -1,5 +1,8 @@
-﻿namespace Calculator.Application.Features.Account.Commands.AccountSettlement;
+﻿using MediatR;
+using Shared.Implementations.Abstractions;
 
-public class AccountSettlementCommand
+namespace Calculator.Application.Features.Account.Commands.AccountSettlement;
+
+public record AccountSettlementCommand(Guid AccountId) : ICommand<Unit>
 {
 }

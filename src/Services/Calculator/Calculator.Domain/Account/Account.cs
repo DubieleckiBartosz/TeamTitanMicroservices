@@ -193,7 +193,7 @@ public partial class Account : Aggregate
         this.Enqueue(@event);
     }
 
-    public AccountSnapshot CreateSnapshot()
+    public override AccountSnapshot CreateSnapshot()
     {
         return AccountSnapshot.Create(this.Id, this.Version).Set(this);
     }
@@ -201,7 +201,7 @@ public partial class Account : Aggregate
     public override Account? FromSnapshot(ISnapshot? snapshot)
     {
         var snapshotAccount = (AccountSnapshot?)snapshot;
-        if (snapshotAccount == null || snapshotAccount.State == null || snapshotAccount.State?.Details == null)
+        if (snapshotAccount?.State?.Details == null)
         {
             return null;
         }

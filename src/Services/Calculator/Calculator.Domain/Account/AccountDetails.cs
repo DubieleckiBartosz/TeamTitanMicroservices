@@ -92,6 +92,7 @@ public class AccountDetails
     /// <param name="hourlyRate"></param>
     /// <param name="overtimeRate"></param>
     /// <param name="balance"></param>
+    /// <param name="expirationDate"></param>
     /// <returns></returns>
     public static AccountDetails CreateAccountDetails(string accountExternalId, string departmentCode,
         CountingType countingType,
