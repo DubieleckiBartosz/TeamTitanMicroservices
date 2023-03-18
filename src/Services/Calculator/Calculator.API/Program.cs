@@ -25,10 +25,11 @@ builder.Configuration.AddJsonFile(Path.Combine(commonFolder, "SharedSettings.jso
 
 builder.GetDependencyInjectionInfrastructure();
 
-builder.EventStoreConfiguration(_ => new List<IProjection>()
-{    
-    new AccountProjection(_.GetService<IAccountRepository>()!)
-}, typeof(AssemblyCalculatorApplicationReference), typeof(AssemblySharedImplementationsReference)).RegisterBackgroundProcess();
+builder.EventStoreConfiguration(_ => new List<IProjection>
+    {
+        new AccountProjection(_.GetService<IAccountRepository>()!)
+    }, typeof(AssemblyCalculatorApplicationReference), typeof(AssemblySharedImplementationsReference))
+    .RegisterBackgroundProcess().GetHangfire();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -46,6 +47,7 @@ builder.GetSwaggerConfiguration();
 
 var app = builder.Build();
 app.SubscribeEvents();
+app.RegisterBackgroundDashboard();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

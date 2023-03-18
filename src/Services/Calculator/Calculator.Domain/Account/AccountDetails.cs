@@ -20,6 +20,8 @@ public class AccountDetails
     public decimal? HourlyRate { get; private set; }
     public decimal? OvertimeRate { get; private set; } 
     public DateTime? ExpirationDate { get; private set; }
+    public int SettlementDayMonth { get; private set; }
+
 
     //Constructor for serializer
     public AccountDetails()

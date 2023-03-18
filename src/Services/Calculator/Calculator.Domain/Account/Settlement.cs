@@ -2,27 +2,24 @@
 
 public class Settlement
 {
-    public bool IsPaid { get; private set; } 
     public DateTime From { get; }
     public DateTime To { get; }
     public decimal Value { get; }
     public string Period => $"{From.ToShortDateString()} - {To.ToShortDateString()}";
 
-    private Settlement(bool isPaid, decimal value, DateTime from, DateTime to)
+    private Settlement(decimal value, int settlementDayMonth)
     {
+        var now = DateTime.UtcNow;
+        var currentMonth = now.Month;
+        var currentYear = now.Year;  
+
         Value = value;
-        IsPaid = isPaid;
-        From = from;
-        To = to;
+        To = new DateTime(currentYear, currentMonth, settlementDayMonth);
+        From = To.AddMonths(-1).AddDays(-1);
     }
 
-    public static Settlement Create(bool isPaid, decimal value, DateTime from, DateTime to)
+    public static Settlement Create(decimal value, int settlementDayMonth)
     {
-        return new Settlement(isPaid, value, from, to);
-    }
-
-    public void AsPaid()
-    {
-        this.IsPaid = true;
+        return new Settlement(value, settlementDayMonth);
     }
 }
