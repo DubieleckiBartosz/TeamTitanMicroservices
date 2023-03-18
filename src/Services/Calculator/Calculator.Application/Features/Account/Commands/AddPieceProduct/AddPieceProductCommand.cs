@@ -9,6 +9,7 @@ public record AddPieceProductCommand(Guid PieceworkProductId, decimal Quantity, 
 {
     public static AddPieceProductCommand Create(AddPieceProductParameters parameters)
     {
-        return new AddPieceProductCommand()
+        return new AddPieceProductCommand(parameters.PieceworkProductId, parameters.Quantity, parameters.CurrentPrice,
+            parameters.AccountId, parameters.Date);
     }
 }

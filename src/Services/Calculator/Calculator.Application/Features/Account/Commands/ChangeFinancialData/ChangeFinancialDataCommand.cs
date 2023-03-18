@@ -8,6 +8,6 @@ public record ChangeFinancialDataCommand(decimal? OvertimeRate, decimal? HourlyR
 {
     public static ChangeFinancialDataCommand Create(ChangeFinancialDataParameters parameters)
     {
-
+        return new ChangeFinancialDataCommand(parameters.OvertimeRate, parameters.HourlyRate, parameters.AccountId);
     }
 }
