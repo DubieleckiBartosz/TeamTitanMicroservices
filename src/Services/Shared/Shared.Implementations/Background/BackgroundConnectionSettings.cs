@@ -1,6 +1,7 @@
 ﻿using Hangfire.SqlServer;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace Shared.Implementations.Background;
@@ -9,6 +10,8 @@ public static class BackgroundConnectionSettings
 {
     public static WebApplicationBuilder GetBackgroundConnectionSettings(this WebApplicationBuilder builder, string connection)
     {
+        builder.Services.AddScoped<IJobService, JobService>();
+
         builder.Services.AddHangfire(_ =>
         {
             _.UseSqlServerStorage(connection,
