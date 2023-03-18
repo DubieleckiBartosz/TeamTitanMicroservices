@@ -138,7 +138,20 @@ public class Account : Aggregate
         Apply(@event);
         this.Enqueue(@event);
     }
-    
+    public void UpdateHourlyRate(decimal newHourlyRate)
+    {
+        var @event = HourlyRateChanged.Create(newHourlyRate, this.Id);
+        Apply(@event);
+        this.Enqueue(@event);
+    }
+
+    public void UpdateOvertimeRate(decimal newOvertimeRate)
+    {
+        var @event = OvertimeRateChanged.Create(newOvertimeRate, this.Id);
+        Apply(@event);
+        this.Enqueue(@event);
+    }
+
     public void AccountUpdateFinancialData(decimal? overtimeRate, decimal? hourlyRate)
     {
         var @event = FinancialDataUpdated.Create(overtimeRate, hourlyRate, this.Id);
