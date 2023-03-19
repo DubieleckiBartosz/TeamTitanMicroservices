@@ -35,9 +35,9 @@ public class IdentityEmailService : IIdentityEmailService
         await SendAsync(recipient, template, MessageSubjects.ResetPassword);
     }
 
-    public async Task SendEmailInitUserAsync(string recipient, string code)
+    public async Task SendEmailInitUserOrganizationAsync(string recipient, string userCode, string organizationCode)
     {
-        var dictData = TemplateCreator.TemplateInitUser(code);
+        var dictData = TemplateCreator.TemplateInitUser(userCode, organizationCode);
         var template = Templates.GetUniqueCodeTemplate().GetTemplateReplaceData(dictData);
 
         await SendAsync(recipient, template, MessageSubjects.Code);
