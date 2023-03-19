@@ -11,7 +11,7 @@ public class AccountReader : IRead
     public Guid Id { get; }
     public decimal Balance { get; init; }
     public string AccountOwner { get; }
-    public string DepartmentCode { get; }
+    public string CompanyCode { get; }
     public CountingType CountingType { get; private set; }
     public AccountStatus AccountStatus { get; private set; }
     public string? ActivatedBy { get; private set; }
@@ -40,7 +40,7 @@ public class AccountReader : IRead
     /// </summary>
     /// <param name="id"></param>
     /// <param name="accountOwner"></param>
-    /// <param name="departmentCode"></param>
+    /// <param name="companyCode"></param>
     /// <param name="countingType"></param>
     /// <param name="accountStatus"></param>
     /// <param name="activatedBy"></param>
@@ -56,7 +56,7 @@ public class AccountReader : IRead
     /// <param name="productItems"></param>
     /// <param name="workDays"></param>
     /// <param name="bonuses"></param>
-    private AccountReader(Guid id, string accountOwner, string departmentCode, CountingType countingType,
+    private AccountReader(Guid id, string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, 
         decimal balance, DateTime? expirationDate, int? settlementDayMonth,
@@ -64,7 +64,7 @@ public class AccountReader : IRead
     {
         this.Id = id;
         this.AccountOwner = accountOwner;
-        this.DepartmentCode = departmentCode;
+        this.CompanyCode = companyCode;
         this.CountingType = countingType;
         this.AccountStatus = accountStatus;
         this.ActivatedBy = activatedBy;
@@ -87,13 +87,13 @@ public class AccountReader : IRead
     /// </summary>
     /// <param name="accountId"></param>
     /// <param name="accountOwner"></param>
-    /// <param name="departmentCode"></param>
+    /// <param name="companyCode"></param>
     /// <param name="createdBy"></param>
-    private AccountReader(Guid accountId, string accountOwner, string departmentCode, string createdBy)
+    private AccountReader(Guid accountId, string accountOwner, string companyCode, string createdBy)
     {
         this.Id = accountId;
         this.AccountOwner = accountOwner;
-        this.DepartmentCode = departmentCode;
+        this.CompanyCode = companyCode;
         this.CreatedBy = createdBy;
         this.IsActive = false;
         this.Balance = 0;
@@ -101,15 +101,15 @@ public class AccountReader : IRead
 
     public static AccountReader Create(NewAccountInitiated @event)
     {
-        return new AccountReader(@event.AccountId, @event.AccountCode, @event.DepartmentCode, @event.CreatedBy);
+        return new AccountReader(@event.AccountId, @event.AccountCode, @event.CompanyCode, @event.CreatedBy);
     }
 
-    public static AccountReader Load(Guid id, string accountOwner, string departmentCode, CountingType countingType,
+    public static AccountReader Load(Guid id, string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth,
         List<ProductItemReader> productItems, List<WorkDayReader> workDays, List<BonusReader> bonuses)
     {
-        return new AccountReader(id, accountOwner, departmentCode, countingType,
+        return new AccountReader(id, accountOwner, companyCode, countingType,
             accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth,
             productItems, workDays, bonuses);

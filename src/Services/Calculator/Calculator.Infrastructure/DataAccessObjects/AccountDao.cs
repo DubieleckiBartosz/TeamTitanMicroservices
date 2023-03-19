@@ -9,7 +9,7 @@ public class AccountDao
     public Guid Id { get; init; }
     public decimal Balance { get; init; }
     public string AccountOwner { get; init; } = default!;
-    public string DepartmentCode { get; init; } = default!;
+    public string CompanyCode { get; init; } = default!;
     public CountingType CountingType { get; init; }
     public AccountStatus AccountStatus { get; init; }
     public string? ActivatedBy { get; init; }
@@ -37,7 +37,7 @@ public class AccountDao
         var bonuses = Bonuses.Select(_ =>
             BonusReader.Load(_.Id, _.BonusCode, _.Creator, _.Settled, _.Canceled, _.Created)).ToList();
 
-        return AccountReader.Load(Id, AccountOwner, DepartmentCode, CountingType,
+        return AccountReader.Load(Id, AccountOwner, CompanyCode, CountingType,
             AccountStatus, ActivatedBy, CreatedBy, DeactivatedBy, IsActive,
             WorkDayHours, HourlyRate, OvertimeRate, Balance, ExpirationDate, SettlementDayMonth, products, workDays,
             bonuses);

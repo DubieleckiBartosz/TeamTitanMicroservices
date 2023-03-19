@@ -9,7 +9,7 @@ public class AccountDetails
 { 
     public decimal Balance { get; private set; } 
     public string AccountOwner { get; private set; } //Setter for serializer
-    public string DepartmentCode { get; private set; } //Setter for serializer
+    public string CompanyCode { get; private set; } //Setter for serializer
     public CountingType CountingType { get; private set; }
     public AccountStatus AccountStatus { get; private set; }
     public string? ActivatedBy { get; private set; }
@@ -32,7 +32,7 @@ public class AccountDetails
     /// For logic
     /// </summary>
     /// <param name="accountOwner"></param>
-    /// <param name="departmentCode"></param>
+    /// <param name="companyCode"></param>
     /// <param name="countingType"></param>
     /// <param name="accountStatus"></param>
     /// <param name="activatedBy"></param>
@@ -45,12 +45,12 @@ public class AccountDetails
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
-    private AccountDetails(string accountOwner, string departmentCode, CountingType countingType,
+    private AccountDetails(string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth)
     {
         AccountOwner = accountOwner;
-        DepartmentCode = departmentCode;
+        CompanyCode = companyCode;
         CountingType = countingType;
         AccountStatus = accountStatus;
         ActivatedBy = activatedBy;
@@ -69,13 +69,13 @@ public class AccountDetails
     /// Init
     /// </summary>
     /// <param name="accountOwner"></param>
-    /// <param name="departmentCode"></param>
+    /// <param name="companyCode"></param>
     /// <param name="createdBy"></param>
-    private AccountDetails(string accountOwner, string departmentCode, string createdBy)
+    private AccountDetails(string accountOwner, string companyCode, string createdBy)
     {
         Balance = 0;
         AccountOwner = accountOwner;
-        DepartmentCode = departmentCode;
+        CompanyCode = companyCode;
         CreatedBy = createdBy;
     }
 
@@ -83,7 +83,7 @@ public class AccountDetails
     /// To create an account state (snapshot)
     /// </summary>
     /// <param name="accountExternalId"></param>
-    /// <param name="departmentCode"></param>
+    /// <param name="companyCode"></param>
     /// <param name="countingType"></param>
     /// <param name="accountStatus"></param>
     /// <param name="activatedBy"></param>
@@ -97,12 +97,12 @@ public class AccountDetails
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
     /// <returns></returns>
-    public static AccountDetails CreateAccountDetails(string accountExternalId, string departmentCode,
+    public static AccountDetails CreateAccountDetails(string accountExternalId, string companyCode,
         CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth)
     {
-        return new AccountDetails(accountExternalId, departmentCode,
+        return new AccountDetails(accountExternalId, companyCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth: settlementDayMonth);
     }
@@ -111,7 +111,7 @@ public class AccountDetails
     /// For loading data, e.g. from a snapshot
     /// </summary>
     /// <param name="accountExternalId"></param>
-    /// <param name="departmentCode"></param>
+    /// <param name="companyCode"></param>
     /// <param name="countingType"></param>
     /// <param name="accountStatus"></param>
     /// <param name="activatedBy"></param>
@@ -125,19 +125,19 @@ public class AccountDetails
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
     /// <returns></returns>
-    public static AccountDetails LoadAccountDetails(string accountExternalId, string departmentCode,
+    public static AccountDetails LoadAccountDetails(string accountExternalId, string companyCode,
         CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth)
     {
-        return new AccountDetails(accountExternalId, departmentCode,
+        return new AccountDetails(accountExternalId, companyCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth);
     }
 
-    public static AccountDetails Init(string accountOwnerExternalId, string departmentCode, string createdBy)
+    public static AccountDetails Init(string accountOwnerExternalId, string companyCode, string createdBy)
     {
-        return new AccountDetails(accountOwnerExternalId, departmentCode, createdBy);
+        return new AccountDetails(accountOwnerExternalId, companyCode, createdBy);
     }
 
     public void AssignData(CountingType countingType,

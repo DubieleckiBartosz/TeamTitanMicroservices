@@ -2,14 +2,14 @@
 
 CREATE OR ALTER PROCEDURE account_createNew_I
 	@accountId UNIQUEIDENTIFIER,
-	@departmentCode VARCHAR(MAX),
+	@companyCode VARCHAR(MAX),
 	@accountOwner VARCHAR(MAX),
 	@createdBy VARCHAR(MAX),
 	@isActive BIT
 AS
 BEGIN
-	INSERT INTO Accounts(Id, DepartmentCode, AccountOwner, CreatedBy, IsActive)
-	VALUES (@accountId, @departmentCode, @accountOwner, @createdBy, @isActive)
+	INSERT INTO Accounts(Id, CompanyCode, AccountOwner, CreatedBy, IsActive)
+	VALUES (@accountId, @companyCode, @accountOwner, @createdBy, @isActive)
 END
 GO
 

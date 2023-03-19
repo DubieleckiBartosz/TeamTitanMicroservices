@@ -16,11 +16,11 @@ public class AccountState
     {
     }
 
-    private AccountState(string accountOwnerExternalId, string departmentCode, CountingType countingType,
+    private AccountState(string accountOwnerExternalId, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expiration, int settlementDayMonth, List<Settlement> settlements)
     {
-        Details = AccountDetails.CreateAccountDetails(accountOwnerExternalId, departmentCode,
+        Details = AccountDetails.CreateAccountDetails(accountOwnerExternalId, companyCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate, balance, expiration, settlementDayMonth);
 
@@ -35,7 +35,7 @@ public class AccountState
         var details = account.Details!;
         return new AccountState(
             details.AccountOwner, 
-            details.DepartmentCode,
+            details.CompanyCode,
             details.CountingType, 
             details.AccountStatus,
             details.ActivatedBy, 

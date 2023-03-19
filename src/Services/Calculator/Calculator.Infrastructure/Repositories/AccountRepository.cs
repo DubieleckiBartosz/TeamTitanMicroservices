@@ -133,7 +133,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         var parameters = new DynamicParameters();
 
         parameters.Add("@accountId", accountReader.Id);
-        parameters.Add("@departmentCode", accountReader.DepartmentCode);
+        parameters.Add("@companyCode", accountReader.CompanyCode);
         parameters.Add("@accountOwner", accountReader.AccountOwner);
         parameters.Add("@createdBy", accountReader.CreatedBy); 
         parameters.Add("@isActive", accountReader.IsActive); 

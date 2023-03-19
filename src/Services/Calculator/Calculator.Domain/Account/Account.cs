@@ -30,11 +30,11 @@ public class Account : Aggregate
     /// Init account
     /// </summary>
     /// <param name="accountOwnerCode"></param>
-    /// <param name="departmentCode"></param>
+    /// <param name="companyCode"></param>
     /// <param name="creator"></param>
-    private Account(string accountOwnerCode, string departmentCode, string creator)
+    private Account(string accountOwnerCode, string companyCode, string creator)
     { 
-        var @event = NewAccountInitiated.Create(departmentCode, accountOwnerCode, creator, Guid.NewGuid());
+        var @event = NewAccountInitiated.Create(companyCode, accountOwnerCode, creator, Guid.NewGuid());
         Apply(@event);
         this.Enqueue(@event);
     }
@@ -45,7 +45,7 @@ public class Account : Aggregate
     /// <param name="accountId"></param>
     /// <param name="version"></param>
     /// <param name="accountOwnerExternalId"></param>
-    /// <param name="departmentCode"></param>
+    /// <param name="companyCode"></param>
     /// <param name="countingType"></param>
     /// <param name="accountStatus"></param>
     /// <param name="activatedBy"></param>
@@ -58,14 +58,14 @@ public class Account : Aggregate
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
-    private Account(Guid accountId, int version, string accountOwnerExternalId, string departmentCode, CountingType countingType,
+    private Account(Guid accountId, int version, string accountOwnerExternalId, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int settlementDayMonth)
     {
         Id = accountId;
         Version = version;
         Details = AccountDetails.LoadAccountDetails(
-            accountOwnerExternalId, departmentCode,
+            accountOwnerExternalId, companyCode,
             countingType, accountStatus, activatedBy, 
             createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth); 
@@ -74,9 +74,9 @@ public class Account : Aggregate
         WorkDays = new List<WorkDay>();
     }
 
-    public static Account Create(string departmentCode, string accountOwnerCode, string createdBy)
+    public static Account Create(string companyCode, string accountOwnerCode, string createdBy)
     {
-        return new Account(accountOwnerCode, departmentCode, createdBy);
+        return new Account(accountOwnerCode, companyCode, createdBy);
     }
 
     public void CompleteAccount(CountingType countingType, int workDayHours, int settlementDayMonth,
@@ -218,7 +218,7 @@ public class Account : Aggregate
             snapshotAccount.AccountId,
             snapshotAccount.Version,
             details.AccountOwner,
-            details.DepartmentCode,
+            details.CompanyCode,
             details.CountingType, 
             details.AccountStatus, 
             details.ActivatedBy,
@@ -285,7 +285,7 @@ public class Account : Aggregate
     public void Initiated(NewAccountInitiated @event)
     {
         Id = @event.AccountId;
-        Details = AccountDetails.Init(@event.AccountCode, @event.DepartmentCode, @event.CreatedBy);
+        Details = AccountDetails.Init(@event.AccountCode, @event.CompanyCode, @event.CreatedBy);
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
     }
