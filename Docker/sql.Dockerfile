@@ -14,6 +14,7 @@ COPY ./Database/Identity/Identity-create-storedProcedures.sql ./
 COPY ./Database/Calculator/Calculator-create-db.sql ./
 COPY ./Database/Calculator/Calculator-create-tables.sql ./
 COPY ./Database/Calculator/Calculator-create-storedProcedures.sql ./ 
+COPY ./Database/Background-create-db.sql ./ 
 COPY entrypoint.sh ./
 COPY setupsql.sh ./
 

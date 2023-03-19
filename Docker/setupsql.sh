@@ -9,6 +9,7 @@ SCRIPTS[4]="$SQL_CMD $CONN_STRING -d TeamTitanIdentityTests -i Identity-create-s
 SCRIPTS[5]="$SQL_CMD $CONN_STRING -d master -i Calculator-create-db.sql" 
 SCRIPTS[6]="$SQL_CMD $CONN_STRING -d TeamTitanCalculator -i Calculator-create-tables.sql" 
 SCRIPTS[7]="$SQL_CMD $CONN_STRING -d TeamTitanCalculator -i Calculator-create-storedProcedures.sql"
+SCRIPTS[8]="$SQL_CMD $CONN_STRING -d master -i Background-create-db.sql"
 
 for ((i = 0; i < ${#SCRIPTS[@]}; i++))
 do   
