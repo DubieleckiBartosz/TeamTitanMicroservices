@@ -16,9 +16,10 @@ public static class TokenUtils
     {
         var roleClaims = new List<Claim>();
         roleClaims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)).ToList());
-        if (user.VerificationCode != null)
+        if (user.VerificationCode != null && user.OrganizationCode != null)
         {
-            roleClaims.Add(new Claim(CommonConstants.ClaimCode, user.VerificationCode));
+            roleClaims.Add(new Claim(CommonConstants.ClaimVerificationCodeType, user.VerificationCode));
+            roleClaims.Add(new Claim(CommonConstants.ClaimOrganizationCodeType, user.OrganizationCode));
         } 
 
         var claims = new[]

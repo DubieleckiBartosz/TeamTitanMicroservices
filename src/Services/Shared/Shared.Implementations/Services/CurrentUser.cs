@@ -39,9 +39,18 @@ public class CurrentUser : ICurrentUser
     {
         get
         {
-            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimCodeType)?.Value;
+            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimVerificationCodeType)?.Value;
         }
     }
+
+    public string? OrganizationCode
+    {
+        get
+        {
+            return Claims?.Claims.FirstOrDefault(_ => _.Type == Constants.ClaimOrganizationCodeType)?.Value;
+        }
+    }
+
 
     public string UserName
     {

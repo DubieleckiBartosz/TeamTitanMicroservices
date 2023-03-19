@@ -43,36 +43,61 @@ public class UserService : IUserService
         _jwtSettings = jwtSettings?.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
 
-    public async Task<Response<string>> AssignUserCodeAsync(AssignUserCodeDto assignUserCodeDto)
+    public async Task<Response<string>> MergeUserCodesAsync(AssignUserCodesDto assignUserCodesDto)
     {
-        if (assignUserCodeDto == null)
+        if (assignUserCodesDto == null)
         {
-            throw new ArgumentNullException(nameof(assignUserCodeDto));
+            throw new ArgumentNullException(nameof(assignUserCodesDto));
         }
 
-        var isInUse = await this._userRepository.CodeIsInUseAsync(assignUserCodeDto.Code);
+        var isInUse = await this._userRepository.CodeIsInUseAsync(assignUserCodesDto.UserCode);
         if (isInUse)
         {
             throw new AuthException(ExceptionIdentityMessages.CodeIsInUse,
                 ExceptionIdentityTitles.IncorrectCode);
         }
           
-        var code = assignUserCodeDto.Code;
+        var userCode = assignUserCodesDto.UserCode;
+        var organizationCode = assignUserCodesDto.UserCode;
         var currentUserId = _currentUser.UserId;
 
         var user = await _userRepository.FindByIdAsync(currentUserId);
 
-        user.AssignCode(code);
+        user.AssignCodes(userCode, organizationCode);
 
-        _loggerManager.LogInformation($"Code {code} has been assigned to user {user.Email}"); 
+        await _userRepository.MergeCodesAsync(user);
 
-        await _userRepository.AssignUserVerificationCodeAsync(user); 
-
-        _loggerManager.LogInformation($"User code saved {code}");
+        _loggerManager.LogInformation(
+            $"User {user.Email} merged to organization {organizationCode} with code {userCode}");
 
         return Response<string>.Ok(ResponseStrings.CompleteDataSuccess);
     }
-     
+
+    public async Task<Response<string>> InitUserOrganizationAsync(InitUserOrganizationDto initUserOrganizationDto)
+    {
+        if (initUserOrganizationDto == null)
+        {
+            throw new ArgumentNullException(nameof(initUserOrganizationDto));
+        }
+
+        var isInUse = await this._userRepository.CodeIsInUseAsync(initUserOrganizationDto.UserCode);
+        if (isInUse)
+        {
+            throw new AuthException(ExceptionIdentityMessages.CodeIsInUse,
+                ExceptionIdentityTitles.IncorrectCode);
+        }
+
+        var verificationCode = initUserOrganizationDto.UserCode;
+        var organizationCode = initUserOrganizationDto.OrganizationCode;
+
+        var newRole = this.CheckRole(initUserOrganizationDto.Role);
+        var role = (int) newRole.ToEnum<Roles>();
+
+        await _userRepository.CreateTemporaryUserAsync(role, verificationCode, organizationCode);
+
+        return Response<string>.Ok(ResponseStrings.OperationSuccess);
+    }
+
     public async Task<Response<int>> RegisterNewUserAsync(RegisterDto registerDto, string origin)
     {
         if (registerDto == null)
@@ -191,7 +216,8 @@ public class UserService : IUserService
         }
          
         var newRole = this.CheckRole(userNewRoleDto.Role);
-        user.AddNewRole(Enumeration.GetById<Role>((int)newRole.ToEnum<Roles>()));
+        var role = Enumeration.GetById<Role>((int) newRole.ToEnum<Roles>());
+        user.AddNewRole(role);
 
         await this._userRepository.AddToRoleAsync(user);
 

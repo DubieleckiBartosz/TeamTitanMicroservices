@@ -4,6 +4,6 @@ public static class MessageSubjects
 {
     public const string AccountConfirmation = "Account confirmation";
     public const string ResetPassword = "Reset Password";
-    public const string Code = "Code";
+    public const string Code = "UserCode";
 
 }

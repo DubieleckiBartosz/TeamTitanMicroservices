@@ -12,14 +12,15 @@ BEGIN
 			VerificationToken VARCHAR(MAX) NULL,
 			VerificationTokenExpirationDate DATETIME NULL,
 			VerificationCode VARCHAR(MAX) NULL, 
+			OrganizationCode VARCHAR(MAX) NULL, 
 			ResetToken VARCHAR(MAX) NULL,
-			ResetTokenExpirationDate DATETIME NULL,
-			UniqueUserCode VARCHAR(MAX) NULL,  
+			ResetTokenExpirationDate DATETIME NULL, 
 			Created DATETIME NOT NULL DEFAULT GETDATE(),
-			Modified DATETIME NOT NULL DEFAULT GETDATE()
+			Modified DATETIME NOT NULL DEFAULT GETDATE(),
+			CONSTRAINT UC_Organization_VerificationCode UNIQUE (VerificationCode, OrganizationCode)
 		)
 END
-
+ 
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='RefreshTokens' and xtype='U')
 BEGIN
 		CREATE TABLE [dbo].[RefreshTokens]
@@ -71,5 +72,21 @@ BEGIN
 			UserId INT NOT NULL FOREIGN KEY REFERENCES ApplicationUsers(Id) ON DELETE CASCADE,
 			RoleId INT NOT NULL FOREIGN KEY REFERENCES Roles(Id) ON DELETE CASCADE,
 		    CONSTRAINT PK_Users_Roles PRIMARY KEY(UserId, RoleId)
+		)
+END
+
+
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='TempUsers' and xtype='U')
+BEGIN
+
+	CREATE TABLE TempUsers
+		(
+		    Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,   
+			RoleId INT NOT NULL FOREIGN KEY REFERENCES Roles(Id) ON DELETE CASCADE, 
+			VerificationCode VARCHAR(MAX) NOT NULL, 
+			OrganizationCode VARCHAR(MAX) NOT NULL,  
+			Created DATETIME NOT NULL DEFAULT GETDATE(),
+			Modified DATETIME NOT NULL DEFAULT GETDATE(),
+			CONSTRAINT UC_Organization_VerificationCode UNIQUE (VerificationCode, OrganizationCode)
 		)
 END
