@@ -4,7 +4,7 @@ namespace Identity.Application.Models.DataTransferObjects;
 
 public class InitUserOrganizationDto
 {
-    public string Mail { get; }
+    public string? Mail { get; }
     public string Role { get; } 
     public string OrganizationCode { get; }
     public string UserCode { get; }

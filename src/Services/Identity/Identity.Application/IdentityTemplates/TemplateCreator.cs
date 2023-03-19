@@ -22,11 +22,12 @@ public class TemplateCreator
         return dictData;
     }
     
-    public static Dictionary<string, string> TemplateInitUser(string uniqueCode)
+    public static Dictionary<string, string> TemplateInitUser(string uniqueCode, string organizationCode)
     {
         var dictData = new Dictionary<string, string>
         {
-            {"uniqueCode", uniqueCode}
+            {"uniqueCode", uniqueCode},
+            {"organizationCode", organizationCode}
         };
         return dictData;
     }

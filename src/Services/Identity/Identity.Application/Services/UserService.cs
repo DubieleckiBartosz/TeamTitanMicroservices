@@ -95,6 +95,12 @@ public class UserService : IUserService
 
         await _userRepository.CreateTemporaryUserAsync(role, verificationCode, organizationCode);
 
+        var mail = initUserOrganizationDto.Mail;
+        if (mail != null)
+        {
+            await _identityEmailService.SendEmailInitUserOrganizationAsync(mail, verificationCode, organizationCode);
+        }
+
         return Response<string>.Ok(ResponseStrings.OperationSuccess);
     }
 

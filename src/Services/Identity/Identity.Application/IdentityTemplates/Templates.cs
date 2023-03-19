@@ -38,14 +38,29 @@ public class Templates
                     "border-radius: 5px;" +
                     "text-align: center;" +
                "}" +
-               "h1 {margin-top: 0;color: #333;}" +
-               "p {margin: 20px 0;color: #666;}.code {font-size: 2em;font-weight: bold;color: #333;}" +
+               "h1 {" +
+                   "margin-top: 0;" +
+                   "color: #333;" +
+               "}" +
+               "p {" +
+                   "margin: 20px 0;" +
+                   "color: #666;" +
+               "}" +
+               ".code {" +
+                   "font-size: 2em;" +
+                   "font-weight: bold;" +
+                   "color: #333;" +
+               "}" +
                "</style>" +
                "</head>" +
-                   "<body>" +
-                       "<div class=\"container\"><h1>Unique UserCode</h1>" +
-                       "<p>Welcome to our company. Your code is:</p>" +
-                       "<div class=\"code\">{uniqueCode}</div><p>Please keep this code in a safe place.</p></div>" +
+                   "<body>" + 
+                        "<div class=\"container\">" + 
+                           "<h1>Unique UserCode</h1>" + 
+                           "<p>Welcome to our company.</p>" +
+                           "<p>Organization code: <span class=\"code\">{organizationCode}</span></p>" + 
+                           "<p>Your code is: <span class=\"code\">{uniqueCode}</span></p>" + 
+                           "<p>Please keep these codes in a safe place.</p>" + 
+                       "</div>" +  
                    "</body>" +
                "</html>";
     }
