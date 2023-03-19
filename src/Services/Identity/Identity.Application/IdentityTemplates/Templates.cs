@@ -47,19 +47,18 @@ public class Templates
                    "color: #666;" +
                "}" +
                ".code {" +
-                   "font-size: 2em;" +
+                   "font-size: 1.2em;" +
                    "font-weight: bold;" +
                    "color: #333;" +
                "}" +
                "</style>" +
                "</head>" +
                    "<body>" + 
-                        "<div class=\"container\">" + 
-                           "<h1>Unique UserCode</h1>" + 
-                           "<p>Welcome to our company.</p>" +
-                           "<p>Organization code: <span class=\"code\">{organizationCode}</span></p>" + 
-                           "<p>Your code is: <span class=\"code\">{uniqueCode}</span></p>" + 
-                           "<p>Please keep these codes in a safe place.</p>" + 
+                        "<div class=\"container\">" +  
+                           "<h1>Welcome to our company.</h1>" +
+                           "<h3>Organization code: <span class=\"code\">{organizationCode}</span></h3>" +
+                           "<h3>Your code is: <span class=\"code\">{uniqueCode}</span></h3>" +
+                           "<h3>Please keep these codes in a safe place.</h3>" + 
                        "</div>" +  
                    "</body>" +
                "</html>";

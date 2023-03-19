@@ -14,10 +14,12 @@ public class ExceptionIdentityMessages
 
     public const string RegisterFailed = "Cannot create user, check the data and try again later.";
     public const string InitCodesFailed = "Codes cannot be assigned";
+    public const string MergeCodesFailed = "Failed to merge codes";
     public const string UserNotFound = "User not found.";
     public const string UserRolesNotFound = "Unable to get user roles.";
     public const string IncorrectData = "Incorrect data! Check data and try again."; 
-    public const string CodeIsInUse = "This code is in use."; 
+    public const string CodeIsInUse = "This code is in use.";  
+    public const string NoRoles = "You have no role for this operation.";  
 
     public static string RoleNotFound(List<string> allRoles)
     {

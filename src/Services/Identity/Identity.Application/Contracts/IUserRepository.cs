@@ -20,4 +20,5 @@ public interface IUserRepository
     Task<List<string>> GetUserRolesAsync(User user);
     Task ClearResetTokenAsync(User user);
     Task ClearTokens();
+    Task ClearUserCodesAsync(User user, string oldVerificationCode);
 }

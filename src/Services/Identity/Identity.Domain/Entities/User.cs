@@ -121,29 +121,35 @@ public class User : Entity, IAggregateRoot
 
     public void AssignCodes(string verificationCode, string organizationCode)
     {
+        if (VerificationCode != null || OrganizationCode != null)
+        {
+            throw new BusinessException(BusinessRuleErrorMessages.ReleaseCodesErrorMessage,
+                BusinessExceptionTitles.ReleasingCodesTitle);
+        }
+
         VerificationCode = verificationCode;
         OrganizationCode = organizationCode;
     }
+
+    public void GetRidOfCodes()
+    {
+        if (VerificationCode == null || OrganizationCode == null)
+        {
+            throw new BusinessException(BusinessRuleErrorMessages.CodesNullErrorMessage,
+                BusinessExceptionTitles.OperationCannotBePerformedTitle);
+        }
+
+        VerificationCode = null;
+        OrganizationCode = null;
+    }
+
 
     public static User CreateUser(string verificationToken, string userName, string email, string phoneNumber)
     {
         var token = TokenValue.CreateVerificationToken(verificationToken);
         return new User(token, userName, email, phoneNumber);
     }
-
-
-    public void CompleteData(string verificationToken, string userName, string phoneNumber)
-    {
-        var token = TokenValue.CreateVerificationToken(verificationToken); 
-        UserName = userName ?? throw new ArgumentNullException(nameof(userName)); 
-        PhoneNumber = phoneNumber ?? throw new ArgumentNullException(nameof(phoneNumber));
-        VerificationToken = token;
-        IsConfirmed = false;
-        ResetToken = null; 
-        RefreshTokens = new List<RefreshToken>();
-    }
-
-
+      
     public void SetPasswordHash(string passwordHash)
     {
         PasswordHash = passwordHash;

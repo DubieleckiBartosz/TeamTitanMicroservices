@@ -6,6 +6,7 @@ namespace Identity.Application.Contracts.Services;
 public interface IUserService
 {
     Task<Response<string>> MergeUserCodesAsync(AssignUserCodesDto assignUserCodesDto);
+    Task<Response<string>> ClearUserCodesAsync();
     Task<Response<string>> InitUserOrganizationAsync(InitUserOrganizationDto initUserOrganizationDto);
     Task<Response<int>> RegisterNewUserAsync(RegisterDto registerDto, string origin);
     Task<Response<AuthenticationDto>> LoginAsync(LoginDto loginDto);

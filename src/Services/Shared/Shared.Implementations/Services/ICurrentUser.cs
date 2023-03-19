@@ -3,6 +3,7 @@
 public interface ICurrentUser
 {
     bool IsInRole(string roleName);
+    bool IsInRoles(string[] roles);
     int UserId { get; } 
     string? VerificationCode { get; }
     string? OrganizationCode { get; }

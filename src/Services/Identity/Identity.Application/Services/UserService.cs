@@ -58,7 +58,7 @@ public class UserService : IUserService
         }
           
         var userCode = assignUserCodesDto.UserCode;
-        var organizationCode = assignUserCodesDto.UserCode;
+        var organizationCode = assignUserCodesDto.OrganizationCode;
         var currentUserId = _currentUser.UserId;
 
         var user = await _userRepository.FindByIdAsync(currentUserId);
@@ -71,6 +71,31 @@ public class UserService : IUserService
             $"User {user.Email} merged to organization {organizationCode} with code {userCode}");
 
         return Response<string>.Ok(ResponseStrings.CompleteDataSuccess);
+    }
+
+    public async Task<Response<string>> ClearUserCodesAsync()
+    {
+        var access = this._currentUser.IsInRoles(new string[]
+        {
+            Roles.Employee.ToString(),
+            Roles.Manager.ToString(),
+        });
+
+        if (access)
+        {
+            var userId = _currentUser.UserId;
+
+            var user = await _userRepository.FindByIdAsync(userId);
+            var code = user.VerificationCode;
+            user.GetRidOfCodes();
+
+            await _userRepository.ClearUserCodesAsync(user, code!);
+
+            return Response<string>.Ok(ResponseStrings.CodesCleared);
+        }
+
+        throw new AuthException(ExceptionIdentityMessages.NoRoles,
+            ExceptionIdentityTitles.IncorrectRole);
     }
 
     public async Task<Response<string>> InitUserOrganizationAsync(InitUserOrganizationDto initUserOrganizationDto)
