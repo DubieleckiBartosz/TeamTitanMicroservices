@@ -3,6 +3,7 @@
 public class ExceptionIdentityTitles
 {
     public const string CreatingUser = "Creating a user.";
+    public const string MergeFailed = "Merge failed.";
     public const string CreatingUserCodes = "Creating user codes.";
     public const string UserByToken = "Searching for a user with a token.";
     public const string UserByEmail = "Searching for a user with a mail.";
@@ -19,4 +20,5 @@ public class ExceptionIdentityTitles
     public const string ClearResetToken = "Clearing the reset token.";
     public const string ResetToken = "Token Status."; 
     public const string IncorrectCode = "Incorrect code."; 
+    public const string IncorrectRole = "Incorrect role."; 
 }

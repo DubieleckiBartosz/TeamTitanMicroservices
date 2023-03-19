@@ -1,23 +1,32 @@
 
 CREATE OR ALTER PROCEDURE user_mergeCodes_U  
-	@verificationCode VARCHAR(MAX), 
-	@organizationCode VARCHAR(MAX), 
+	@verificationCode VARCHAR(50), 
+	@organizationCode VARCHAR(50), 
 	@userId INT
 AS
 BEGIN  
 	BEGIN TRY  
 		BEGIN TRANSACTION; 
 
+			DECLARE @userTempTable TABLE (RoleId INT, VerificationCode VARCHAR(50), OrganizationCode VARCHAR(50)); 
+
+			INSERT INTO @userTempTable(RoleId, VerificationCode, OrganizationCode)
+			SELECT RoleId, VerificationCode, OrganizationCode FROM TempUsers 
+			WHERE VerificationCode = @verificationCode 
+			AND OrganizationCode = @organizationCode
+
 			UPDATE au
-			SET au.VerificationCode = tu.VerificationCode,
-				au.OrganizationCode = tu.OrganizationCode,
+			SET au.VerificationCode = t.VerificationCode,
+				au.OrganizationCode = t.OrganizationCode,
 				au.Modified = GETDATE()
-			FROM ApplicationUsers au 
-			INNER JOIN TempUsers tu 
-			ON tu.VerificationCode = @verificationCode 
-			AND tu.OrganizationCode = @organizationCode
+			FROM ApplicationUsers au INNER JOIN @userTempTable t 
+			ON t.VerificationCode = @verificationCode 
+			AND t.OrganizationCode = @organizationCode
 			AND au.Id = @userId;
-	
+			 
+			INSERT INTO UserRoles (UserId, RoleId, VerificationCode) 
+			SELECT @userId, RoleId, VerificationCode FROM @userTempTable  
+
 			DELETE FROM TempUsers 
 			WHERE VerificationCode = @verificationCode 
 			AND OrganizationCode = @organizationCode
@@ -39,8 +48,43 @@ BEGIN
 END
 GO 
 
+
+CREATE OR ALTER PROCEDURE user_clearUserCodes_UD  
+	@userId INT,
+	@verificationCode VARCHAR(50)
+AS
+BEGIN   
+	BEGIN TRY  
+		BEGIN TRANSACTION; 
+
+			UPDATE ApplicationUsers 
+			SET VerificationCode = NULL,
+				OrganizationCode = NULL
+			WHERE Id = @userId
+
+			DELETE FROM UserRoles
+			WHERE VerificationCode = @verificationCode
+
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH 		
+END
+GO
+
+
 CREATE OR ALTER PROCEDURE user_getUserByCode_S  
-	@uniqueCode VARCHAR(MAX) 
+	@uniqueCode VARCHAR(50) 
 AS
 BEGIN  
 	SELECT 
@@ -48,7 +92,7 @@ BEGIN
 		au.VerificationCode,
 		au.OrganizationCode,
 		au.Email,
-		ur.RoleId 
+		ur.RoleId AS [Role]
 	FROM ApplicationUsers AS au
 	INNER JOIN UserRoles AS ur ON ur.UserId = au.Id 
 	WHERE au.VerificationCode = @uniqueCode 
@@ -65,7 +109,7 @@ BEGIN
 		au.VerificationCode,
 		au.OrganizationCode,
 		au.Email,
-		ur.RoleId 
+		ur.RoleId AS [Role]
 	FROM ApplicationUsers AS au
 	INNER JOIN UserRoles AS ur ON ur.UserId = au.Id 
 	WHERE au.Id = @userId
@@ -74,7 +118,7 @@ GO
 
 
 CREATE OR ALTER PROCEDURE user_codeExists_S
-	@code VARCHAR(MAX)
+	@code VARCHAR(50)
 AS
 BEGIN
 	SELECT 1 FROM ApplicationUsers WHERE VerificationCode = @code
@@ -363,8 +407,8 @@ GO
  
 CREATE OR ALTER PROCEDURE [dbo].[temp_createUserCodes_I]  
 	@roleId INT,
-    @organizationCode VARCHAR(MAX),
-    @verificationCode VARCHAR(MAX)
+    @organizationCode VARCHAR(50),
+    @verificationCode VARCHAR(50)
 AS
 BEGIN 
 	INSERT INTO TempUsers(RoleId, VerificationCode, OrganizationCode)

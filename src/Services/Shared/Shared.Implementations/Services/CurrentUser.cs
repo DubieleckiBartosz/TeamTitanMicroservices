@@ -15,10 +15,18 @@ public class CurrentUser : ICurrentUser
     }
 
     private ClaimsPrincipal? Claims => _httpContextAccessor?.HttpContext?.User;
+    private List<Claim>? Roles => Claims?.Claims.Where(_ => _.Type == ClaimTypes.Role).ToList();
     public bool IsInRole(string roleName)
     {
-        var resultRoles = Claims != null ? null : Claims?.Claims.Where(_ => _.Type == ClaimTypes.Role).ToList();
+        var resultRoles = Roles;
         var response = resultRoles?.Any(_ => _.Value == roleName);
+        return response ?? false;
+    }
+
+    public bool IsInRoles(string[] roles)
+    {
+        var resultRoles = Roles;
+        var response = resultRoles?.Any(_ => roles.Contains(_.Value));
         return response ?? false;
     }
 

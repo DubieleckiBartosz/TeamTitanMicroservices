@@ -25,14 +25,26 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(object), 500)]
     [ProducesResponseType(typeof(Response<string>), 200)]
     [SwaggerOperation(Summary = "Assign codes to user")]
-    [HttpPost("[action]")]
+    [HttpPut("[action]")]
     public async Task<IActionResult> AssignUserCodes([FromBody] AssignUserCodesParameters codesParameters)
     { 
         var response = await _userService.MergeUserCodesAsync(new AssignUserCodesDto(codesParameters));
         return Ok(response);
     }
 
-    [Authorize("Admin,Owner,Manager")]
+    [Authorize(Roles = "Admin,Owner,Manager,Employee")]
+    [ProducesResponseType(typeof(object), 400)]
+    [ProducesResponseType(typeof(object), 500)]
+    [ProducesResponseType(typeof(Response<string>), 200)]
+    [SwaggerOperation(Summary = "Getting rid of the codes")]
+    [HttpPut("[action]")]
+    public async Task<IActionResult> ClearUserCodes()
+    { 
+        var response = await _userService.ClearUserCodesAsync();
+        return Ok(response);
+    }
+
+    [Authorize(Roles = "Admin,Owner,Manager")]
     [ProducesResponseType(typeof(object), 400)]
     [ProducesResponseType(typeof(object), 500)]
     [ProducesResponseType(typeof(Response<string>), 200)]
@@ -162,7 +174,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(Response<string>), 200)]
     [SwaggerOperation(Summary = "Add user to owner role")]
     [HttpPut("[action]")]
-    public async Task<IActionResult> AddTrainerRoleToUser([FromBody] UserOwnerRoleParameters parameters)
+    public async Task<IActionResult> AddOwnerRoleToUser([FromBody] UserOwnerRoleParameters parameters)
     {
         var result = await this._userService.AddToOwnerRoleAsync(new UserOwnerRoleDto(parameters));
         return Ok(result);

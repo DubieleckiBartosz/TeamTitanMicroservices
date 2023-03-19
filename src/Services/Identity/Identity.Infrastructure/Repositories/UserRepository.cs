@@ -76,7 +76,22 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
         param.Add("@organizationCode", user.OrganizationCode); 
         param.Add("@userId", user.Id);  
 
-        await this.ExecuteAsync("user_mergeCodes_U", param, CommandType.StoredProcedure);
+        var result = await this.ExecuteAsync(sql: "user_mergeCodes_U", param: param, commandType: CommandType.StoredProcedure);
+        if (result <= 0)
+        {
+            throw new IdentityResultException(ExceptionIdentityMessages.MergeCodesFailed,
+                ExceptionIdentityTitles.MergeFailed, HttpStatusCode.InternalServerError, null);
+        }
+    }
+    
+    public async Task ClearUserCodesAsync(User user, string oldVerificationCode)
+    {
+        var param = new DynamicParameters();
+         
+        param.Add("@verificationCode", oldVerificationCode);  
+        param.Add("@userId", user.Id);  
+
+        await this.ExecuteAsync(sql: "user_clearUserCodes_UD", param: param, commandType: CommandType.StoredProcedure); 
     }
 
     public async Task ConfirmAccountAsync(User user)
