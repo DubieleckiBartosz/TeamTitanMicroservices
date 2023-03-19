@@ -2,10 +2,10 @@
 
 namespace Calculator.Domain.Account.Events;
 
-public record NewAccountInitiated(string DepartmentCode, string AccountCode, string CreatedBy, Guid AccountId) : IEvent
+public record NewAccountInitiated(string CompanyCode, string AccountCode, string CreatedBy, Guid AccountId) : IEvent
 {
-    public static NewAccountInitiated Create(string departmentCode, string accountOwnerCode, string createdBy, Guid accountId)
+    public static NewAccountInitiated Create(string companyCode, string accountOwnerCode, string createdBy, Guid accountId)
     {
-        return new NewAccountInitiated(departmentCode, accountOwnerCode, createdBy, accountId);
+        return new NewAccountInitiated(companyCode, accountOwnerCode, createdBy, accountId);
     }
 }
