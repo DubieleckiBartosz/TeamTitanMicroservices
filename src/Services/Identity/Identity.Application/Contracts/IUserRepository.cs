@@ -6,9 +6,10 @@ public interface IUserRepository
 {
     Task<User> FindByIdAsync(int id);
     Task<User> FindByCodeAsync(string code);
-    Task AssignUserVerificationCodeAsync(User user);
+    Task MergeCodesAsync(User user);
     Task<bool> CodeIsInUseAsync(string code);
     Task<int> CreateAsync(User user);
+    Task CreateTemporaryUserAsync(int roleId, string verificationCode, string organizationCode);
     Task ConfirmAccountAsync(User user);
     Task<User> FindUserByVerificationTokenAsync(string tokenKey);
     Task<User> FindUserByResetTokenAsync(string tokenKey);

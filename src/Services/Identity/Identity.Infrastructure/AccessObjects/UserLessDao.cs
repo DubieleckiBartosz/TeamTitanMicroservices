@@ -6,11 +6,12 @@ public class UserLessDao
 {
     public int Id { get; set; } 
     public string VerificationCode { get; set; }
+    public string OrganizationCode { get; set; }
     public string Email { get; set; }
     public int Role { get; set; }
 
     public User Map()
     {
-        return User.LoadUserLess(Id, VerificationCode, Role, Email);
+        return User.LoadUserLess(Id, VerificationCode, OrganizationCode, Role, Email);
     }
 }

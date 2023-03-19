@@ -20,7 +20,7 @@ public class Templates
     
     public static string GetUniqueCodeTemplate()
     {
-        return "<!DOCTYPE html><html><head><title>Code</title>" +
+        return "<!DOCTYPE html><html><head><title>UserCode</title>" +
                "<style>" +
                "body {" +
                    "font-family: " +
@@ -43,7 +43,7 @@ public class Templates
                "</style>" +
                "</head>" +
                    "<body>" +
-                       "<div class=\"container\"><h1>Unique Code</h1>" +
+                       "<div class=\"container\"><h1>Unique UserCode</h1>" +
                        "<p>Welcome to our company. Your code is:</p>" +
                        "<div class=\"code\">{uniqueCode}</div><p>Please keep this code in a safe place.</p></div>" +
                    "</body>" +

@@ -24,14 +24,26 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(object), 400)]
     [ProducesResponseType(typeof(object), 500)]
     [ProducesResponseType(typeof(Response<string>), 200)]
-    [SwaggerOperation(Summary = "Assign code to user")]
+    [SwaggerOperation(Summary = "Assign codes to user")]
     [HttpPost("[action]")]
-    public async Task<IActionResult> Init([FromBody] AssignUserCodeParameters codeParameters)
+    public async Task<IActionResult> AssignUserCodes([FromBody] AssignUserCodesParameters codesParameters)
     { 
-        var response = await _userService.AssignUserCodeAsync(new AssignUserCodeDto(codeParameters));
+        var response = await _userService.MergeUserCodesAsync(new AssignUserCodesDto(codesParameters));
         return Ok(response);
     }
-     
+
+    [Authorize("Admin,Owner,Manager")]
+    [ProducesResponseType(typeof(object), 400)]
+    [ProducesResponseType(typeof(object), 500)]
+    [ProducesResponseType(typeof(Response<string>), 200)]
+    [SwaggerOperation(Summary = "Init user organization")]
+    [HttpPost("[action]")]
+    public async Task<IActionResult> InitUserOrganization([FromBody] InitUserOrganizationParameters parameters)
+    {
+        var response = await _userService.InitUserOrganizationAsync(new InitUserOrganizationDto(parameters));
+        return Ok(response);
+    }
+
     [ProducesResponseType(typeof(object), 400)]
     [ProducesResponseType(typeof(object), 500)]
     [ProducesResponseType(typeof(Response<int>), 200)]

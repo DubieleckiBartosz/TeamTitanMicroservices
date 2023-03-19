@@ -1,12 +1,41 @@
 
-CREATE OR ALTER PROCEDURE user_assignCode_U  
-	@code VARCHAR(MAX), 
+CREATE OR ALTER PROCEDURE user_mergeCodes_U  
+	@verificationCode VARCHAR(MAX), 
+	@organizationCode VARCHAR(MAX), 
 	@userId INT
 AS
 BEGIN  
-	UPDATE ApplicationUsers
-		SET VerificationCode = @code
-	WHERE Id = @userId							
+	BEGIN TRY  
+		BEGIN TRANSACTION; 
+
+			UPDATE au
+			SET au.VerificationCode = tu.VerificationCode,
+				au.OrganizationCode = tu.OrganizationCode,
+				au.Modified = GETDATE()
+			FROM ApplicationUsers au 
+			INNER JOIN TempUsers tu 
+			ON tu.VerificationCode = @verificationCode 
+			AND tu.OrganizationCode = @organizationCode
+			AND au.Id = @userId;
+	
+			DELETE FROM TempUsers 
+			WHERE VerificationCode = @verificationCode 
+			AND OrganizationCode = @organizationCode
+
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH 	
 END
 GO 
 
@@ -17,6 +46,7 @@ BEGIN
 	SELECT 
 		au.Id, 
 		au.VerificationCode,
+		au.OrganizationCode,
 		au.Email,
 		ur.RoleId 
 	FROM ApplicationUsers AS au
@@ -33,6 +63,7 @@ BEGIN
 	SELECT 
 		au.Id, 
 		au.VerificationCode,
+		au.OrganizationCode,
 		au.Email,
 		ur.RoleId 
 	FROM ApplicationUsers AS au
@@ -114,26 +145,8 @@ CREATE OR ALTER PROCEDURE [dbo].[user_addToRole_I]
 	@role INT
 AS 
 BEGIN 
-	BEGIN TRY  
-		BEGIN TRANSACTION;
-		 
-			INSERT INTO UserRoles(UserId, RoleId) 
-			VALUES (@userId, @role)
-	
-		COMMIT TRANSACTION;
-	END TRY  
-	BEGIN CATCH
-	    IF (XACT_STATE()) = -1
-        BEGIN
-			ROLLBACK TRANSACTION
-		END
-  
-		IF (XACT_STATE()) = 1
-        BEGIN
-			COMMIT TRANSACTION
-		END
-		
-	END CATCH
+		INSERT INTO UserRoles(UserId, RoleId) 
+		VALUES (@userId, @role) 
 END
 GO
 
@@ -171,6 +184,7 @@ BEGIN
 	au.ResetToken,
 	au.ResetTokenExpirationDate, 
 	au.VerificationCode, 
+	au.OrganizationCode,
 	rt.Id,
 	rt.Token,
 	rt.TokenExpirationDate,
@@ -199,7 +213,8 @@ BEGIN
 	au.VerificationTokenExpirationDate,
 	au.ResetToken,
 	au.ResetTokenExpirationDate, 
-	au.VerificationCode, 
+	au.VerificationCode,
+	au.OrganizationCode,
 	rt.Id,
 	rt.Token,
 	rt.TokenExpirationDate,
@@ -229,6 +244,7 @@ BEGIN
 	au.ResetToken,
 	au.ResetTokenExpirationDate, 
 	au.VerificationCode, 
+	au.OrganizationCode,
 	rt.Id,
 	rt.Token,
 	rt.TokenExpirationDate,
@@ -258,6 +274,7 @@ BEGIN
 	au.ResetToken,
 	au.ResetTokenExpirationDate, 
 	au.VerificationCode, 
+	au.OrganizationCode,
 	rt.Id,
 	rt.Token,
 	rt.TokenExpirationDate,
@@ -341,5 +358,16 @@ BEGIN
 		END
 		
 	END CATCH
+END
+GO
+ 
+CREATE OR ALTER PROCEDURE [dbo].[temp_createUserCodes_I]  
+	@roleId INT,
+    @organizationCode VARCHAR(MAX),
+    @verificationCode VARCHAR(MAX)
+AS
+BEGIN 
+	INSERT INTO TempUsers(RoleId, VerificationCode, OrganizationCode)
+	VALUES(@roleId, @verificationCode, @organizationCode)
 END
 GO

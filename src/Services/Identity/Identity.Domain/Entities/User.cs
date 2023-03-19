@@ -15,6 +15,7 @@ public class User : Entity, IAggregateRoot
     public bool IsConfirmed { get; private set; }
     public string PasswordHash { get; private set; } 
     public string? VerificationCode { get; private set; }
+    public string? OrganizationCode { get; private set; }
     public TokenValue VerificationToken { get; private set; }
     public TokenValue? ResetToken { get; private set; }
     public List<RefreshToken> RefreshTokens { get; private set; }
@@ -25,13 +26,15 @@ public class User : Entity, IAggregateRoot
     /// </summary>
     /// <param name="id"></param> 
     /// <param name="verificationCode"></param>
+    /// <param name="organizationCode"></param>
     /// <param name="role"></param>
     /// <param name="email"></param>
-    private User(int id, string verificationCode, int role, string email)
+    private User(int id, string? verificationCode, string? organizationCode, int role, string email)
     {
         Id = id;
         Email = email;
         VerificationCode = verificationCode;
+        OrganizationCode = organizationCode;
         var userRole = Enumeration.GetById<Role>(role);
         Roles = new List<Role> { userRole };
     }
@@ -62,6 +65,7 @@ public class User : Entity, IAggregateRoot
     /// </summary>
     /// <param name="id"></param> 
     /// <param name="verificationCode"></param>
+    /// <param name="organizationCode"></param>
     /// <param name="isConfirmed"></param>
     /// <param name="resetToken"></param>
     /// <param name="resetTokenExpirationDate"></param>
@@ -74,7 +78,7 @@ public class User : Entity, IAggregateRoot
     /// <param name="roles"></param>
     /// <param name="refreshTokens"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    private User(int id, string? verificationCode, bool isConfirmed, string resetToken,
+    private User(int id, string? verificationCode, string? organizationCode, bool isConfirmed, string resetToken,
         DateTime? resetTokenExpirationDate,
         string verificationToken, DateTime? verificationTokenExpirationDate,  
         string userName,
@@ -85,6 +89,7 @@ public class User : Entity, IAggregateRoot
     {
         Id = id;
         VerificationCode = verificationCode;
+        OrganizationCode = organizationCode;
 
         if (refreshTokens != null && refreshTokens.Any())
         {
@@ -97,27 +102,27 @@ public class User : Entity, IAggregateRoot
         Roles = roles ?? throw new ArgumentNullException(nameof(roles));
     } 
 
-    public static User LoadUser(int id, string? verificationExternalCode, bool isConfirmed,
+    public static User LoadUser(int id, string? verificationCode, string? organizationCode, bool isConfirmed,
         string resetToken, DateTime? resetTokenExpirationDate,
         string verificationToken, DateTime? verificationTokenExpirationDate,  
         string userName, string email,
         string phoneNumber,
         string passwordHash, List<Role> roles, List<RefreshToken>? refreshTokens = null)
     {
-        return new User(id, verificationExternalCode, isConfirmed, resetToken, resetTokenExpirationDate,
-            verificationToken,
-            verificationTokenExpirationDate, userName, email,
-            phoneNumber, passwordHash, roles, refreshTokens);
+        return new User(id, verificationCode, organizationCode, isConfirmed, 
+            resetToken, resetTokenExpirationDate, verificationToken, verificationTokenExpirationDate, 
+            userName, email, phoneNumber, passwordHash, roles, refreshTokens);
     }
 
-    public static User LoadUserLess(int id, string verificationExternalCode, int role, string email)
+    public static User LoadUserLess(int id, string? verificationCode, string? organizationCode, int role, string email)
     {
-        return new User(id, verificationExternalCode, role, email);
+        return new User(id, verificationCode, organizationCode, role, email);
     }
 
-    public void AssignCode(string verificationExternalCode)
+    public void AssignCodes(string verificationCode, string organizationCode)
     {
-        VerificationCode = verificationExternalCode;
+        VerificationCode = verificationCode;
+        OrganizationCode = organizationCode;
     }
 
     public static User CreateUser(string verificationToken, string userName, string email, string phoneNumber)

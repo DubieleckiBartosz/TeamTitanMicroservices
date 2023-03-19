@@ -8,6 +8,7 @@ internal class UserDao
 {
     public int Id { get; set; } 
     public string? VerificationCode { get; set; }
+    public string? OrganizationCode { get; set; }
     public string UserName { get; set; }
     public string Email { get; set; }
     public bool IsConfirmed { get; set; }
@@ -16,7 +17,7 @@ internal class UserDao
     public string VerificationToken { get; set; }
     public DateTime? VerificationTokenExpirationDate { get; set; }
     public string ResetToken { get; set; }
-    public DateTime? ResetTokenExpirationDate { get; set; } 
+    public DateTime? ResetTokenExpirationDate { get; set; }
     public List<int> Roles { get; set; }
     public List<TokenDao> RefreshTokens { get; set; }
 
@@ -24,10 +25,18 @@ internal class UserDao
     {
         var roles = Roles.Select(Enumeration.GetById<Role>).ToList();
         var tokens = RefreshTokens.Select(_ => _.Map())?.ToList();
-        return User.LoadUser(Id, VerificationCode, IsConfirmed,
-            ResetToken, ResetTokenExpirationDate,
+        return User.LoadUser(
+            Id, 
+            VerificationCode,
+            OrganizationCode, 
+            IsConfirmed,
+            ResetToken,
+            ResetTokenExpirationDate,
             VerificationToken,
-            VerificationTokenExpirationDate, UserName, Email, PhoneNumber,
+            VerificationTokenExpirationDate, 
+            UserName, 
+            Email, 
+            PhoneNumber,
             PasswordHash, roles, tokens);
     }
 }

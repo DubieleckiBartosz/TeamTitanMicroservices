@@ -13,6 +13,7 @@ public class ExceptionIdentityMessages
     }
 
     public const string RegisterFailed = "Cannot create user, check the data and try again later.";
+    public const string InitCodesFailed = "Codes cannot be assigned";
     public const string UserNotFound = "User not found.";
     public const string UserRolesNotFound = "Unable to get user roles.";
     public const string IncorrectData = "Incorrect data! Check data and try again."; 

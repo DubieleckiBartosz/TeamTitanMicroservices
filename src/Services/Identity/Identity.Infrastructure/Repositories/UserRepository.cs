@@ -68,14 +68,15 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
         return result;
     }
 
-    public async Task AssignUserVerificationCodeAsync(User user)
+    public async Task MergeCodesAsync(User user)
     {
         var param = new DynamicParameters();
          
-        param.Add("@code", user.VerificationCode); 
+        param.Add("@verificationCode", user.VerificationCode); 
+        param.Add("@organizationCode", user.OrganizationCode); 
         param.Add("@userId", user.Id);  
 
-        await this.ExecuteAsync("user_assignCode_U", param, CommandType.StoredProcedure);
+        await this.ExecuteAsync("user_mergeCodes_U", param, CommandType.StoredProcedure);
     }
 
     public async Task ConfirmAccountAsync(User user)
@@ -156,6 +157,24 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
         }
 
         return result.Value;
+    }
+    
+    public async Task CreateTemporaryUserAsync(int roleId, string verificationCode, string organizationCode)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@roleId", roleId);
+        param.Add("@verificationCode", verificationCode); 
+        param.Add("@organizationCode", organizationCode); 
+
+       var result = await ExecuteAsync("[dbo].[temp_createUserCodes_I]", param,
+            commandType: CommandType.StoredProcedure);
+
+       if (result <= 0)
+       {
+           throw new IdentityResultException(ExceptionIdentityMessages.InitCodesFailed,
+               ExceptionIdentityTitles.CreatingUserCodes, HttpStatusCode.InternalServerError, null);
+        }
     }
 
     public async Task<User> FindUserByVerificationTokenAsync(string tokenKey)
@@ -290,8 +309,7 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
 
         return result.ToList();
     }
-
-
+     
     public async Task ClearTokens()
     {
         await this.ExecuteAsync("user_clearRevokedTokens_D",
