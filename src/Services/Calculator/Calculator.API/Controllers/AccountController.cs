@@ -8,6 +8,7 @@ using Calculator.Application.Features.Account.Commands.ChangeDayHours;
 using Calculator.Application.Features.Account.Commands.ChangeFinancialData;
 using Calculator.Application.Features.Account.Commands.CompleteData;
 using Calculator.Application.Features.Account.Commands.DeactivateAccount;
+using Calculator.Application.Features.Account.Queries.GetAccountsBySearch;
 using Calculator.Application.Parameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,20 +25,21 @@ public class AccountController : BaseController
     {
     }
 
+
     /// <summary>
-    /// Activate account
+    /// Search accounts
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
-    [HttpPut("[action]")]
-    public async Task<IActionResult> ActivateAccount([FromBody] ActivateAccountParameters parameters)
+    [HttpPost("[action]")]
+    public async Task<IActionResult> SearchAccounts([FromBody] GetAccountsBySearchParameters parameters)
     {
-        var command = ActivateAccountCommand.Create(parameters);
-        await CommandBus.Send(command);
-        return NoContent();
+        var query = GetAccountsBySearchQuery.Create(parameters);
+        var response = await QueryBus.Send(query);
+        return Ok(response);
     }
-
+     
     /// <summary>
     /// Add new bonus to account
     /// </summary>
@@ -76,6 +78,20 @@ public class AccountController : BaseController
     public async Task<IActionResult> AddWorkDay([FromBody] AddWorkDayParameters parameters)
     {
         var command = AddWorkDayCommand.Create(parameters);
+        await CommandBus.Send(command);
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Activate account
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "Admin,Owner,Manager")]
+    [HttpPut("[action]")]
+    public async Task<IActionResult> ActivateAccount([FromBody] ActivateAccountParameters parameters)
+    {
+        var command = ActivateAccountCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
     }
@@ -162,5 +178,5 @@ public class AccountController : BaseController
         var command = DeactivateAccountCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
-    } 
+    }  
 }

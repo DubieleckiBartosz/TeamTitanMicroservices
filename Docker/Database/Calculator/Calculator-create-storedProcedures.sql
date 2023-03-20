@@ -2,8 +2,8 @@
 
 CREATE OR ALTER PROCEDURE account_createNew_I
 	@accountId UNIQUEIDENTIFIER,
-	@companyCode VARCHAR(MAX),
-	@accountOwner VARCHAR(MAX),
+	@companyCode VARCHAR(50),
+	@accountOwner VARCHAR(50),
 	@createdBy VARCHAR(MAX),
 	@isActive BIT
 AS
@@ -257,5 +257,280 @@ BEGIN
 		END
 		
 	END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE settlement_createSettlement_I
+	@accountId UNIQUEIDENTIFIER,
+	@from DATETIME,
+	@to DATETIME,
+	@value DECIMAL 
+AS
+BEGIN
+	
+INSERT INTO dbo.Settlements(AccountId, [From], [To], [Value])
+     VALUES (@accountId, @from, @to, @value )
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE account_getById_S
+@accountId UNIQUEIDENTIFIER
+AS
+BEGIN
+	SELECT 
+	   [Id]
+       [CompanyCode],
+       [AccountOwner],
+       [Balance],
+       [AccountStatus],
+       [CountingType],
+       [ActivatedBy],
+       [CreatedBy],
+       [DeactivatedBy],
+       [WorkDayHours],
+       [HourlyRate],
+       [OvertimeRate],
+       [IsActive],
+       [ExpirationDate],
+       [SettlementDayMonth]
+  FROM [TeamTitanCalculator].[dbo].[Accounts]
+END
+GO
+
+CREATE OR ALTER PROCEDURE account_getByIdWithBonuses_S
+@accountId UNIQUEIDENTIFIER
+AS
+BEGIN
+	SELECT 
+	   a.Id,
+       a.CompanyCode,
+       a.AccountOwner,
+       a.Balance,
+       a.AccountStatus,
+       a.CountingType,
+       a.ActivatedBy,
+       a.CreatedBy,
+       a.DeactivatedBy,
+       a.WorkDayHours,
+       a.HourlyRate,
+       a.OvertimeRate,
+       a.IsActive,
+       a.ExpirationDate,
+       a.SettlementDayMonth,
+	   b.AccountId,
+       b.BonusCode,
+       b.Creator,
+       b.Settled,
+       b.Canceled
+  FROM TeamTitanCalculator.dbo.Accounts AS a
+  INNER JOIN Bonuses AS b ON b.AccountId = a.Id
+  WHERE a.Id = @accountId
+END
+GO
+
+CREATE OR ALTER PROCEDURE account_getByIdWithWorkDays_s
+@accountId UNIQUEIDENTIFIER
+AS
+BEGIN
+	SELECT 
+	   a.Id,
+       a.CompanyCode,
+       a.AccountOwner,
+       a.Balance,
+       a.AccountStatus,
+       a.CountingType,
+       a.ActivatedBy,
+       a.CreatedBy,
+       a.DeactivatedBy,
+       a.WorkDayHours,
+       a.HourlyRate,
+       a.OvertimeRate,
+       a.IsActive,
+       a.ExpirationDate,
+       a.SettlementDayMonth, 
+	   w.AccountId,
+       w.[Date],
+       w.HoursWorked,
+       w.Overtime,
+       w.IsDayOff,
+       w.CreatedBy
+  FROM TeamTitanCalculator.dbo.Accounts AS a
+  INNER JOIN WorkDays AS w ON w.AccountId = a.Id
+  WHERE a.Id = @accountId
+END
+GO
+
+CREATE OR ALTER PROCEDURE account_getByIdWithProducts_s
+@accountId UNIQUEIDENTIFIER
+AS
+BEGIN
+	SELECT 
+	   a.Id,
+       a.CompanyCode,
+       a.AccountOwner,
+       a.Balance,
+       a.AccountStatus,
+       a.CountingType,
+       a.ActivatedBy,
+       a.CreatedBy,
+       a.DeactivatedBy,
+       a.WorkDayHours,
+       a.HourlyRate,
+       a.OvertimeRate,
+       a.IsActive,
+       a.ExpirationDate,
+       a.SettlementDayMonth,
+	   p.AccountId,
+       p.PieceworkProductId,
+       p.CurrentPrice,
+       p.Quantity,
+       p.IsConsidered,
+       p.[Date]
+  FROM TeamTitanCalculator.dbo.Accounts AS a
+  INNER JOIN ProductItems AS p ON p.AccountId = a.Id
+  WHERE a.Id = @accountId
+END
+GO
+
+CREATE OR ALTER PROCEDURE account_getDetailsById_s
+@accountId UNIQUEIDENTIFIER
+AS
+BEGIN
+	SELECT 
+	   a.Id,
+       a.CompanyCode,
+       a.AccountOwner,
+       a.Balance,
+       a.AccountStatus,
+       a.CountingType,
+       a.ActivatedBy,
+       a.CreatedBy,
+       a.DeactivatedBy,
+       a.WorkDayHours,
+       a.HourlyRate,
+       a.OvertimeRate,
+       a.IsActive,
+       a.ExpirationDate,
+       a.SettlementDayMonth,
+	   w.AccountId,
+       w.[Date],
+       w.HoursWorked,
+       w.Overtime,
+       w.IsDayOff,
+       w.CreatedBy,
+	   p.AccountId,
+       p.PieceworkProductId,
+       p.CurrentPrice,
+       p.Quantity,
+       p.IsConsidered,
+       p.[Date]
+  FROM TeamTitanCalculator.dbo.Accounts AS a
+  LEFT JOIN WorkDays AS w ON w.AccountId = a.Id
+  LEFT JOIN ProductItems AS p ON p.AccountId = a.Id
+  WHERE a.Id = @accountId
+END
+GO
+
+
+ CREATE OR ALTER PROCEDURE [dbo].[account_getBySearch_S]
+	@accountId UNIQUEIDENTIFIER NULL,
+	@countingType INT NULL,
+	@accountStatus INT NULL,
+	@expirationDateFrom DATETIME NULL,
+	@expirationDateTo DATETIME NULL,
+	@activatedBy VARCHAR(50) NULL,
+	@deactivatedBy VARCHAR(50) NULL,
+	@hourlyRateFrom DECIMAL NULL,
+	@hourlyRateTo DECIMAL NULL,
+	@settlementDayMonth INT NULL,
+	@balanceFrom DECIMAL NULL,
+	@balanceTo DECIMAL NULL,
+	@type VARCHAR(10),
+	@name VARCHAR(50),
+	@pageNumber INT,
+	@pageSize INT,
+	@companyCode VARCHAR(50) 
+AS
+BEGIN
+	 WITH Data_CTE 
+	 AS
+	 (
+		 SELECT 
+			  Id,
+			  CompanyCode,
+			  AccountOwner,
+			  Balance,
+			  AccountStatus,
+			  CountingType,
+			  ActivatedBy,
+			  CreatedBy,
+			  DeactivatedBy,
+			  WorkDayHours,
+			  HourlyRate,
+			  OvertimeRate,
+			  IsActive,
+			  ExpirationDate,
+			  SettlementDayMonth,
+			  Created
+		 FROM TeamTitanCalculator.dbo.Accounts 
+		 WHERE CompanyCode = @companyCode 
+		 AND (@accountId IS NULL OR Id = @accountId)
+		 AND (@countingType IS NULL OR CountingType = @countingType)
+		 AND (@accountStatus IS NULL OR AccountStatus = @accountStatus)
+		 AND (@expirationDateFrom IS NULL OR ExpirationDate >= @expirationDateFrom)
+		 AND (@expirationDateTo IS NULL OR ExpirationDate <= @expirationDateTo)
+		 AND (@activatedBy IS NULL OR ActivatedBy = @activatedBy)
+		 AND (@deactivatedBy IS NULL OR DeactivatedBy = @deactivatedBy)
+		 AND (@hourlyRateFrom IS NULL OR HourlyRate >= @hourlyRateFrom)
+		 AND (@hourlyRateTo IS NULL OR HourlyRate <= @hourlyRateTo)
+		 AND (@settlementDayMonth IS NULL OR SettlementDayMonth = @settlementDayMonth)
+		 AND (@balanceFrom IS NULL OR Balance >= @balanceFrom)
+		 AND (@balanceTo IS NULL OR Balance <= @balanceTo)
+	 ), 
+	 Count_CTE 
+	 AS 
+	 (
+	 	SELECT COUNT(*) AS TotalCount FROM Data_CTE
+	 )
+	 SELECT 
+	 	   d.Id,
+		   d.CompanyCode,
+		   d.AccountOwner,
+		   d.Balance,
+		   d.AccountStatus,
+		   d.CountingType,
+		   d.ActivatedBy,
+		   d.CreatedBy,
+		   d.DeactivatedBy,
+		   d.WorkDayHours,
+		   d.HourlyRate,
+		   d.OvertimeRate,
+		   d.IsActive,
+		   d.ExpirationDate,
+		   d.SettlementDayMonth,
+		   c.TotalCount
+	 FROM Data_CTE AS d
+	 CROSS JOIN Count_CTE AS c
+	 ORDER BY 
+	 CASE WHEN @name = 'Id' AND @type = 'asc' THEN Id END ASC,  
+	 CASE WHEN @name = 'Id' AND @type = 'desc' THEN Id END DESC,
+
+	 CASE WHEN @name = 'HourlyRate' AND @type = 'asc' THEN HourlyRate END ASC,  
+	 CASE WHEN @name = 'HourlyRate' AND @type = 'desc' THEN HourlyRate END DESC,
+
+	 CASE WHEN @name = 'ExpirationDate' AND @type = 'asc' THEN ExpirationDate END ASC,  
+	 CASE WHEN @name = 'ExpirationDate' AND @type = 'desc' THEN ExpirationDate END DESC,
+
+	 CASE WHEN @name = 'Balance' AND @type = 'asc' THEN Balance END ASC,  
+	 CASE WHEN @name = 'Balance' AND @type = 'desc' THEN Balance END DESC,
+
+	 CASE WHEN @name = 'SettlementDayMonth' AND @type = 'asc' THEN SettlementDayMonth END ASC,  
+	 CASE WHEN @name = 'SettlementDayMonth' AND @type = 'desc' THEN SettlementDayMonth END DESC,
+
+	 CASE WHEN @name = 'Created' AND @type = 'asc' THEN Created END ASC,  
+	 CASE WHEN @name = 'Created' AND @type = 'desc' THEN Created END DESC
+
+	 OFFSET (@pageNumber - 1)* @pageSize ROWS FETCH NEXT @pageSize ROWS ONLY;   
 END
 GO

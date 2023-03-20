@@ -29,7 +29,7 @@ builder.EventStoreConfiguration(_ => new List<IProjection>
     {
         new AccountProjection(_.GetService<IAccountRepository>()!)
     }, typeof(AssemblyCalculatorApplicationReference), typeof(AssemblySharedImplementationsReference))
-    .RegisterBackgroundProcess().GetHangfire();
+    .RegisterBackgroundProcess().GetHangfire().GetAutoMapper(typeof(AssemblyCalculatorApplicationReference).Assembly);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
