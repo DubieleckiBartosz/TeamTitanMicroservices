@@ -42,6 +42,13 @@ public static class SharedConfigurations
         return services;
     }
 
+    public static WebApplicationBuilder GetAutoMapper(this WebApplicationBuilder builder, Assembly assembly)
+    {
+        builder.Services.AddAutoMapper(assembly);
+
+        return builder;
+    }
+
     public static IServiceCollection GetAccessoriesDependencyInjection(this IServiceCollection services)
     {        
         //USER

@@ -1,10 +1,16 @@
 ﻿using Calculator.Application.ReadModels.AccountReaders;
+using Calculator.Domain.Statuses;
+using Calculator.Domain.Types;
+using Shared.Implementations.Search;
 
 namespace Calculator.Application.Contracts;
 
 public interface IAccountRepository
 {
-    Task<AccountReader?> GetAccountsBySearchAsync();
+    Task<ResponseSearchList<AccountReader>?> GetAccountsBySearchAsync(Guid? accountId, CountingType? countingType, AccountStatus? accountStatus,
+        DateTime? expirationDate, DateTime? expirationDateTo, string? activatedBy, string? deactivatedBy, decimal? hourlyRateFrom,
+        decimal? hourlyRateTo, int? settlementDayMonth, decimal? balanceFrom, decimal? balanceTo,
+        string type, string name, int pageNumber, int pageSize, string companyCode);
     Task<AccountReader?> GetAccountByIdAsync(Guid accountId);
     Task<AccountReader?> GetAccountByIdWithWorkDaysAsync(Guid accountId);
     Task<AccountReader?> GetAccountByIdWithProductsAsync(Guid accountId);
@@ -12,6 +18,9 @@ public interface IAccountRepository
     Task<AccountReader?> GetAccountDetailsByIdAsync(Guid accountId);
     Task AddAsync(AccountReader accountReader);
     Task AddBonusAsync(AccountReader account);
+    Task AddProductItemAsync(AccountReader accountReader);
+    Task AddNewWorkDayAsync(AccountReader accountReader);
+    Task AddSettlementAsync(AccountReader accountReader);
     Task UpdateDataAsync(AccountReader accountReader);
     Task UpdateFinancialDataAsync(AccountReader accountReader);
     Task UpdateBonusAccountAsync(BonusReader bonusValue, AccountReader account);
@@ -20,7 +29,5 @@ public interface IAccountRepository
     Task UpdateWorkDayHoursAsync(AccountReader accountReader);
     Task UpdateHourlyRateAsync(AccountReader accountReader);
     Task UpdateOvertimeRateAsync(AccountReader accountReader);
-    Task UpdateStatusToActiveAsync(AccountReader accountReader);  
-    Task AddProductItemAsync(AccountReader accountReader);
-    Task AddNewWorkDayAsync(AccountReader accountReader); 
+    Task UpdateStatusToActiveAsync(AccountReader accountReader);   
 }

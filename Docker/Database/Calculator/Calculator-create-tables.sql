@@ -3,8 +3,8 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Accounts' and xtype='U')
 BEGIN
 	CREATE TABLE Accounts(
 	Id UNIQUEIDENTIFIER PRIMARY KEY NOT NULL, 
-	CompanyCode VARCHAR(MAX) NOT NULL, 
-	AccountOwner VARCHAR(MAX) NOT NULL,
+	CompanyCode VARCHAR(50) NOT NULL, 
+	AccountOwner VARCHAR(50) NOT NULL,
 	Balance DECIMAL NOT NULL DEFAULT 0,
 	AccountStatus INT NULL,
 	CountingType INT NULL,

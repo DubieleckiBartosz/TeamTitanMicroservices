@@ -5,7 +5,6 @@ public class Settlement
     public DateTime From { get; }
     public DateTime To { get; }
     public decimal Value { get; }
-    public string Period => $"{From.ToShortDateString()} - {To.ToShortDateString()}";
 
     private Settlement(decimal value, int settlementDayMonth)
     {

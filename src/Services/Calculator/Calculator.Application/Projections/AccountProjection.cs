@@ -27,6 +27,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.Projects<BonusAdded>(Handle);
         this.Projects<BonusCanceled>(Handle);
         this.Projects<FinancialDataUpdated>(Handle);
+        this.Projects<AccountSettled>(Handle);
     }
 
     private async Task Handle(AccountActivated @event, CancellationToken cancellationToken = default)
@@ -40,9 +41,23 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.CheckAccount(account);
 
         account!.AccountActivated(@event);
-        await _accountRepository.UpdateStatusToActiveAsync(account);
-
+        await _accountRepository.UpdateStatusToActiveAsync(account); 
     }
+
+    private async Task Handle(AccountSettled @event, CancellationToken cancellationToken = default)
+    {
+        if (@event == null)
+        {
+            throw new ArgumentNullException(nameof(@event));
+        }
+
+        var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
+        this.CheckAccount(account);
+
+        account!.Settled(@event);
+        await _accountRepository.AddSettlementAsync(account);
+    }
+
 
     private async Task Handle(AccountDataCompleted @event, CancellationToken cancellationToken = default)
     {

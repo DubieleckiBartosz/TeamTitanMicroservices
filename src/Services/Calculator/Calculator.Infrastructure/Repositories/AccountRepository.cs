@@ -1,10 +1,13 @@
 ﻿using System.Data;
 using Calculator.Application.Contracts;
 using Calculator.Application.ReadModels.AccountReaders;
+using Calculator.Domain.Statuses;
+using Calculator.Domain.Types;
 using Calculator.Infrastructure.DataAccessObjects;
 using Dapper;
 using Shared.Implementations.Dapper;
 using Shared.Implementations.Logging;
+using Shared.Implementations.Search;
 
 namespace Calculator.Infrastructure.Repositories;
 
@@ -14,9 +17,40 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
     {
     }
 
-    public async Task<AccountReader?> GetAccountsBySearchAsync()
+    public async Task<ResponseSearchList<AccountReader>?> GetAccountsBySearchAsync(
+        Guid? accountId, CountingType? countingType, AccountStatus? accountStatus,
+        DateTime? expirationDateFrom, DateTime? expirationDateTo, string? activatedBy, string? deactivatedBy, decimal? hourlyRateFrom,
+        decimal? hourlyRateTo, int? settlementDayMonth, decimal? balanceFrom, decimal? balanceTo,
+        string type, string name, int pageNumber, int pageSize, string companyCode)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountId);
+        parameters.Add("@countingType", countingType);
+        parameters.Add("@accountStatus", accountStatus);
+        parameters.Add("@expirationDateFrom", expirationDateFrom);
+        parameters.Add("@expirationDateTo", expirationDateTo);
+        parameters.Add("@activatedBy", activatedBy);
+        parameters.Add("@deactivatedBy", deactivatedBy);
+        parameters.Add("@hourlyRateFrom", hourlyRateFrom);
+        parameters.Add("@hourlyRateTo", hourlyRateTo);
+        parameters.Add("@settlementDayMonth", settlementDayMonth);
+        parameters.Add("@balanceFrom", balanceFrom);
+        parameters.Add("@balanceTo", balanceTo);
+        parameters.Add("@type", type);
+        parameters.Add("@name", name);
+        parameters.Add("@pageNumber", pageNumber);
+        parameters.Add("@pageSize", pageSize);
+        parameters.Add("@companyCode", companyCode);
+
+        var result =
+            (await QueryAsync<AccountSearchDao>("account_getBySearch_S", parameters, CommandType.StoredProcedure))
+            ?.ToList();
+
+        var totalCount = result?.FirstOrDefault()?.TotalCount;
+        var data = result?.Select(_ => _.Map()).ToList();
+
+        return ResponseSearchList<AccountReader>.Create(data, totalCount ?? 0); 
     }
 
     public async Task<AccountReader?> GetAccountByIdAsync(Guid accountId)
@@ -218,6 +252,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         await ExecuteAsync("account_newOvertimeRate_U", parameters, CommandType.StoredProcedure);
     }
 
+     
     public async Task UpdateStatusToActiveAsync(AccountReader accountReader)
     {
         var parameters = new DynamicParameters();
@@ -261,6 +296,20 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
 
         await ExecuteAsync("product_createPieceworkProductItem_I", parameters, CommandType.StoredProcedure);
     }
+
+    public async Task AddSettlementAsync(AccountReader accountReader)
+    {
+        var settlement = accountReader.Settlements.Last();
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountReader.Id);
+        parameters.Add("@from", settlement.From);
+        parameters.Add("@to", settlement.To);
+        parameters.Add("@value", settlement.Value);
+
+        await ExecuteAsync("settlement_createSettlement_I", parameters, CommandType.StoredProcedure);
+    }
+
 
     public async Task AddBonusAsync(AccountReader account)
     {

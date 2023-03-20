@@ -24,9 +24,10 @@ public class AccountDao
     public List<ProductItemDao> ProductItems { get; init; } = new();
     public List<WorkDayDao> WorkDays { get; init; } = new();
     public List<BonusDao> Bonuses { get; init; } = new();
+    public List<SettlementDao> Settlements { get; init; } = new();
 
     public AccountReader Map()
-    {
+    { 
         var products = ProductItems.Select(_ =>
             ProductItemReader.Load(_.PieceworkProductId, _.Quantity, _.CurrentPrice, _.AccountId, _.IsConsidered,
                 _.Date)).ToList();
@@ -37,9 +38,11 @@ public class AccountDao
         var bonuses = Bonuses.Select(_ =>
             BonusReader.Load(_.Id, _.BonusCode, _.Creator, _.Settled, _.Canceled, _.Created)).ToList();
 
+        var settlements = Settlements.Select(_ => SettlementReader.Load(_.From, _.To, _.Value)).ToList();
+
         return AccountReader.Load(Id, AccountOwner, CompanyCode, CountingType,
             AccountStatus, ActivatedBy, CreatedBy, DeactivatedBy, IsActive,
             WorkDayHours, HourlyRate, OvertimeRate, Balance, ExpirationDate, SettlementDayMonth, products, workDays,
-            bonuses);
+            bonuses, settlements);
     }
 }

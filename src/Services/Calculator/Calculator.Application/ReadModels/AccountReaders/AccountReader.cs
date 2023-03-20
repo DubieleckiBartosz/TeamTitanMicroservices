@@ -1,4 +1,5 @@
-﻿using Calculator.Domain.Account.Events;
+﻿using Calculator.Domain.Account;
+using Calculator.Domain.Account.Events;
 using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
 using Shared.Domain.Tools;
@@ -27,6 +28,7 @@ public class AccountReader : IRead
     public List<ProductItemReader> ProductItems { get; private set; } = new List<ProductItemReader>();
     public List<WorkDayReader> WorkDays { get; private set; } = new List<WorkDayReader>();
     public List<BonusReader> Bonuses { get; private set; } = new List<BonusReader>();
+    public List<SettlementReader> Settlements { get; private set; } = new List<SettlementReader>();
 
     /// <summary>
     /// For instance creation
@@ -56,11 +58,13 @@ public class AccountReader : IRead
     /// <param name="productItems"></param>
     /// <param name="workDays"></param>
     /// <param name="bonuses"></param>
+    /// <param name="settlements"></param>
     private AccountReader(Guid id, string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, 
         decimal balance, DateTime? expirationDate, int? settlementDayMonth,
-        List<ProductItemReader> productItems, List<WorkDayReader> workDays, List<BonusReader> bonuses)
+        List<ProductItemReader> productItems, List<WorkDayReader> workDays, 
+        List<BonusReader> bonuses, List<SettlementReader> settlements)
     {
         this.Id = id;
         this.AccountOwner = accountOwner;
@@ -80,6 +84,7 @@ public class AccountReader : IRead
         this.Bonuses = bonuses;
         this.ExpirationDate = expirationDate;
         this.SettlementDayMonth = settlementDayMonth;
+        this.Settlements = settlements;
     }
 
     /// <summary>
@@ -107,12 +112,12 @@ public class AccountReader : IRead
     public static AccountReader Load(Guid id, string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth,
-        List<ProductItemReader> productItems, List<WorkDayReader> workDays, List<BonusReader> bonuses)
+        List<ProductItemReader> productItems, List<WorkDayReader> workDays, List<BonusReader> bonuses, List<SettlementReader> settlements)
     {
         return new AccountReader(id, accountOwner, companyCode, countingType,
             accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth,
-            productItems, workDays, bonuses);
+            productItems, workDays, bonuses, settlements);
     }
 
     public AccountReader DataCompleted(AccountDataCompleted @event)
@@ -213,6 +218,15 @@ public class AccountReader : IRead
         Bonuses.Replace(bonus, bonus.AsCanceled());
 
         return bonus;
+    }
+
+    public AccountReader Settled(AccountSettled @event)
+    {
+        var settlement = SettlementReader.Create(@event.Balance, SettlementDayMonth!.Value);
+
+        Settlements.Add(settlement);
+
+        return this;
     }
 
     public ProductItemReader? GetLastProductItem()
