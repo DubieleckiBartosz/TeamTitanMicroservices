@@ -1,4 +1,5 @@
 --Accounts table
+SET QUOTED_IDENTIFIER ON;
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Accounts' and xtype='U')
 BEGIN
 	CREATE TABLE Accounts(

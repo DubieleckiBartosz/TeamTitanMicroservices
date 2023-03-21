@@ -17,6 +17,6 @@
     "Issuer": "TeamTitan-identity-service"
   },
   "ConnectionStrings": {
-    "HangfireConnection": "Server=localhost,1440;Database=TeamTitanHangfire;User id=sa;Password=sql12345"
+    "HangfireConnection": "Server=localhost,1440;Database=TeamTitanHangfire;User id=sa;Password=sql123456(!)"
   }
 }

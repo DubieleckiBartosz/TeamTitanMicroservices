@@ -1,6 +1,8 @@
+PRINT 'Creating tables...'
+SET QUOTED_IDENTIFIER ON;
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ApplicationUsers' and xtype='U')
-BEGIN
-
+BEGIN 
+	PRINT 'Before creating ApplicationUsers'
 	CREATE TABLE ApplicationUsers
 		(
 		    Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,  
@@ -22,10 +24,13 @@ BEGIN
 			CREATE UNIQUE INDEX IX_ApplicationUsers_VerificationCode 
 			ON ApplicationUsers (VerificationCode) 
 			WHERE VerificationCode IS NOT NULL 
+	PRINT 'After creating ApplicationUsers'
 END
  
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='RefreshTokens' and xtype='U')
 BEGIN
+		PRINT 'Before creating [RefreshTokens]'
+
 		CREATE TABLE [dbo].[RefreshTokens]
 		(
 			Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -39,6 +44,7 @@ BEGIN
 		
 		ALTER TABLE [dbo].[RefreshTokens] ADD  CONSTRAINT [FK_RefreshToken_ApplicationUsers] FOREIGN KEY([UserId])
 		REFERENCES [dbo].[ApplicationUsers] ([Id]) 
+		PRINT 'After creating [RefreshTokens]'
 
 		
 --TYPE
@@ -57,6 +63,7 @@ END
 
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Roles' and xtype='U')
 BEGIN
+		PRINT 'After creating [Roles]'
 		CREATE TABLE [dbo].[Roles]
 			(
 				Id INT PRIMARY KEY IDENTITY(1,1) NOT NULL,
@@ -64,6 +71,7 @@ BEGIN
 			)
 
 		INSERT INTO Roles VALUES('Admin'), ('Owner'), ('Manager'), ('Employee'), ('User')
+		PRINT 'After creating [Roles]'
 								
 END
 
