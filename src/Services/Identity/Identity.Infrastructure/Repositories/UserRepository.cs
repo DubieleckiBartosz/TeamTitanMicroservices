@@ -331,3 +331,4 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
             commandType: CommandType.StoredProcedure);
     }
 }
+

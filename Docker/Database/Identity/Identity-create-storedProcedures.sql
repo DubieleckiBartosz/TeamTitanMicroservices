@@ -1,3 +1,5 @@
+SET QUOTED_IDENTIFIER ON;
+GO
 
 CREATE OR ALTER PROCEDURE user_mergeCodes_U  
 	@verificationCode VARCHAR(50), 
