@@ -356,7 +356,7 @@ public class Account : Aggregate
 
     private void BonusToAccountAdded(BonusAdded @event)
     {
-        var newBonus = Bonus.Create(@event.Creator, @event.BonusCode);
+        var newBonus = Bonus.Create(@event.Creator, @event.BonusCode, @event.BonusAmount);
         Bonuses!.Add(newBonus);
     }
 

@@ -207,7 +207,7 @@ public class AccountReader : IRead
 
     public void BonusToAccountAdded(BonusAdded @event)
     {
-        var newBonus = BonusReader.Create(@event.Creator, @event.BonusCode);
+        var newBonus = BonusReader.Create(@event.Creator, @event.BonusCode, @event.BonusAmount);
         Bonuses!.Add(newBonus);
     }
 
