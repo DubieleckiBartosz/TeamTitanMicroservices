@@ -194,6 +194,7 @@ CREATE OR ALTER PROCEDURE bonus_createNew_I
 	@accountId UNIQUEIDENTIFIER,
 	@bonusCode VARCHAR(12),  
 	@creator VARCHAR(MAX),
+	@amount DECIMAL,
 	@canceled BIT = 0,
 	@settled BIT = 0,
 	@created DATETIME,
@@ -206,8 +207,8 @@ BEGIN
 			UPDATE Accounts SET Balance = @balance
 			WHERE Id = @accountId;
 			
-			INSERT INTO Bonuses(AccountId, BonusCode, Creator, Canceled, Settled, Created)
-			VALUES(@accountId, @bonusCode, @creator, @canceled, @settled, @created)
+			INSERT INTO Bonuses(AccountId, BonusCode, Amount, Creator, Canceled, Settled, Created)
+			VALUES(@accountId, @bonusCode, @amount, @creator, @canceled, @settled, @created)
 	
 		COMMIT TRANSACTION;
 	END TRY  
@@ -270,18 +271,17 @@ CREATE OR ALTER PROCEDURE settlement_createSettlement_I
 AS
 BEGIN
 	
-INSERT INTO dbo.Settlements(AccountId, [From], [To], [Value])
-     VALUES (@accountId, @from, @to, @value )
+	INSERT INTO dbo.Settlements(AccountId, [From], [To], [Value])
+    VALUES (@accountId, @from, @to, @value )
 END
-GO
-
+GO 
 
 CREATE OR ALTER PROCEDURE account_getById_S
 @accountId UNIQUEIDENTIFIER
 AS
 BEGIN
 	SELECT 
-	   [Id]
+	   [Id],
        [CompanyCode],
        [AccountOwner],
        [Balance],
@@ -297,6 +297,7 @@ BEGIN
        [ExpirationDate],
        [SettlementDayMonth]
   FROM [TeamTitanCalculator].[dbo].[Accounts]
+  WHERE Id = @accountId
 END
 GO
 
@@ -320,13 +321,15 @@ BEGIN
        a.IsActive,
        a.ExpirationDate,
        a.SettlementDayMonth,
-	   b.AccountId,
+	   b.Id, 
        b.BonusCode,
+	   b.Amount,
        b.Creator,
        b.Settled,
-       b.Canceled
+       b.Canceled,
+	   b.Created
   FROM TeamTitanCalculator.dbo.Accounts AS a
-  INNER JOIN Bonuses AS b ON b.AccountId = a.Id
+  LEFT JOIN Bonuses AS b ON b.AccountId = a.Id
   WHERE a.Id = @accountId
 END
 GO
@@ -358,7 +361,7 @@ BEGIN
        w.IsDayOff,
        w.CreatedBy
   FROM TeamTitanCalculator.dbo.Accounts AS a
-  INNER JOIN WorkDays AS w ON w.AccountId = a.Id
+  LEFT JOIN WorkDays AS w ON w.AccountId = a.Id
   WHERE a.Id = @accountId
 END
 GO
@@ -390,7 +393,7 @@ BEGIN
        p.IsConsidered,
        p.[Date]
   FROM TeamTitanCalculator.dbo.Accounts AS a
-  INNER JOIN ProductItems AS p ON p.AccountId = a.Id
+  LEFT JOIN ProductItems AS p ON p.AccountId = a.Id
   WHERE a.Id = @accountId
 END
 GO

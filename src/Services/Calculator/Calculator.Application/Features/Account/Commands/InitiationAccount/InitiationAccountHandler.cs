@@ -19,7 +19,7 @@ public class InitiationAccountHandler : ICommandHandler<InitiationAccountCommand
         var creator = request.Creator;
 
         var newAccount = Domain.Account.Account.Create(companyCode, accountCode, creator);
-        await _repository.AddAndPublishAsync(newAccount);
+        await _repository.AddAsync(newAccount);
 
         return Unit.Value;
     }

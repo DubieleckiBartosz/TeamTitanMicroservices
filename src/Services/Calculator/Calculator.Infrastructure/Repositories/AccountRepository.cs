@@ -72,7 +72,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
 
         var dict = new Dictionary<Guid, AccountDao>();
 
-        var result = (await QueryAsync<AccountDao, BonusDao, AccountDao>(
+        var result = (await QueryAsync<AccountDao, BonusDao?, AccountDao>(
             "account_getByIdWithBonuses_S", (a, b) =>
             {
                 if (!dict.TryGetValue(a.Id, out var value))
@@ -81,7 +81,10 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
                     dict.Add(a.Id, value);
                 }
 
-                value.Bonuses.Add(b);
+                if (b != null)
+                {
+                    value.Bonuses.Add(b);
+                }
 
                 return value;
             }, "Id,Id", parameters, CommandType.StoredProcedure)).FirstOrDefault(); 
@@ -96,7 +99,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@accountId", accountId);
 
         var dict = new Dictionary<Guid, AccountDao>();
-        var result = (await QueryAsync<AccountDao, WorkDayDao, AccountDao>(
+        var result = (await QueryAsync<AccountDao, WorkDayDao?, AccountDao>(
             "account_getByIdWithWorkDays_s", (a, w) =>
             {
                 if (!dict.TryGetValue(a.Id, out var value))
@@ -105,7 +108,10 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
                     dict.Add(a.Id, value);
                 }
 
-                value.WorkDays.Add(w);
+                if (w != null)
+                {
+                    value.WorkDays.Add(w);
+                }
 
                 return value;
             }, "Id,Id", parameters, CommandType.StoredProcedure)).FirstOrDefault();
@@ -120,7 +126,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@accountId", accountId);
 
         var dict = new Dictionary<Guid, AccountDao>();
-        var result = (await QueryAsync<AccountDao, ProductItemDao, AccountDao>(
+        var result = (await QueryAsync<AccountDao, ProductItemDao?, AccountDao>(
             "account_getByIdWithProducts_s", (a, p) =>
             {
                 if (!dict.TryGetValue(a.Id, out var value))
@@ -129,7 +135,10 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
                     dict.Add(a.Id, value);
                 }
 
-                value.ProductItems.Add(p);
+                if (p != null)
+                {
+                    value.ProductItems.Add(p);
+                }
 
                 return value;
             }, "Id,Id", parameters, CommandType.StoredProcedure)).FirstOrDefault();
@@ -144,7 +153,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@accountId", accountId);
 
         var dict = new Dictionary<Guid, AccountDao>();
-        var result = (await QueryAsync<AccountDao, WorkDayDao, ProductItemDao, AccountDao>(
+        var result = (await QueryAsync<AccountDao, WorkDayDao?, ProductItemDao?, AccountDao>(
             "account_getDetailsById_s", (a, w, p) =>
             {
                 if (!dict.TryGetValue(a.Id, out var value))
@@ -153,8 +162,15 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
                     dict.Add(a.Id, value);
                 }
 
-                value.WorkDays.Add(w);
-                value.ProductItems.Add(p);
+                if (w != null)
+                {
+                    value.WorkDays.Add(w);
+                }
+
+                if (p != null)
+                {
+                    value.ProductItems.Add(p);
+                }
 
                 return value;
             }, "Id,Id,Id", parameters, CommandType.StoredProcedure)).FirstOrDefault();
@@ -319,13 +335,14 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
 
         parameters.Add("@accountId", account.Id);
         parameters.Add("@balance", account.Balance);
+        parameters.Add("@amount", bonusValue.Amount);
         parameters.Add("@bonusCode", bonusValue.BonusCode);
         parameters.Add("@creator", bonusValue.Creator);
         parameters.Add("@canceled", bonusValue.Canceled);
         parameters.Add("@settled", bonusValue.Settled);
         parameters.Add("@created", bonusValue.Created);
 
-        await ExecuteAsync("account_createNewBonus_I", parameters, CommandType.StoredProcedure);
+        await ExecuteAsync("bonus_createNew_I", parameters, CommandType.StoredProcedure);
     }
 
     public async Task UpdateBonusAccountAsync(BonusReader bonusValue, AccountReader account)

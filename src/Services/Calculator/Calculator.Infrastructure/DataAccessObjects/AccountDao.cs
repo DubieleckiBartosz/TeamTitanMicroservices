@@ -36,7 +36,7 @@ public class AccountDao
             WorkDayReader.Create(_.Date, _.HoursWorked, _.Overtime, _.IsDayOff, _.CreatedBy, _.AccountId)).ToList();
         
         var bonuses = Bonuses.Select(_ =>
-            BonusReader.Load(_.Id, _.BonusCode, _.Creator, _.Settled, _.Canceled, _.Created)).ToList();
+            BonusReader.Load(_.Id, _.BonusCode, _.Creator, _.Settled, _.Canceled, _.Created, _.Amount)).ToList();
 
         var settlements = Settlements.Select(_ => SettlementReader.Load(_.From, _.To, _.Value)).ToList();
 

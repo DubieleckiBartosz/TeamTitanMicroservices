@@ -8,6 +8,7 @@ using Calculator.Application.Features.Account.Commands.ChangeDayHours;
 using Calculator.Application.Features.Account.Commands.ChangeFinancialData;
 using Calculator.Application.Features.Account.Commands.CompleteData;
 using Calculator.Application.Features.Account.Commands.DeactivateAccount;
+using Calculator.Application.Features.Account.Commands.InitiationAccount;
 using Calculator.Application.Features.Account.Queries.GetAccountsBySearch;
 using Calculator.Application.Parameters;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +26,20 @@ public class AccountController : BaseController
     {
     }
 
+
+    /// <summary>
+    /// Search accounts
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "Admin,Owner,Manager")]
+    [HttpPost("[action]")]
+    public async Task<IActionResult> TEST([FromBody] InitiationAccountCommand command)
+    { 
+        var response = await CommandBus.Send(command);
+        return Ok(response);
+    }
+     
 
     /// <summary>
     /// Search accounts

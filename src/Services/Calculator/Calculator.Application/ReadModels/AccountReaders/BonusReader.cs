@@ -3,7 +3,8 @@
 public class BonusReader
 {
     public Guid Id { get; }
-    public string BonusCode { get; } 
+    public string BonusCode { get; }
+    public decimal Amount { get; }
     public string Creator { get; }
     public bool Settled { get; private set; }
     public bool Canceled { get; private set; }
@@ -14,9 +15,11 @@ public class BonusReader
     /// </summary>
     /// <param name="creator"></param>
     /// <param name="bonusCode"></param>
-    private BonusReader(string creator, string bonusCode)
+    /// <param name="amount"></param>
+    private BonusReader(string creator, string bonusCode, decimal amount)
     { 
         BonusCode = bonusCode;
+        Amount = amount;
         Settled = false;
         Canceled = false;
         Created = DateTime.UtcNow;
@@ -32,8 +35,9 @@ public class BonusReader
     /// <param name="settled"></param>
     /// <param name="canceled"></param>
     /// <param name="created"></param>
+    /// <param name="amount"></param>
     private BonusReader(Guid id, string bonusCode, string creator, bool settled,
-        bool canceled, DateTime created) : this(creator, bonusCode)
+        bool canceled, DateTime created, decimal amount) : this(creator, bonusCode, amount)
     {
         Id = id;
         Settled = settled;
@@ -43,14 +47,14 @@ public class BonusReader
 
     public static BonusReader Load(Guid id, string bonusCode, string creator,
         bool settled,
-        bool canceled, DateTime created)
+        bool canceled, DateTime created, decimal amount)
     {
-        return new BonusReader(id, bonusCode, creator, settled, canceled, created);
+        return new BonusReader(id, bonusCode, creator, settled, canceled, created, amount);
     }
 
-    public static BonusReader Create(string creator, string bonusCode)
+    public static BonusReader Create(string creator, string bonusCode, decimal amount)
     {
-        return new BonusReader(creator, bonusCode);
+        return new BonusReader(creator, bonusCode, amount);
     }
 
     public BonusReader AsSettled()
