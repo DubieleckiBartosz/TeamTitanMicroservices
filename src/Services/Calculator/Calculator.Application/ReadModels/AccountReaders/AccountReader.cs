@@ -1,5 +1,4 @@
-﻿using Calculator.Domain.Account;
-using Calculator.Domain.Account.Events;
+﻿using Calculator.Domain.Account.Events;
 using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
 using Shared.Domain.Tools;
@@ -10,7 +9,7 @@ namespace Calculator.Application.ReadModels.AccountReaders;
 public class AccountReader : IRead
 {
     public Guid Id { get; }
-    public decimal Balance { get; init; }
+    public decimal Balance { get; private set; }
     public string AccountOwner { get; }
     public string CompanyCode { get; }
     public CountingType CountingType { get; private set; }
@@ -193,6 +192,12 @@ public class AccountReader : IRead
 
         WorkDays.Add(workDay);
 
+
+        if (!@event.IsDayOff && CountingType == CountingType.ForAnHour)
+        {
+            Balance = workDay.HoursWorked * HourlyRate!.Value + workDay.Overtime * (HourlyRate ?? 0); 
+        }
+
         return this;
     }
 
@@ -200,7 +205,13 @@ public class AccountReader : IRead
     {
         var pieceProduct = ProductItemReader.Create(@event.PieceworkProductId, @event.Quantity, @event.CurrentPrice, Id,
             @event.Date);
+
         ProductItems.Add(pieceProduct);
+
+        if (CountingType == CountingType.Piecework)
+        {
+            Balance = @event.Quantity * @event.CurrentPrice; 
+        }
 
         return this;
     }
@@ -209,12 +220,13 @@ public class AccountReader : IRead
     {
         var newBonus = BonusReader.Create(@event.Creator, @event.BonusCode, @event.BonusAmount);
         Bonuses!.Add(newBonus);
+        Balance = @event.BonusAmount;
     }
 
     public BonusReader AccountBonusCanceled(BonusCanceled @event)
     {
-        var bonus = Bonuses.First(_ => _.BonusCode == @event.BonusCode);
-
+        var bonus = Bonuses.First(_ => _.BonusCode == @event.BonusCode); 
+        Balance -= bonus.Amount;
         Bonuses.Replace(bonus, bonus.AsCanceled());
 
         return bonus;

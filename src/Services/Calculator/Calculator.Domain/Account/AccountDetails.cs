@@ -219,14 +219,19 @@ public class AccountDetails
                 value = workDay.HoursWorked * HourlyRate!.Value + workDay.Overtime * (HourlyRate ?? 0);
             } 
         }
-         
+
+        if (@event is BonusAdded bonus)
+        {
+            value = bonus.BonusAmount;
+        }
+
         //Validation
         Balance += value; 
     }
 
-    public void DecreaseBalance(IEvent @event)
+    public void DecreaseBalance(decimal valueDecrease)
     {
-   
+        Balance -= valueDecrease;
     }
 
     public void ClearBalance()
