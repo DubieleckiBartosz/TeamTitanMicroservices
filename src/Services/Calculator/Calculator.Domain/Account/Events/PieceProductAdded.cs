@@ -6,8 +6,8 @@ public record PieceProductAdded(Guid PieceworkProductId, decimal Quantity, decim
     DateTime Date) : IEvent
 {
     public static PieceProductAdded Create(Guid pieceworkProductId, decimal quantity, decimal currentPrice,
-        Guid accountId, DateTime? date)
+        Guid accountId, DateTime date)
     {
-        return new PieceProductAdded(pieceworkProductId, quantity, currentPrice, accountId, date ?? DateTime.UtcNow);
+        return new PieceProductAdded(pieceworkProductId, quantity, currentPrice, accountId, date);
     }
 }

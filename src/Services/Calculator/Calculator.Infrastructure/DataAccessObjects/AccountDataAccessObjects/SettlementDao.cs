@@ -1,4 +1,4 @@
-﻿namespace Calculator.Infrastructure.DataAccessObjects;
+﻿namespace Calculator.Infrastructure.DataAccessObjects.AccountDataAccessObjects;
 
 public class SettlementDao
 {

@@ -3,7 +3,7 @@ using Calculator.Application.Contracts;
 using Calculator.Application.ReadModels.AccountReaders;
 using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
-using Calculator.Infrastructure.DataAccessObjects;
+using Calculator.Infrastructure.DataAccessObjects.AccountDataAccessObjects;
 using Dapper;
 using Shared.Implementations.Dapper;
 using Shared.Implementations.Logging;

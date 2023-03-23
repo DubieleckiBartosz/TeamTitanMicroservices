@@ -91,6 +91,11 @@ public class Account : Aggregate
 
     public void ActiveAccount(string activateBy)
     {
+        if (Details.IsActive)
+        {
+            throw new BusinessException("Bad current status", "The account is already activated.");
+        }
+
         var @event =
             Events.AccountActivated.Create(activateBy, this.Id);
         Apply(@event);
@@ -99,6 +104,11 @@ public class Account : Aggregate
 
     public void DeactivateAccount(string deactivateBy)
     {
+        if (!Details.IsActive)
+        {
+            throw new BusinessException("Bad current status", "The account is already deactivated.");
+        }
+
         var @event = Events.AccountDeactivated.Create(deactivateBy, this.Id);
         Apply(@event);
         this.Enqueue(@event);
@@ -106,6 +116,8 @@ public class Account : Aggregate
 
     public void UpdateWorkDayHours(int newWorkDayHours)
     {
+        this.ThrowWhenNotActive();
+
         var @event = DayHoursChanged.Create(newWorkDayHours, this.Id);
         Apply(@event);
         this.Enqueue(@event);
@@ -113,6 +125,8 @@ public class Account : Aggregate
 
     public void UpdateCountingType(CountingType newCountingType)
     {
+        this.ThrowWhenNotActive();
+
         var @event = CountingTypeChanged.Create(newCountingType, this.Id);
         Apply(@event);
         this.Enqueue(@event);
@@ -120,26 +134,41 @@ public class Account : Aggregate
 
     public void AddNewWorkDay(DateTime date, int hoursWorked, int overtime, bool isDayOff, string createdBy)
     {
+        this.ThrowWhenNotActive();
+
+        if (hoursWorked > Details.WorkDayHours)
+        {
+            throw new BusinessException("Incorrect number of hours",
+                "The maximum number of hours for this account is 8. The rest must be registered as overtime.");
+        }
+
+        this.ThrowWhenDateOfRange(date);
+
         var @event = WorkDayAdded.Create(date, hoursWorked, overtime, isDayOff, createdBy, this.Id);
         Apply(@event);
         this.Enqueue(@event);
     }
 
-    public void AddNewPieceProductItem(Guid pieceworkProductId, decimal quantity, decimal currentPrice, DateTime? date)
+    public void AddNewPieceProductItem(Guid pieceworkProductId, decimal quantity, decimal currentPrice, DateTime date)
     {
+        this.ThrowWhenNotActive();
+        this.ThrowWhenDateOfRange(date); 
+
         var @event = PieceProductAdded.Create(pieceworkProductId, quantity, currentPrice, this.Id, date);
         Apply(@event);
         this.Enqueue(@event);
     }
     
     public void AccountSettlement()
-    {
+    { 
         var @event = AccountSettled.Create(this.Id, Details.Balance);
         Apply(@event);
         this.Enqueue(@event);
     }
     public void UpdateHourlyRate(decimal newHourlyRate)
     {
+        this.ThrowWhenNotActive();
+
         var @event = HourlyRateChanged.Create(newHourlyRate, this.Id);
         Apply(@event);
         this.Enqueue(@event);
@@ -147,6 +176,8 @@ public class Account : Aggregate
 
     public void UpdateOvertimeRate(decimal newOvertimeRate)
     {
+        this.ThrowWhenNotActive();
+
         var @event = OvertimeRateChanged.Create(newOvertimeRate, this.Id);
         Apply(@event);
         this.Enqueue(@event);
@@ -154,6 +185,8 @@ public class Account : Aggregate
 
     public void AccountUpdateFinancialData(decimal? overtimeRate, decimal? hourlyRate)
     {
+        this.ThrowWhenNotActive();
+
         var @event = FinancialDataUpdated.Create(overtimeRate, hourlyRate, this.Id);
         Apply(@event);
         this.Enqueue(@event);
@@ -161,6 +194,8 @@ public class Account : Aggregate
 
     public void AddBonus(string creator, decimal amount)
     {
+        this.ThrowWhenNotActive();
+
         var repeat = true;
         var bonusCode = string.Empty;
         while (repeat)
@@ -181,6 +216,7 @@ public class Account : Aggregate
 
     public void CancelBonus(string bonusCode)
     {
+        this.ThrowWhenNotActive();
         if (Bonuses == null)
         {
             throw new BusinessException("List is NULL", "List of bonuses is NULL.",
@@ -358,15 +394,17 @@ public class Account : Aggregate
     {
         var newBonus = Bonus.Create(@event.Creator, @event.BonusCode, @event.BonusAmount);
         Bonuses!.Add(newBonus);
+        Details.IncreaseBalance(@event);
     }
 
     private void AccountBonusCanceled(BonusCanceled @event)
     {
         var bonus = Bonuses?.FirstOrDefault(_ => _.BonusCode == @event.BonusCode);
-
-        if (Bonuses != null && bonus != null)
+         
+        if (bonus != null)
         {
-            Bonuses.Replace(bonus, bonus.AsCanceled());
+            Details.DecreaseBalance(bonus.Amount);
+            Bonuses!.Replace(bonus, bonus.AsCanceled());
         }
     }
 
@@ -377,5 +415,47 @@ public class Account : Aggregate
         Settlements.Add(settlement);
 
         Details.ClearBalance();
+
+        var currentDate = DateTime.UtcNow;
+        var dayMonth = (int)Details.SettlementDayMonth!;
+        var takeFrom = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddMonths(-1);
+
+        if (ProductItems.Any())
+        {
+            ProductItems.RemoveAll(p => p.Date < takeFrom);
+            ProductItems.ForEach(_ => _.AsConsidered());
+        }
+
+        if (WorkDays.Any())
+        {
+            WorkDays.RemoveAll(w => w.Date < takeFrom);
+        }
+
+        if (Bonuses.Any())
+        {
+            Bonuses.RemoveAll(b => b.Created < takeFrom);
+            Bonuses.ForEach(_ => _.AsSettled());
+        } 
+    }
+
+    private void ThrowWhenNotActive()
+    {
+        if (!Details.IsActive)
+        {
+            throw new BusinessException("Incorrect account status", "Account must be active if you want to modify it. ");
+        } 
+    }
+
+    private void ThrowWhenDateOfRange(DateTime date)
+    {
+        var dayMonth = (int)Details.SettlementDayMonth!;
+        var currentDate = DateTime.UtcNow;
+        var lastMonthEnd = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddDays(-1);
+        var from = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddMonths(-1);
+
+        if (date < from || date > lastMonthEnd)
+        {
+            throw new BusinessException("Incorrect date", "Fate is out of range.");
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Calculator.Application.Features.Account.ViewModels;
+﻿using Calculator.Application.Features.Account.ViewModels.AccountViews;
 using Calculator.Application.Parameters;
 using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;

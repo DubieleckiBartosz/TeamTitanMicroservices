@@ -1,7 +1,7 @@
 ﻿using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
 
-namespace Calculator.Application.Features.Account.ViewModels;
+namespace Calculator.Application.Features.Account.ViewModels.AccountViews;
 
 public class AccountViewModel
 {

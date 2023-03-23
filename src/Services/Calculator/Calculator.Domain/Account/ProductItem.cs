@@ -31,6 +31,6 @@ public class ProductItem
 
     public void AsConsidered()
     {
-        IsConsidered = true;
+        IsConsidered = true; 
     }
 }

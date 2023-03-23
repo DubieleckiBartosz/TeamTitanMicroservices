@@ -201,7 +201,7 @@ CREATE OR ALTER PROCEDURE bonus_createNew_I
 	@balance DECIMAL
 AS
 BEGIN 
-		BEGIN TRY  
+	BEGIN TRY  
 		BEGIN TRANSACTION;
 			
 			UPDATE Accounts SET Balance = @balance
@@ -537,5 +537,132 @@ BEGIN
 	 CASE WHEN @name = 'Created' AND @type = 'desc' THEN Created END DESC
 
 	 OFFSET (@pageNumber - 1)* @pageSize ROWS FETCH NEXT @pageSize ROWS ONLY;   
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE product_createNew_I
+	 @id UNIQUEIDENTIFIER,
+	 @companyCode VARCHAR(50),
+	 @productSku VARCHAR(12),
+	 @pricePerUnit DECIMAL,
+	 @countedInUnit VARCHAR(50),
+	 @productName VARCHAR(50),
+	 @isAvailable BIT,
+	 @createdBy VARCHAR(50)
+AS
+BEGIN 
+	BEGIN TRY  
+		BEGIN TRANSACTION;
+			
+			INSERT INTO PieceworkProducts(
+			  Id, CompanyCode, ProductSku, PricePerUnit, 
+			  CountedInUnit, ProductName, IsAvailable, 
+			  CreatedBy
+			) 
+			VALUES (
+				@id, @companyCode, @productSku, @pricePerUnit, 
+				@countedInUnit, @productName, @isAvailable, 
+				@createdBy
+			  ) 
+
+			INSERT INTO ProductPriceHistory(ProductId, Price)
+			VALUES(@id, @pricePerUnit)
+
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE product_newAvailability_U
+	 @id UNIQUEIDENTIFIER, 
+	 @newAvailability BIT 
+AS
+BEGIN 
+	 UPDATE PieceworkProducts SET IsAvailable = @newAvailability
+	 WHERE Id = @id
+END
+GO
+ 
+
+CREATE OR ALTER PROCEDURE product_newPrice_U
+	 @id UNIQUEIDENTIFIER, 
+	 @newPricePerUnit DECIMAL 
+AS
+BEGIN 
+	BEGIN TRY  
+		BEGIN TRANSACTION;
+			
+			UPDATE PieceworkProducts SET PricePerUnit = @newPricePerUnit
+			WHERE Id = @id
+
+			INSERT INTO ProductPriceHistory(ProductId, Price)
+			VALUES(@id, @newPricePerUnit)
+
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END 
+	END CATCH
+END
+GO
+ 
+CREATE OR ALTER PROCEDURE product_getById_S
+	@id UNIQUEIDENTIFIER
+AS
+BEGIN
+	SELECT [Id],
+		   [CompanyCode],
+		   [ProductSku],
+		   [PricePerUnit],
+		   [CountedInUnit],
+		   [ProductName],
+		   [CreatedBy],
+		   [Created], 
+		   [IsAvailable]
+	  FROM [TeamTitanCalculator].[dbo].[PieceworkProducts]
+	  WHERE Id = @id
+END
+GO
+
+CREATE OR ALTER PROCEDURE product_getWithHistoryById_S
+	@id UNIQUEIDENTIFIER
+AS
+BEGIN
+	SELECT pp.Id,
+		   pp.CompanyCode,
+		   pp.ProductSku,
+		   pp.PricePerUnit,
+		   pp.CountedInUnit,
+		   pp.ProductName,
+		   pp.CreatedBy,
+		   pp.Created, 
+		   pp.IsAvailable,
+		   pph.Id,
+		   pph.Price,
+		   pph.Created
+	  FROM TeamTitanCalculator.dbo.PieceworkProducts AS pp
+	  INNER JOIN ProductPriceHistory AS pph ON pph.ProductId = pp.Id
+	  WHERE pp.Id = @id
 END
 GO
