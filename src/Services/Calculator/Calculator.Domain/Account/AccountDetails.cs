@@ -143,8 +143,7 @@ public class AccountDetails
     public void AssignData(CountingType countingType,
         AccountStatus accountStatus, bool isActive,
         int workDayHours, int settlementDayMonth, DateTime? expirationDate)
-    {          
-        //Validation
+    {           
         CountingType = countingType;
         AccountStatus = accountStatus;
         IsActive = isActive;
@@ -154,41 +153,35 @@ public class AccountDetails
     }
 
     public void AssignFinancialData(decimal? hourlyRate, decimal? overtimeRate)
-    {
-        //Validation 
+    { 
         HourlyRate = hourlyRate ?? HourlyRate;
         OvertimeRate = overtimeRate ?? OvertimeRate; 
     }
 
 
     public void UpdateWorkDayHours(int newWorkDayHours)
-    {
-        //Validation
+    { 
         WorkDayHours = newWorkDayHours;
     }
     public void UpdateOvertimeRate(decimal overtimeRate)
-    {       
-        //Validation
+    {        
         OvertimeRate = overtimeRate;
     }
 
     public void UpdateHourlyRate(decimal hourlyRate)
-    {
-        //Validation
+    { 
         HourlyRate = hourlyRate;
     }
 
     public void Deactivate(string deactivatedBy)
-    {
-        //Validation
+    { 
         DeactivatedBy = deactivatedBy;
         AccountStatus = AccountStatus.Off;
         IsActive = false;
     }
 
     public void Activate(string activatedBy)
-    {
-        //Validation
+    { 
         ActivatedBy = activatedBy;
         AccountStatus = AccountStatus.InUse;
         IsActive = true;
@@ -224,8 +217,7 @@ public class AccountDetails
         {
             value = bonus.BonusAmount;
         }
-
-        //Validation
+         
         Balance += value; 
     }
 
@@ -235,8 +227,7 @@ public class AccountDetails
     }
 
     public void ClearBalance()
-    {
-        //Validation
+    { 
         Balance = 0; 
     } 
 }

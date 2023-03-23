@@ -27,7 +27,8 @@ builder.GetDependencyInjectionInfrastructure();
 
 builder.EventStoreConfiguration(_ => new List<IProjection>
     {
-        new AccountProjection(_.GetService<IAccountRepository>()!)
+        new AccountProjection(_.GetService<IAccountRepository>()!),
+        new ProductProjection(_.GetService<IProductRepository>()!)
     }, typeof(AssemblyCalculatorApplicationReference), typeof(AssemblySharedImplementationsReference))
     .RegisterBackgroundProcess().GetHangfire().GetAutoMapper(typeof(AssemblyCalculatorApplicationReference).Assembly);
 

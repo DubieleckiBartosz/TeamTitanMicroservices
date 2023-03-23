@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace Calculator.API.Configurations;
 
@@ -42,6 +43,10 @@ public static class SwaggerConfiguration
             {
                 {securityScheme, new string[] { }}
             });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
         });
 
         return builder;

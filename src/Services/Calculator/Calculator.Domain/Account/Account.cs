@@ -415,9 +415,27 @@ public class Account : Aggregate
         Settlements.Add(settlement);
 
         Details.ClearBalance();
-        ProductItems.Clear();
-        WorkDays.Clear();
-        Bonuses.Clear();
+
+        var currentDate = DateTime.UtcNow;
+        var dayMonth = (int)Details.SettlementDayMonth!;
+        var takeFrom = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddMonths(-1);
+
+        if (ProductItems.Any())
+        {
+            ProductItems.RemoveAll(p => p.Date < takeFrom);
+            ProductItems.ForEach(_ => _.AsConsidered());
+        }
+
+        if (WorkDays.Any())
+        {
+            WorkDays.RemoveAll(w => w.Date < takeFrom);
+        }
+
+        if (Bonuses.Any())
+        {
+            Bonuses.RemoveAll(b => b.Created < takeFrom);
+            Bonuses.ForEach(_ => _.AsSettled());
+        } 
     }
 
     private void ThrowWhenNotActive()

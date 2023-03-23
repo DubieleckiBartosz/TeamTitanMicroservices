@@ -235,7 +235,7 @@ public class AccountReader : IRead
     public AccountReader Settled(AccountSettled @event)
     {
         var settlement = SettlementReader.Create(@event.Balance, SettlementDayMonth!.Value);
-
+        //[TODO]
         Settlements.Add(settlement);
 
         return this;

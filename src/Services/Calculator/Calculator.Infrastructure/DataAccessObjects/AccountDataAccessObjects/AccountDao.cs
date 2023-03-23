@@ -2,7 +2,7 @@
 using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
 
-namespace Calculator.Infrastructure.DataAccessObjects;
+namespace Calculator.Infrastructure.DataAccessObjects.AccountDataAccessObjects;
 
 public class AccountDao
 {
@@ -27,14 +27,14 @@ public class AccountDao
     public List<SettlementDao> Settlements { get; init; } = new();
 
     public AccountReader Map()
-    { 
+    {
         var products = ProductItems.Select(_ =>
             ProductItemReader.Load(_.PieceworkProductId, _.Quantity, _.CurrentPrice, _.AccountId, _.IsConsidered,
                 _.Date)).ToList();
 
         var workDays = WorkDays.Select(_ =>
             WorkDayReader.Create(_.Date, _.HoursWorked, _.Overtime, _.IsDayOff, _.CreatedBy, _.AccountId)).ToList();
-        
+
         var bonuses = Bonuses.Select(_ =>
             BonusReader.Load(_.Id, _.BonusCode, _.Creator, _.Settled, _.Canceled, _.Created, _.Amount)).ToList();
 

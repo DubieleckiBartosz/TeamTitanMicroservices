@@ -1,6 +1,6 @@
 ﻿using Calculator.Application.Constants;
 using Calculator.Application.Contracts;
-using Calculator.Application.Features.Account.ViewModels;
+using Calculator.Application.Features.Account.ViewModels.AccountViews;
 using Calculator.Application.ReadModels.AccountReaders;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.Core.Exceptions;
