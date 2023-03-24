@@ -1,5 +1,12 @@
-﻿namespace Calculator.Application.Features.Product.Queries.GetProductsBySearch;
+﻿using Calculator.Application.Features.Product.ViewModels;
+using Shared.Implementations.Abstractions;
 
-public class GetProductsBySearchQueryHandler
+namespace Calculator.Application.Features.Product.Queries.GetProductsBySearch;
+
+public class GetProductsBySearchQueryHandler : IQueryHandler<GetProductsBySearchQuery, ProductViewModel>
 {
+    public Task<ProductViewModel> Handle(GetProductsBySearchQuery request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

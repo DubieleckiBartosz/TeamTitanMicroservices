@@ -51,7 +51,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
             throw new ArgumentNullException(nameof(@event));
         }
 
-        var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
+        var account = await _accountRepository.GetAccountWithProductsAndBonusesByIdAsync(@event.AccountId, @event.From, @event.To);
         this.CheckAccount(account);
 
         account!.Settled(@event);

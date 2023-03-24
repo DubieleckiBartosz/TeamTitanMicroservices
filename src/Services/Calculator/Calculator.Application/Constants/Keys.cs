@@ -2,6 +2,6 @@
 
 public class Keys
 {
-    public const string SettlementBackgroundJobName = "account_settlement";
+    public static string SettlementBackgroundJobName(string identifierAccount) => "account_settlement" + identifierAccount;
 
 }

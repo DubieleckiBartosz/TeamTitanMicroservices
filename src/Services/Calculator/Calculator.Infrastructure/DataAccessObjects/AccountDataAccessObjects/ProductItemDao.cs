@@ -2,6 +2,7 @@
 
 public class ProductItemDao
 {
+    public Guid Id { get; init; }
     public Guid AccountId { get; init; }
     public Guid PieceworkProductId { get; init; }
     public decimal CurrentPrice { get; init; }

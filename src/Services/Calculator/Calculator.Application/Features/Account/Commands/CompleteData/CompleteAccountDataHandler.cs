@@ -45,7 +45,7 @@ public class CompleteAccountDataHandler : ICommandHandler<CompleteAccountDataCom
         var cronExpression =
             $"0 {timeDifference.Minutes} {timeDifference.Hours} {settlementDayMonth} {targetDate.Month} ? {targetDate.Year}";
 
-        _jobService.RecurringMediator(Keys.SettlementBackgroundJobName, new AccountSettlementCommand(account.Id),
+        _jobService.RecurringMediator(Keys.SettlementBackgroundJobName(account.Id.ToString()), new AccountSettlementCommand(account.Id),
             cronExpression);
 
         return Unit.Value;

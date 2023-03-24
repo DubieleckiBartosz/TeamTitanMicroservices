@@ -235,7 +235,7 @@ CREATE OR ALTER PROCEDURE account_finishBonusLife_U
 	@balance DECIMAL
 AS
 BEGIN 
-		BEGIN TRY  
+	BEGIN TRY  
 		BEGIN TRANSACTION;
 
 			UPDATE Accounts SET Balance = @balance
@@ -263,16 +263,44 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE settlement_createSettlement_I
+
+CREATE OR ALTER PROCEDURE [dbo].[settlement_createSettlement_I]
 	@accountId UNIQUEIDENTIFIER,
 	@from DATETIME,
 	@to DATETIME,
-	@value DECIMAL 
+	@value DECIMAL,
+	@bonuses ConsiderationTableType READONLY,
+	@products ConsiderationTableType READONLY
 AS
 BEGIN
-	
-	INSERT INTO dbo.Settlements(AccountId, [From], [To], [Value])
-    VALUES (@accountId, @from, @to, @value )
+	BEGIN TRY  
+		BEGIN TRANSACTION;
+		
+			INSERT INTO dbo.Settlements(AccountId, [From], [To], [Value])
+			VALUES (@accountId, @from, @to, @value )
+
+			UPDATE Bonuses SET Settled = 1
+			FROM Bonuses AS b
+			INNER JOIN @bonuses AS bc ON bc.Id = b.Id
+
+			UPDATE ProductItems SET IsConsidered = 1
+			FROM Bonuses AS b
+			INNER JOIN @products AS pc ON pc.Id = b.Id
+
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH
 END
 GO 
 
@@ -646,7 +674,8 @@ END
 GO
 
 CREATE OR ALTER PROCEDURE product_getWithHistoryById_S
-	@id UNIQUEIDENTIFIER
+	@id UNIQUEIDENTIFIER,
+	@company VARCHAR(50)
 AS
 BEGIN
 	SELECT pp.Id,
@@ -663,6 +692,53 @@ BEGIN
 		   pph.Created
 	  FROM TeamTitanCalculator.dbo.PieceworkProducts AS pp
 	  INNER JOIN ProductPriceHistory AS pph ON pph.ProductId = pp.Id
-	  WHERE pp.Id = @id
+	  WHERE pp.Id = @id AND pp.CompanyCode = @company 
+END
+GO
+
+ 
+ 
+CREATE OR ALTER PROCEDURE account_getWithProductsAndBonusesById_S
+	@accountId UNIQUEIDENTIFIER,
+	@startDate DATETIME,
+	@toDate DATETIME
+AS
+BEGIN
+	SELECT 
+	   a.Id,
+       a.CompanyCode,
+       a.AccountOwner,
+       a.Balance,
+       a.AccountStatus,
+       a.CountingType,
+       a.ActivatedBy,
+       a.CreatedBy,
+       a.DeactivatedBy,
+       a.WorkDayHours,
+       a.HourlyRate,
+       a.OvertimeRate,
+       a.IsActive,
+       a.ExpirationDate,
+       a.SettlementDayMonth,
+	   b.Id,
+	   b.BonusCode, 
+	   b.Amount, 
+	   b.Settled, 
+	   b.Canceled, 
+	   b.Created, 
+	   b.Creator, 
+	   p.Id,
+	   p.AccountId,
+       p.PieceworkProductId,
+       p.CurrentPrice,
+       p.Quantity,
+       p.IsConsidered,
+       p.[Date]
+  FROM TeamTitanCalculator.dbo.Accounts AS a
+  LEFT JOIN Bonuses AS b ON b.AccountId = a.Id
+  LEFT JOIN ProductItems AS p ON p.AccountId = a.Id
+  WHERE a.Id = @accountId 
+  AND (@startDate IS NULL OR (b.Created IS NULL OR b.Created >= @startDate AND b.Created < @toDate))
+  AND (@startDate IS NULL OR (p.Created IS NULL OR p.Created >= @startDate AND p.Created < @toDate))
 END
 GO

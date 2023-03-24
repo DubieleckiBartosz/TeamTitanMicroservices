@@ -234,9 +234,20 @@ public class AccountReader : IRead
 
     public AccountReader Settled(AccountSettled @event)
     {
-        var settlement = SettlementReader.Create(@event.Balance, SettlementDayMonth!.Value);
-        //[TODO]
+        var settlement = SettlementReader.Create(@event.Balance, @event.From, @event.To);
+  
         Settlements.Add(settlement);
+        Balance = 0; 
+          
+        if (ProductItems.Any())
+        {
+             ProductItems.ForEach(_ => _.AsConsidered());
+        } 
+
+        if (Bonuses.Any())
+        { 
+            Bonuses.ForEach(_ => _.AsSettled());
+        }
 
         return this;
     }

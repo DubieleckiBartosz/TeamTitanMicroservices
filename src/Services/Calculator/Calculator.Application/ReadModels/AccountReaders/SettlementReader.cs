@@ -7,31 +7,15 @@ public class SettlementReader
     public decimal Value { get; }
     public string Period => $"{From.ToShortDateString()} - {To.ToShortDateString()}";
 
-    private SettlementReader(decimal value, int settlementDayMonth)
+    private SettlementReader(decimal value, DateTime from, DateTime to)
     {
-        var now = DateTime.UtcNow;
-        var currentMonth = now.Month;
-        var currentYear = now.Year;
-
         Value = value;
-        To = new DateTime(currentYear, currentMonth, settlementDayMonth);
-        From = To.AddMonths(-1).AddDays(-1);
-    }
-
-    private SettlementReader(DateTime from, DateTime to, decimal value)
-    {
-        From = from;
         To = to;
-        Value = value;
+        From = from;
     }
-
-    public static SettlementReader Create(decimal value, int settlementDayMonth)
+     
+    public static SettlementReader Create(decimal value, DateTime from, DateTime to)
     {
-        return new SettlementReader(value, settlementDayMonth);
-    }
-
-    public static SettlementReader Load(DateTime from, DateTime to, decimal value)
-    {
-        return new SettlementReader(from, to, value);
-    }
+        return new SettlementReader(value, from, to);
+    } 
 }
