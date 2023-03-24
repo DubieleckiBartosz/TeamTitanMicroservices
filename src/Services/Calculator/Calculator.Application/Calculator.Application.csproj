@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Account\Queries\GetSettlementsByAccountId\" />
-    <Folder Include="Features\Account\ViewModels\ProductViews\" />
-    <Folder Include="Parameters\ProductParameters\" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Calculator.Application.ReadModels.ProductReaders;
+using Shared.Implementations.Search;
 
 namespace Calculator.Application.Contracts;
 
@@ -6,7 +7,12 @@ public interface IProductRepository
 {
     Task<ProductReader?> GetProductByIdAsync(Guid id);
     Task<ProductReader?> GetProductWithHistoryAsync(Guid id, string company);
-    Task<List<ProductReader>?> GetProductsBySearchAsync();
+
+    Task<ResponseSearchList<ProductReader>?> GetProductsBySearchAsync(string? productSku, decimal? pricePerUnitFrom,
+        decimal? pricePerUnitTo,
+        string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool isAvailable,
+        string type, string name, int pageNumber, int pageSize, string companyCode);
+
     Task AddAsync(ProductReader productReader);
     Task UpdatePriceAsync(ProductReader productReader);
     Task UpdateAvailabilityAsync(ProductReader productReader);

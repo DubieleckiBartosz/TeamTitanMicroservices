@@ -1,5 +1,5 @@
-﻿using Calculator.Application.Features.Account.ViewModels.AccountViews;
-using Calculator.Application.Parameters;
+﻿using Calculator.Application.Features.Account.ViewModels;
+using Calculator.Application.Parameters.AccountParameters;
 using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
 using Shared.Implementations.Abstractions;

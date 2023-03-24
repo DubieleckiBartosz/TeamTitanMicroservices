@@ -742,3 +742,80 @@ BEGIN
   AND (@startDate IS NULL OR (p.Created IS NULL OR p.Created >= @startDate AND p.Created < @toDate))
 END
 GO
+
+CREATE OR ALTER PROCEDURE product_getBySearch_S
+	@productSku VARCHAR(12) NULL,
+	@pricePerUnitFrom DECIMAL NULL,
+	@pricePerUnitTo DECIMAL NULL,
+	@countedInUnit VARCHAR(50) NULL,
+	@productName VARCHAR(50) NULL, 
+	@fromDate DATETIME NULL,
+	@toDate DATETIME NULL,
+	@isAvailable BIT NULL,
+	@type VARCHAR(10),
+	@name VARCHAR(50),
+	@pageNumber INT,
+	@pageSize INT,
+	@companyCode VARCHAR(50) 
+AS
+BEGIN
+	 WITH Data_CTE 
+	 AS
+	 (
+		 SELECT 
+			  Id,
+			  CompanyCode,
+			  ProductSku,
+			  PricePerUnit,
+			  CountedInUnit,
+			  ProductName,
+			  CreatedBy,
+			  Created,
+			  Modified,
+			  IsAvailable
+		 FROM TeamTitanCalculator.dbo.PieceworkProducts  
+		 WHERE CompanyCode = @companyCode 
+		 AND (@productSku IS NULL OR ProductSku LIKE '%' + @productSku + '%')
+		 AND (@pricePerUnitFrom IS NULL OR PricePerUnit >= @pricePerUnitFrom)   
+		 AND (@pricePerUnitTo IS NULL OR PricePerUnit <= @pricePerUnitTo)
+		 AND (@countedInUnit IS NULL OR LOWER(CountedInUnit) = LOWER(@countedInUnit))
+		 AND (@productName IS NULL OR LOWER(ProductName) = LOWER(@productName))
+		 AND (@fromDate IS NULL OR Created >= @fromDate)
+		 AND (@toDate IS NULL OR Created <= @toDate)
+		 AND (@isAvailable IS NULL OR IsAvailable = @isAvailable) 
+	 ), 
+	 Count_CTE 
+	 AS 
+	 (
+	 	SELECT COUNT(*) AS TotalCount FROM Data_CTE
+	 )
+	  
+     SELECT t.Id,
+		   t.CompanyCode,
+		   t.ProductSku,
+		   t.PricePerUnit,
+		   t.CountedInUnit,
+		   t.ProductName,
+		   t.CreatedBy,
+		   t.Created,
+		   t.Modified,
+		   t.IsAvailable,
+		   c.TotalCount
+	 FROM Data_CTE AS t
+	 CROSS JOIN Count_CTE AS c
+	 ORDER BY 
+	 CASE WHEN @name = 'Id' AND @type = 'asc' THEN Id END ASC,  
+	 CASE WHEN @name = 'Id' AND @type = 'desc' THEN Id END DESC, 
+
+	 CASE WHEN @name = 'Created' AND @type = 'asc' THEN Created END ASC,  
+	 CASE WHEN @name = 'Created' AND @type = 'desc' THEN Created END DESC,
+
+	 CASE WHEN @name = 'Price' AND @type = 'asc' THEN PricePerUnit END ASC,  
+	 CASE WHEN @name = 'Price' AND @type = 'desc' THEN PricePerUnit END DESC,
+
+	 CASE WHEN @name = 'ProductName' AND @type = 'asc' THEN ProductName END ASC,  
+	 CASE WHEN @name = 'ProductName' AND @type = 'desc' THEN ProductName END DESC
+
+	 OFFSET (@pageNumber - 1)* @pageSize ROWS FETCH NEXT @pageSize ROWS ONLY;   
+END
+GO

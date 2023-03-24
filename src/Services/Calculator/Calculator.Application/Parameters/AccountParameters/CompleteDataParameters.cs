@@ -2,7 +2,7 @@
 using Calculator.Domain.Types;
 using Newtonsoft.Json;
 
-namespace Calculator.Application.Parameters;
+namespace Calculator.Application.Parameters.AccountParameters;
 
 public class CompleteDataParameters
 {

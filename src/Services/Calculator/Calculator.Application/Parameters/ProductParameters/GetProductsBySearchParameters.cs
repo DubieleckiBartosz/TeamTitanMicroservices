@@ -2,7 +2,7 @@
 using Shared.Implementations.Search;
 using Shared.Implementations.Search.SearchParameters;
 
-namespace Calculator.Application.Parameters.AccountParameters;
+namespace Calculator.Application.Parameters.ProductParameters;
 
 public class GetProductsBySearchParameters : BaseSearchQueryParameters, IFilterModel
 {
@@ -19,7 +19,7 @@ public class GetProductsBySearchParameters : BaseSearchQueryParameters, IFilterM
     [JsonConstructor]
     public GetProductsBySearchParameters(string? productSku, decimal? pricePerUnitFrom, decimal? pricePerUnitTo,
         string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool isAvailable,
-        SortModelParameters sort)
+        SortModelParameters sort, int pageNumber, int pageSize)
     {
         ProductSku = productSku;
         PricePerUnitFrom = pricePerUnitFrom;
@@ -30,5 +30,7 @@ public class GetProductsBySearchParameters : BaseSearchQueryParameters, IFilterM
         ToDate = toDate;
         IsAvailable = isAvailable;
         Sort = sort;
+        PageNumber = pageNumber;
+        PageSize = pageSize;
     }
 }

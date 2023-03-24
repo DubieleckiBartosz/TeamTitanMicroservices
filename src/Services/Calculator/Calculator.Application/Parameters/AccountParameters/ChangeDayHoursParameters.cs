@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Calculator.Application.Parameters;
+namespace Calculator.Application.Parameters.AccountParameters;
 
 public class ChangeDayHoursParameters
 {

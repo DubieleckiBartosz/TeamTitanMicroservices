@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 
-namespace Calculator.Application.Parameters;
+namespace Calculator.Application.Parameters.AccountParameters;
 
 public class ChangeFinancialDataParameters
 {
     public decimal? OvertimeRate { get; init; }
-    public decimal? HourlyRate { get; init; } 
+    public decimal? HourlyRate { get; init; }
     public Guid AccountId { get; init; }
 
     [JsonConstructor]

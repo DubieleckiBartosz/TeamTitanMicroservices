@@ -6,6 +6,7 @@ using Dapper;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Dapper;
 using Shared.Implementations.Logging;
+using Shared.Implementations.Search;
 
 namespace Calculator.Infrastructure.Repositories;
 
@@ -50,10 +51,35 @@ public class ProductRepository : BaseRepository<ProductRepository>, IProductRepo
         return result?.Map();
     }
 
-    public Task<List<ProductReader>?> GetProductsBySearchAsync()
+    public async Task<ResponseSearchList<ProductReader>?> GetProductsBySearchAsync(string? productSku,
+        decimal? pricePerUnitFrom, decimal? pricePerUnitTo,
+        string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool isAvailable, string type,
+        string name, int pageNumber, int pageSize, string companyCode)
     {
-        //[TODO]
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@productSku", productSku);
+        parameters.Add("@pricePerUnitFrom", pricePerUnitFrom);
+        parameters.Add("@pricePerUnitTo", pricePerUnitTo);
+        parameters.Add("@countedInUnit", countedInUnit);
+        parameters.Add("@productName", productName);
+        parameters.Add("@fromDate", fromDate);
+        parameters.Add("@toDate", toDate);
+        parameters.Add("@isAvailable", isAvailable);
+        parameters.Add("@type", type);
+        parameters.Add("@name", name);
+        parameters.Add("@pageNumber", pageNumber);
+        parameters.Add("@pageSize", pageSize);
+        parameters.Add("@companyCode", companyCode);
+
+        var result =
+            (await this.QueryAsync<ProductSearchDao>("product_getBySearch_S", param: parameters, CommandType.StoredProcedure))?.ToList();
+
+
+        var totalCount = result?.FirstOrDefault()?.TotalCount;
+        var data = result?.Select(_ => _.Map()).ToList();
+
+        return ResponseSearchList<ProductReader>.Create(data, totalCount ?? 0);
     }
 
     public async Task AddAsync(ProductReader productReader)
