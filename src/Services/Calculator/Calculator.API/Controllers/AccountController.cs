@@ -9,7 +9,7 @@ using Calculator.Application.Features.Account.Commands.ChangeFinancialData;
 using Calculator.Application.Features.Account.Commands.CompleteData;
 using Calculator.Application.Features.Account.Commands.DeactivateAccount;
 using Calculator.Application.Features.Account.Queries.GetAccountsBySearch;
-using Calculator.Application.Parameters;
+using Calculator.Application.Parameters.AccountParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Implementations.Abstractions;

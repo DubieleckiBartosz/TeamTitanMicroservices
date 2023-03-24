@@ -1,4 +1,4 @@
-﻿using Calculator.Application.Parameters;
+﻿using Calculator.Application.Parameters.AccountParameters;
 using Calculator.Domain.Types;
 using MediatR;
 using Shared.Implementations.Abstractions;

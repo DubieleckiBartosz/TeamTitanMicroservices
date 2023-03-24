@@ -1,5 +1,5 @@
 ﻿using Calculator.Application.Features.Product.ViewModels;
-using Calculator.Application.Parameters.AccountParameters;
+using Calculator.Application.Parameters.ProductParameters;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.Search;
 using Shared.Implementations.Tools;
@@ -9,7 +9,7 @@ namespace Calculator.Application.Features.Product.Queries.GetProductsBySearch;
 public record GetProductsBySearchQuery(string? ProductSku,
     decimal? PricePerUnitFrom, decimal? PricePerUnitTo,
     string? CountedInUnit, string? ProductName, DateTime? FromDate, DateTime? ToDate,
-    bool IsAvailable, SortModel Sort, int PageNumber, int PageSize) : IQuery<ProductViewModel>
+    bool IsAvailable, SortModel Sort, int PageNumber, int PageSize) : IQuery<ProductSearchViewModel>
 {
     public static GetProductsBySearchQuery Create(GetProductsBySearchParameters parameters)
     {
