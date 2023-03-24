@@ -30,7 +30,7 @@ public class CreateNewProductCommandHandler : ICommandHandler<CreateNewProductCo
             newSku = SkuGenerator.Generate();
             var skuExists = await _productRepository.ProductSkuExistsAsync(newSku);
             
-            if (skuExists == null)
+            if (skuExists is null or false)
             {
                 generate = false;
             }

@@ -13,12 +13,12 @@ public class GetProductsBySearchParameters : BaseSearchQueryParameters, IFilterM
     public string? ProductName { get; init; }
     public DateTime? FromDate { get; init; }
     public DateTime? ToDate { get; init; }
-    public bool IsAvailable { get; init; }
+    public bool? IsAvailable { get; init; }
     public SortModelParameters Sort { get; set; }
 
     [JsonConstructor]
     public GetProductsBySearchParameters(string? productSku, decimal? pricePerUnitFrom, decimal? pricePerUnitTo,
-        string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool isAvailable,
+        string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool? isAvailable,
         SortModelParameters sort, int pageNumber, int pageSize)
     {
         ProductSku = productSku;

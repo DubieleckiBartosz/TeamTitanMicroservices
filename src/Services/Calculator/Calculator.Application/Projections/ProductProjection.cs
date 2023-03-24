@@ -39,6 +39,8 @@ public class ProductProjection : ReadModelAction<ProductReader>
         var productResult = await _productRepository.GetProductByIdAsync(@event.ProductId);
 
         this.CheckAccount(productResult);
+
+        productResult!.PriceUpdated(@event);
         await _productRepository.UpdatePriceAsync(productResult!);
     }
 
@@ -52,6 +54,8 @@ public class ProductProjection : ReadModelAction<ProductReader>
         var productResult = await _productRepository.GetProductByIdAsync(@event.ProductId);
 
         this.CheckAccount(productResult);
+
+        productResult!.NewAvailability(@event);
         await _productRepository.UpdateAvailabilityAsync(productResult!);
     }
 

@@ -67,7 +67,7 @@ public class ProductRepository : BaseRepository<ProductRepository>, IProductRepo
 
     public async Task<ResponseSearchList<ProductReader>?> GetProductsBySearchAsync(string? productSku,
         decimal? pricePerUnitFrom, decimal? pricePerUnitTo,
-        string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool isAvailable, string type,
+        string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool? isAvailable, string type,
         string name, int pageNumber, int pageSize, string companyCode)
     {
         var parameters = new DynamicParameters();
