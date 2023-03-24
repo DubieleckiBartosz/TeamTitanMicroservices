@@ -11,7 +11,7 @@ public interface IProductRepository
 
     Task<ResponseSearchList<ProductReader>?> GetProductsBySearchAsync(string? productSku, decimal? pricePerUnitFrom,
         decimal? pricePerUnitTo,
-        string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool isAvailable,
+        string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool? isAvailable,
         string type, string name, int pageNumber, int pageSize, string companyCode);
 
     Task AddAsync(ProductReader productReader);

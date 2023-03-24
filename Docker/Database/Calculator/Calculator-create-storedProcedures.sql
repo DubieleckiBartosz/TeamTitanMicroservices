@@ -814,7 +814,10 @@ BEGIN
 	 CASE WHEN @name = 'Price' AND @type = 'desc' THEN PricePerUnit END DESC,
 
 	 CASE WHEN @name = 'ProductName' AND @type = 'asc' THEN ProductName END ASC,  
-	 CASE WHEN @name = 'ProductName' AND @type = 'desc' THEN ProductName END DESC
+	 CASE WHEN @name = 'ProductName' AND @type = 'desc' THEN ProductName END DESC,
+
+	 CASE WHEN @name = 'Availability' AND @type = 'asc' THEN IsAvailable END ASC,  
+	 CASE WHEN @name = 'Availability' AND @type = 'desc' THEN IsAvailable END DESC
 
 	 OFFSET (@pageNumber - 1)* @pageSize ROWS FETCH NEXT @pageSize ROWS ONLY;   
 END

@@ -9,7 +9,7 @@ namespace Calculator.Application.Features.Product.Queries.GetProductsBySearch;
 public record GetProductsBySearchQuery(string? ProductSku,
     decimal? PricePerUnitFrom, decimal? PricePerUnitTo,
     string? CountedInUnit, string? ProductName, DateTime? FromDate, DateTime? ToDate,
-    bool IsAvailable, SortModel Sort, int PageNumber, int PageSize) : IQuery<ProductSearchViewModel>
+    bool? IsAvailable, SortModel Sort, int PageNumber, int PageSize) : IQuery<ProductSearchViewModel>
 {
     public static GetProductsBySearchQuery Create(GetProductsBySearchParameters parameters)
     {
@@ -21,7 +21,7 @@ public record GetProductsBySearchQuery(string? ProductSku,
         var fromDate = parameters.FromDate;
         var toDate = parameters.ToDate;
         var isAvailable = parameters.IsAvailable;
-        var sort = parameters.CheckOrAssignSortModel();
+        var sort = parameters.CheckOrAssignSortModel(name: "Availability");
         var pageNumber = parameters.PageNumber;
         var pageSize = parameters.PageSize;
 
