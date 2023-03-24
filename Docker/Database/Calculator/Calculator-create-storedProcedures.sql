@@ -674,7 +674,8 @@ END
 GO
 
 CREATE OR ALTER PROCEDURE product_getWithHistoryById_S
-	@id UNIQUEIDENTIFIER
+	@id UNIQUEIDENTIFIER,
+	@company VARCHAR(50)
 AS
 BEGIN
 	SELECT pp.Id,
@@ -691,7 +692,7 @@ BEGIN
 		   pph.Created
 	  FROM TeamTitanCalculator.dbo.PieceworkProducts AS pp
 	  INNER JOIN ProductPriceHistory AS pph ON pph.ProductId = pp.Id
-	  WHERE pp.Id = @id
+	  WHERE pp.Id = @id AND pp.CompanyCode = @company 
 END
 GO
 

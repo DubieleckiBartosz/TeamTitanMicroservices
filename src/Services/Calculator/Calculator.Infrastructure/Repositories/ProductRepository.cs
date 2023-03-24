@@ -27,12 +27,13 @@ public class ProductRepository : BaseRepository<ProductRepository>, IProductRepo
         return result?.Map();
     }
 
-    public async Task<ProductReader?> GetProductWithHistoryAsync(Guid id)
+    public async Task<ProductReader?> GetProductWithHistoryAsync(Guid id, string company)
     {
         var parameters = new DynamicParameters();
 
         var dict = new Dictionary<Guid, ProductDao>();
         parameters.Add("@id", id);
+        parameters.Add("@company", company);
 
         var result = (await this.QueryAsync<ProductDao, PriceHistoryDao, ProductDao>("product_getWithHistoryById_S",(p,ph) =>
         {
