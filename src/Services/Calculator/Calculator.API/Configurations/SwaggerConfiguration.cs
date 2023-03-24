@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 namespace Calculator.API.Configurations;
 
@@ -11,7 +11,12 @@ public static class SwaggerConfiguration
 
         builder.Services.AddSwaggerGen(c =>
         {
-            c.EnableAnnotations();
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+
+            //c.EnableAnnotations();
+
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "TeamTitan Calculator API",
@@ -42,11 +47,7 @@ public static class SwaggerConfiguration
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {securityScheme, new string[] { }}
-            });
-
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            c.IncludeXmlComments(xmlPath);
+            }); 
         });
 
         return builder;

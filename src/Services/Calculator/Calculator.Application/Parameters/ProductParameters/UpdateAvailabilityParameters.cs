@@ -2,15 +2,13 @@
 
 namespace Calculator.Application.Parameters.ProductParameters;
 
-public class UpdatePriceParameters
+public class UpdateAvailabilityParameters
 {
     public Guid ProductId { get; init; }
-    public decimal Price { get; init; }
 
     [JsonConstructor]
-    public UpdatePriceParameters(Guid productId, decimal price)
+    public UpdateAvailabilityParameters(Guid productId)
     {
         ProductId = productId;
-        Price = price;
     }
 }

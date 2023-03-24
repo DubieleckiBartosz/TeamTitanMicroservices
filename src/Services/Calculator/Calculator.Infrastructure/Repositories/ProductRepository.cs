@@ -17,6 +17,18 @@ public class ProductRepository : BaseRepository<ProductRepository>, IProductRepo
     {
     }
 
+    public async Task<bool?> ProductSkuExistsAsync(string sku)
+    {
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@productSku", sku);
+
+        var result = (await QueryAsync<bool>("product_skuExists_S", parameters, CommandType.StoredProcedure))
+            ?.FirstOrDefault();
+
+        return result;
+    }
+    
     public async Task<ProductReader?> GetProductByIdAsync(Guid id)
     {
         var parameters = new DynamicParameters();
@@ -36,17 +48,19 @@ public class ProductRepository : BaseRepository<ProductRepository>, IProductRepo
         parameters.Add("@id", id);
         parameters.Add("@company", company);
 
-        var result = (await this.QueryAsync<ProductDao, PriceHistoryDao, ProductDao>("product_getWithHistoryById_S",(p,ph) =>
-        {
-            if (!dict.TryGetValue(p.Id, out var value))
+        var result = (await QueryAsync<ProductDao, PriceHistoryDao, ProductDao>("product_getWithHistoryById_S",
+            (p, ph) =>
             {
-                value = p;
-                dict.Add(p.Id, value);
-            }
-            value.PriceHistory.Add(ph);
+                if (!dict.TryGetValue(p.Id, out var value))
+                {
+                    value = p;
+                    dict.Add(p.Id, value);
+                }
 
-            return value;
-        },"Id,Id", parameters, CommandType.StoredProcedure))?.FirstOrDefault();
+                value.PriceHistory.Add(ph);
+
+                return value;
+            }, "Id,Id", parameters, CommandType.StoredProcedure))?.FirstOrDefault();
 
         return result?.Map();
     }
@@ -73,7 +87,8 @@ public class ProductRepository : BaseRepository<ProductRepository>, IProductRepo
         parameters.Add("@companyCode", companyCode);
 
         var result =
-            (await this.QueryAsync<ProductSearchDao>("product_getBySearch_S", param: parameters, CommandType.StoredProcedure))?.ToList();
+            (await QueryAsync<ProductSearchDao>("product_getBySearch_S", parameters, CommandType.StoredProcedure))
+            ?.ToList();
 
 
         var totalCount = result?.FirstOrDefault()?.TotalCount;

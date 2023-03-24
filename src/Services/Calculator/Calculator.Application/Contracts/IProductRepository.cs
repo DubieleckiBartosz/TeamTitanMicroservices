@@ -5,6 +5,7 @@ namespace Calculator.Application.Contracts;
 
 public interface IProductRepository
 {
+    Task<bool?> ProductSkuExistsAsync(string sku);
     Task<ProductReader?> GetProductByIdAsync(Guid id);
     Task<ProductReader?> GetProductWithHistoryAsync(Guid id, string company);
 
