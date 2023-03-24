@@ -20,7 +20,7 @@ public class DeactivateAccountHandler : ICommandHandler<DeactivateAccountCommand
     public async Task<Unit> Handle(DeactivateAccountCommand request, CancellationToken cancellationToken)
     {
         var account = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
         var userCode = _currentUser.VerificationCode;
         account!.DeactivateAccount(userCode!);

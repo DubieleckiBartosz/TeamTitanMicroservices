@@ -5,6 +5,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
 using Shared.Implementations.Validators; 
 using Shared.Implementations.Background;
+using Shared.Implementations.Services;
 
 namespace Calculator.Application.Features.Account.Commands.CompleteData;
 
@@ -12,18 +13,20 @@ public class CompleteAccountDataHandler : ICommandHandler<CompleteAccountDataCom
 {
     private readonly IRepository<Domain.Account.Account> _repository;
     private readonly IJobService _jobService;
+    private readonly ICurrentUser _currentUser;
 
-    public CompleteAccountDataHandler(IRepository<Domain.Account.Account> repository, IJobService jobService)
+    public CompleteAccountDataHandler(IRepository<Domain.Account.Account> repository, IJobService jobService, ICurrentUser currentUser)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
+        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
     }
 
     public async Task<Unit> Handle(CompleteAccountDataCommand request, CancellationToken cancellationToken)
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
         var countingType = request.CountingType;
         var workDayHours = request.WorkDayHours;

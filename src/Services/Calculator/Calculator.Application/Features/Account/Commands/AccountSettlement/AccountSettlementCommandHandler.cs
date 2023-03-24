@@ -18,7 +18,7 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
     {
         var account = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNullOrNotMatch("Account");
         account!.AccountSettlement(); 
         await _repository.AddWithSnapshotAsync<AccountSnapshot>(account);
 

@@ -20,7 +20,7 @@ public class AddBonusToAccountCommandHandler : ICommandHandler<AddBonusToAccount
     {
         var account = await _repository.GetAsync(request.AccountId);
 
-        account.CheckAndThrowWhenNull("Account");
+        account.CheckAndThrowWhenNullOrNotMatch("Account",_ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
         var creator = _currentUser.VerificationCode!; 
 
