@@ -64,6 +64,41 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         return result?.FirstOrDefault()?.Map();
     }
 
+    public async Task<AccountReader?> GetAccountWithProductsAndBonusesByIdAsync(Guid accountId, DateTime? startDate, DateTime? toDate)
+    {
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountId);
+        parameters.Add("@startDate", startDate);
+        parameters.Add("@toDate", toDate);
+
+        var dict = new Dictionary<Guid, AccountDao>();
+        var result = await QueryAsync<AccountDao, ProductItemDao?, BonusDao?, AccountDao>(
+            "account_getWithProductsAndBonusesById_S", (a, p, b) =>
+            {
+                if (!dict.TryGetValue(a.Id, out var value))
+                {
+                    value = a;
+                    dict.Add(a.Id, value);
+                }
+
+                if (p != null)
+                {
+                    value.ProductItems.Add(p);
+                }
+
+
+                if (b != null)
+                {
+                    value.Bonuses.Add(b);
+                }
+
+                return value;
+        }, splitOn: "Id,Id,Id", parameters, CommandType.StoredProcedure);
+
+        return result?.FirstOrDefault()?.Map();
+    }
+
     public async Task<AccountReader?> GetAccountByIdWithBonusesAsync(Guid accountId)
     {
         var parameters = new DynamicParameters();
@@ -316,6 +351,27 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
     public async Task AddSettlementAsync(AccountReader accountReader)
     {
         var settlement = accountReader.Settlements.Last();
+
+        /*
+             TVP has a maximum size of 2 MB (as is the default for SQL Server 2016 and later), 
+             then the maximum number of GUIDs that can be stored in the TVP is:
+
+             2 MB = 2,048 KB = 2,097,152 bytes
+             2,097,152 bytes / 16 bytes per GUID = 131,072 GUIDs
+        */
+
+        var toBonusTableType = accountReader.Bonuses?.Select(_ => _.Id).ToList();
+        var toProductTableType = accountReader.ProductItems?.Select(_ => _.PieceworkProductId).ToList();
+        var bonusTable = new DataTable();
+        var productTable = new DataTable();
+
+        bonusTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+        productTable.Columns.Add(new DataColumn("Id", typeof(Guid)));
+
+        toBonusTableType?.ForEach(_ => bonusTable.Rows.Add(_));
+        toProductTableType?.ForEach(_ => productTable.Rows.Add(_));
+
+
         var parameters = new DynamicParameters();
 
         parameters.Add("@accountId", accountReader.Id);
@@ -323,7 +379,13 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@to", settlement.To);
         parameters.Add("@value", settlement.Value);
 
-        await ExecuteAsync("settlement_createSettlement_I", parameters, CommandType.StoredProcedure);
+        parameters.Add("@bonuses",
+            bonusTable.AsTableValuedParameter("ConsiderationTableType"));
+
+        parameters.Add("@products",
+            productTable.AsTableValuedParameter("ConsiderationTableType"));
+
+        await ExecuteAsync("settlement_createSettlement_I", parameters, CommandType.StoredProcedure);  
     }
 
 

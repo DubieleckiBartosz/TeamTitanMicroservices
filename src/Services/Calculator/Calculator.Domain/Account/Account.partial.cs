@@ -97,15 +97,12 @@ public partial class Account
 
     private void Settled(AccountSettled @event)
     {
-        var settlement = Settlement.Create(@event.Balance, Details.SettlementDayMonth!.Value);
+        var settlement = Settlement.Create(@event.Balance, @event.From, @event.To);
 
         Settlements.Add(settlement);
 
-        Details.ClearBalance();
-
-        var currentDate = DateTime.UtcNow;
-        var dayMonth = (int)Details.SettlementDayMonth!;
-        var takeFrom = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddMonths(-1);
+        Details.ClearBalance(); 
+        var takeFrom = @event.From;
 
         if (ProductItems.Any())
         {
@@ -129,7 +126,7 @@ public partial class Account
     {
         if (!Details.IsActive)
         {
-            throw new BusinessException("Incorrect account status", "Account must be active if you want to modify it. ");
+            throw new BusinessException("Incorrect account status", "Account must be active if you want to modify it.");
         }
     }
 

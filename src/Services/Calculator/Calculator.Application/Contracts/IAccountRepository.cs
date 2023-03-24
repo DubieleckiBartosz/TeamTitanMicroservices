@@ -15,7 +15,9 @@ public interface IAccountRepository
     Task<AccountReader?> GetAccountByIdWithWorkDaysAsync(Guid accountId);
     Task<AccountReader?> GetAccountByIdWithProductsAsync(Guid accountId);
     Task<AccountReader?> GetAccountByIdWithBonusesAsync(Guid accountId);
-    Task<AccountReader?> GetAccountDetailsByIdAsync(Guid accountId);
+    Task<AccountReader?> GetAccountDetailsByIdAsync(Guid accountId); 
+    Task<AccountReader?> GetAccountWithProductsAndBonusesByIdAsync(Guid accountId, DateTime? startDate = null,
+        DateTime? toDate = null);
     Task AddAsync(AccountReader accountReader);
     Task AddBonusAsync(AccountReader account);
     Task AddProductItemAsync(AccountReader accountReader);

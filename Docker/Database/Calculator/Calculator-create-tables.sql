@@ -85,6 +85,13 @@ BEGIN
 	Created DATETIME DEFAULT GETDATE(),
 	Modified DATETIME DEFAULT GETDATE(),
 ) 
+
+--TYPE
+		
+		CREATE TYPE [dbo].[ConsiderationTableType] AS TABLE
+		(
+			Id UNIQUEIDENTIFIER NOT NULL 
+		)
 END
 
 --ProductPriceHistory

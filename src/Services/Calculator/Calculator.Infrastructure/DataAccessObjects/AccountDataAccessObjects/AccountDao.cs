@@ -29,7 +29,7 @@ public class AccountDao
     public AccountReader Map()
     {
         var products = ProductItems.Select(_ =>
-            ProductItemReader.Load(_.PieceworkProductId, _.Quantity, _.CurrentPrice, _.AccountId, _.IsConsidered,
+            ProductItemReader.Load(_.Id, _.PieceworkProductId, _.Quantity, _.CurrentPrice, _.AccountId, _.IsConsidered,
                 _.Date)).ToList();
 
         var workDays = WorkDays.Select(_ =>
@@ -38,7 +38,7 @@ public class AccountDao
         var bonuses = Bonuses.Select(_ =>
             BonusReader.Load(_.Id, _.BonusCode, _.Creator, _.Settled, _.Canceled, _.Created, _.Amount)).ToList();
 
-        var settlements = Settlements.Select(_ => SettlementReader.Load(_.From, _.To, _.Value)).ToList();
+        var settlements = Settlements.Select(_ => SettlementReader.Create(_.Value, _.From, _.To)).ToList();
 
         return AccountReader.Load(Id, AccountOwner, CompanyCode, CountingType,
             AccountStatus, ActivatedBy, CreatedBy, DeactivatedBy, IsActive,

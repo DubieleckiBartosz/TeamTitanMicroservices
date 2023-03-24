@@ -2,6 +2,7 @@
 
 public class ProductItemReader
 {
+    public Guid Id { get; }
     public Guid AccountId { get; }
     public Guid PieceworkProductId { get; }
     public decimal CurrentPrice { get; }
@@ -29,16 +30,18 @@ public class ProductItemReader
     /// <summary>
     ///     For load
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="accountId"></param>
     /// <param name="pieceworkProductId"></param>
     /// <param name="currentPrice"></param>
     /// <param name="quantity"></param>
     /// <param name="isConsidered"></param>
     /// <param name="date"></param>
-    private ProductItemReader(Guid accountId, Guid pieceworkProductId, decimal currentPrice, decimal quantity,
+    private ProductItemReader(Guid id, Guid accountId, Guid pieceworkProductId, decimal currentPrice, decimal quantity,
         bool isConsidered, DateTime date) : this(pieceworkProductId, quantity, currentPrice, accountId, date)
     {
         IsConsidered = isConsidered;
+        Id = id;
     }
 
     public static ProductItemReader Create(Guid pieceworkProductId, decimal quantity, decimal currentPrice,
@@ -47,10 +50,10 @@ public class ProductItemReader
         return new ProductItemReader(pieceworkProductId, quantity, currentPrice, accountId, date);
     }
 
-    public static ProductItemReader Load(Guid pieceworkProductId, decimal quantity, decimal currentPrice,
+    public static ProductItemReader Load(Guid id, Guid pieceworkProductId, decimal quantity, decimal currentPrice,
         Guid accountId, bool isConsidered, DateTime date)
     {
-        return new ProductItemReader(accountId, pieceworkProductId, currentPrice, quantity, isConsidered, date);
+        return new ProductItemReader(id, accountId, pieceworkProductId, currentPrice, quantity, isConsidered, date);
     }
 
     public void AsConsidered()

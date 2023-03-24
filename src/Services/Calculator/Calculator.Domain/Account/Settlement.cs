@@ -6,19 +6,15 @@ public class Settlement
     public DateTime To { get; }
     public decimal Value { get; }
 
-    private Settlement(decimal value, int settlementDayMonth)
+    private Settlement(decimal value, DateTime from, DateTime to)
     {
-        var now = DateTime.UtcNow;
-        var currentMonth = now.Month;
-        var currentYear = now.Year;  
-
-        Value = value;
-        To = new DateTime(currentYear, currentMonth, settlementDayMonth);
-        From = To.AddMonths(-1).AddDays(-1);
+        Value = value; 
+        To = to;
+        From = from;
     }
 
-    public static Settlement Create(decimal value, int settlementDayMonth)
+    public static Settlement Create(decimal value, DateTime from, DateTime to)
     {
-        return new Settlement(value, settlementDayMonth);
+        return new Settlement(value, from, to);
     }
 }

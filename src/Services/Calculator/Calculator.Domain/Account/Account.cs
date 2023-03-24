@@ -159,8 +159,15 @@ public partial class Account : Aggregate
     }
     
     public void AccountSettlement()
-    { 
-        var @event = AccountSettled.Create(this.Id, Details.Balance);
+    {
+        var now = DateTime.UtcNow;
+        var currentMonth = now.Month;
+        var currentYear = now.Year;
+         
+        var to = new DateTime(currentYear, currentMonth, (int) Details.SettlementDayMonth!);
+        var from = to.AddMonths(-1).AddDays(-1);
+        var @event = AccountSettled.Create(this.Id, Details.Balance, from, to);
+
         Apply(@event);
         this.Enqueue(@event);
     }
