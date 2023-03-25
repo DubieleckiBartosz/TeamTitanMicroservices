@@ -6,8 +6,8 @@ using Calculator.Application.Features.Account.Commands.CancelBonus;
 using Calculator.Application.Features.Account.Commands.ChangeCountingType;
 using Calculator.Application.Features.Account.Commands.ChangeDayHours;
 using Calculator.Application.Features.Account.Commands.ChangeFinancialData;
-using Calculator.Application.Features.Account.Commands.CompleteData;
 using Calculator.Application.Features.Account.Commands.DeactivateAccount;
+using Calculator.Application.Features.Account.Commands.UpdateData;
 using Calculator.Application.Features.Account.Queries.GetAccountsBySearch;
 using Calculator.Application.Parameters.AccountParameters;
 using Microsoft.AspNetCore.Authorization;
@@ -159,9 +159,9 @@ public class AccountController : BaseController
     /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
     [HttpPut("[action]")]
-    public async Task<IActionResult> CompleteData([FromBody] CompleteDataParameters parameters)
+    public async Task<IActionResult> UpdateData([FromBody] UpdateDataParameters parameters)
     {
-        var command = CompleteAccountDataCommand.Create(parameters);
+        var command = UpdateAccountDataCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
     }

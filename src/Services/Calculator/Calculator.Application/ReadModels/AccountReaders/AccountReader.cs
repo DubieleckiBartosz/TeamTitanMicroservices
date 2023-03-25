@@ -119,7 +119,7 @@ public class AccountReader : IRead
             productItems, workDays, bonuses, settlements);
     }
 
-    public AccountReader DataCompleted(AccountDataCompleted @event)
+    public AccountReader DataCompleted(AccountDataUpdated @event)
     {
         CountingType = @event.CountingType;
         AccountStatus = @event.Status;

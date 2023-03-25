@@ -78,11 +78,11 @@ public partial class Account : Aggregate
         return new Account(accountOwnerCode, companyCode, createdBy);
     }
 
-    public void CompleteAccount(CountingType countingType, int workDayHours, int settlementDayMonth,
+    public void UpdateAccount(CountingType countingType, int workDayHours, int settlementDayMonth,
         DateTime? expirationDate)
     {
         var @event =
-            AccountDataCompleted.Create(countingType, AccountStatus.New, workDayHours, settlementDayMonth, Id,
+            AccountDataUpdated.Create(countingType, AccountStatus.New, workDayHours, settlementDayMonth, Id,
                 expirationDate);
         Apply(@event);
         Enqueue(@event);
@@ -287,7 +287,7 @@ public partial class Account : Aggregate
             case NewAccountInitiated e:
                 this.Initiated(e);
                 break;
-            case AccountDataCompleted e:
+            case AccountDataUpdated e:
                 this.DataCompleted(e);
                 break;
             case FinancialDataUpdated e:

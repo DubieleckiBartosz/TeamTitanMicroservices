@@ -27,11 +27,15 @@ public class JobService : IJobService
         _backgroundJobClient.Enqueue(() => _mediator.Send(command, default));
     }
 
-    public void RecurringMediator(string name, ICommand<Unit> command, string cron)
+    public void RecurringJobMediator(string name, ICommand<Unit> command, string cron)
     {
         _recurringJobManager.AddOrUpdate(name, () => _mediator.Send(command, default), cron);
     }
 
+    public string ScheduleJobMediator(ICommand<Unit> command, TimeSpan delay)
+    {
+        return _backgroundJobClient.Schedule(() => _mediator.Send(command, default), delay);
+    }
 
     /// <summary>
     /// Delete by name
