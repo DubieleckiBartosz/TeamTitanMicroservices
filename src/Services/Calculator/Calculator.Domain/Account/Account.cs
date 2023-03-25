@@ -160,6 +160,11 @@ public partial class Account : Aggregate
     
     public void AccountSettlement()
     {
+        if (!ProductItems.Any() && !Bonuses.Any() && !WorkDays.Any() && !Details.IsActive)
+        {
+            //EXCEPTION
+        }
+
         var now = DateTime.UtcNow;
         var currentMonth = now.Month;
         var currentYear = now.Year;
@@ -242,6 +247,7 @@ public partial class Account : Aggregate
         this.Enqueue(@event);
     }
 
+    public bool IsActive => Details.IsActive;
     public override AccountSnapshot CreateSnapshot()
     {
         return AccountSnapshot.Create(this.Id, this.Version).Set(this);
