@@ -30,7 +30,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE account_completeData_U
+CREATE OR ALTER PROCEDURE account_updateData_U
 	@accountId UNIQUEIDENTIFIER,
 	@countingType INT,
 	@status INT,

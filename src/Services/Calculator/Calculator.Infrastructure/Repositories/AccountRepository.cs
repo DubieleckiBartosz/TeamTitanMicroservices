@@ -249,7 +249,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@workDayHours", accountReader.WorkDayHours);
         parameters.Add("@settlementDayMonth", accountReader.SettlementDayMonth);
          
-        await ExecuteAsync("account_completeData_U", parameters, CommandType.StoredProcedure);
+        await ExecuteAsync("account_updateData_U", parameters, CommandType.StoredProcedure);
     }
 
     public async Task UpdateFinancialDataAsync(AccountReader accountReader)
