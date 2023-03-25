@@ -28,10 +28,13 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
         {
             var jobName = Keys.SettlementBackgroundJobName(account.Id.ToString());
             _jobService.DeleteBackgroundJobByUniqueJobName(jobName, $"Job removed: {jobName}");
+
+            await _repository.UpdateAsync(account);
         }
-
-        await _repository.AddWithSnapshotAsync<AccountSnapshot>(account);
-
+        else
+        {
+            await _repository.UpdateWithSnapshotAsync<AccountSnapshot>(account); 
+        } 
         return Unit.Value;
     }
 }

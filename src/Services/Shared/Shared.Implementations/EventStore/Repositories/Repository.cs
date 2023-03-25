@@ -39,7 +39,7 @@ public class Repository<TAggregate> : IRepository<TAggregate> where TAggregate :
         await _eventStore.StoreAsync(aggregate, null);
     }
 
-    public async Task AddWithSnapshotAsync<TSnapshot>(TAggregate aggregate)
+    public async Task UpdateWithSnapshotAsync<TSnapshot>(TAggregate aggregate)
     {
         //[TODO] move to the snapshot repo and optimize
         await _eventStore.StoreAsync(aggregate, null);
