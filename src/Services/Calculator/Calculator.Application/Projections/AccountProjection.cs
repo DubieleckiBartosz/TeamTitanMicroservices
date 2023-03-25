@@ -15,7 +15,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
 
         this.Projects<AccountActivated>(Handle);
-        this.Projects<AccountDataCompleted>(Handle);
+        this.Projects<AccountDataUpdated>(Handle);
         this.Projects<AccountDeactivated>(Handle);
         this.Projects<CountingTypeChanged>(Handle);
         this.Projects<DayHoursChanged>(Handle);
@@ -59,7 +59,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
     }
 
 
-    private async Task Handle(AccountDataCompleted @event, CancellationToken cancellationToken = default)
+    private async Task Handle(AccountDataUpdated @event, CancellationToken cancellationToken = default)
     {
         if (@event == null)
         {

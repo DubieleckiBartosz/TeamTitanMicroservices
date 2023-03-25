@@ -12,7 +12,7 @@ public partial class Account
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
     }
-    private void DataCompleted(AccountDataCompleted @event)
+    private void DataCompleted(AccountDataUpdated @event)
     {
         Details.AssignData(@event.CountingType, @event.Status, false,
             @event.WorkDayHours, @event.SettlementDayMonth, @event.ExpirationDate);

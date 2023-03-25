@@ -1,10 +1,10 @@
-﻿using Calculator.Application.Features.Account.Commands.CompleteData;
+﻿using Calculator.Application.Features.Account.Commands.UpdateData;
 using FluentValidation;
 using Shared.Implementations.Validators;
 
 namespace Calculator.Application.Validators.CommandValidators.AccountCommandValidators;
 
-public class CompleteAccountDataCommandValidator : AbstractValidatorNotNull<CompleteAccountDataCommand>
+public class CompleteAccountDataCommandValidator : AbstractValidatorNotNull<UpdateAccountDataCommand>
 {
     public CompleteAccountDataCommandValidator()
     {

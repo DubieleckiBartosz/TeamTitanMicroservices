@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Calculator.Application.Parameters.AccountParameters;
 
-public class CompleteDataParameters
+public class UpdateDataParameters
 {
     public CountingType CountingType { get; init; }
     public AccountStatus Status { get; init; }
@@ -14,7 +14,7 @@ public class CompleteDataParameters
     public DateTime? ExpirationDate { get; init; }
 
     [JsonConstructor]
-    public CompleteDataParameters(CountingType countingType, AccountStatus status, int workDayHours,
+    public UpdateDataParameters(CountingType countingType, AccountStatus status, int workDayHours,
         int settlementDayMonth, Guid accountId, DateTime? expirationDate)
     {
         CountingType = countingType;

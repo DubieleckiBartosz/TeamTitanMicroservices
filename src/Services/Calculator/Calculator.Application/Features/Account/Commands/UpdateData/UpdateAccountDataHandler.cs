@@ -3,26 +3,26 @@ using Calculator.Application.Features.Account.Commands.AccountSettlement;
 using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
-using Shared.Implementations.Validators; 
+using Shared.Implementations.Validators;
 using Shared.Implementations.Background;
 using Shared.Implementations.Services;
 
-namespace Calculator.Application.Features.Account.Commands.CompleteData;
+namespace Calculator.Application.Features.Account.Commands.UpdateData;
 
-public class CompleteAccountDataHandler : ICommandHandler<CompleteAccountDataCommand, Unit>
+public class UpdateAccountDataHandler : ICommandHandler<UpdateAccountDataCommand, Unit>
 {
     private readonly IRepository<Domain.Account.Account> _repository;
     private readonly IJobService _jobService;
     private readonly ICurrentUser _currentUser;
 
-    public CompleteAccountDataHandler(IRepository<Domain.Account.Account> repository, IJobService jobService, ICurrentUser currentUser)
+    public UpdateAccountDataHandler(IRepository<Domain.Account.Account> repository, IJobService jobService, ICurrentUser currentUser)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
     }
 
-    public async Task<Unit> Handle(CompleteAccountDataCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateAccountDataCommand request, CancellationToken cancellationToken)
     {
         var account = await _repository.GetAsync(request.AccountId);
 
@@ -30,10 +30,10 @@ public class CompleteAccountDataHandler : ICommandHandler<CompleteAccountDataCom
 
         var countingType = request.CountingType;
         var workDayHours = request.WorkDayHours;
-        var settlementDayMonth = request.SettlementDayMonth; 
+        var settlementDayMonth = request.SettlementDayMonth;
         var expirationDate = request.ExpirationDate;
 
-        account.CompleteAccount(countingType, workDayHours, settlementDayMonth, expirationDate);
+        account.UpdateAccount(countingType, workDayHours, settlementDayMonth, expirationDate);
 
         await _repository.UpdateAsync(account);
 
@@ -48,7 +48,7 @@ public class CompleteAccountDataHandler : ICommandHandler<CompleteAccountDataCom
         var cronExpression =
             $"0 {timeDifference.Minutes} {timeDifference.Hours} {settlementDayMonth} {targetDate.Month} ? {targetDate.Year}";
 
-        _jobService.RecurringMediator(Keys.SettlementBackgroundJobName(account.Id.ToString()), new AccountSettlementCommand(account.Id),
+        _jobService.RecurringJobMediator(Keys.SettlementBackgroundJobName(account.Id.ToString()), new AccountSettlementCommand(account.Id),
             cronExpression);
 
         return Unit.Value;

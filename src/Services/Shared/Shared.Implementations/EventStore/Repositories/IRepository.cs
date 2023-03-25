@@ -8,7 +8,7 @@ public interface IRepository<TAggregate> where TAggregate : Aggregate
     Task<TAggregate?> GetAggregateFromSnapshotAsync<TSnapshot>(Guid id) where TSnapshot : ISnapshot;
     Task<TAggregate> GetAsync(Guid id);
     Task AddAsync(TAggregate aggregate);
-    Task AddWithSnapshotAsync<TSnapshot>(TAggregate aggregate);
+    Task UpdateWithSnapshotAsync<TSnapshot>(TAggregate aggregate);
     Task AddAndPublishAsync(TAggregate aggregate);
     Task UpdateAsync(TAggregate aggregate);
     Task UpdateAndPublishAsync(TAggregate aggregate);
