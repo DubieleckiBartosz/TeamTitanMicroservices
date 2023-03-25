@@ -18,6 +18,7 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
     }
+
     public async Task<Unit> Handle(AccountSettlementCommand request, CancellationToken cancellationToken)
     {
         var account = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
@@ -33,8 +34,9 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
         }
         else
         {
-            await _repository.UpdateWithSnapshotAsync<AccountSnapshot>(account); 
-        } 
+            await _repository.UpdateWithSnapshotAsync<AccountSnapshot>(account);
+        }
+
         return Unit.Value;
     }
 }
