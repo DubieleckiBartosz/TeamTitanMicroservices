@@ -23,4 +23,7 @@ jobs:
         run: dotnet restore TeamTitanMicroservices.sln
       - name: Run Calculator Service Tests
         if: ${{ contains(github.head_ref, 'Calculator') }}
-        run: dotnet test ${{ env.CALCULATOR_TESTS_PATH }}
+        run: |
+          for file in $(find $CALCULATOR_TESTS_PATH -name "Calculator.UnitTests.csproj"); do
+            dotnet test $file
+          done
