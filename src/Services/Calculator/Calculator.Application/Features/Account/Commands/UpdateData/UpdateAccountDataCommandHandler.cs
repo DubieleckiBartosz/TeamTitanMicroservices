@@ -9,13 +9,13 @@ using Shared.Implementations.Services;
 
 namespace Calculator.Application.Features.Account.Commands.UpdateData;
 
-public class UpdateAccountDataHandler : ICommandHandler<UpdateAccountDataCommand, Unit>
+public class UpdateAccountDataCommandHandler : ICommandHandler<UpdateAccountDataCommand, Unit>
 {
     private readonly IRepository<Domain.Account.Account> _repository;
     private readonly IJobService _jobService;
     private readonly ICurrentUser _currentUser;
 
-    public UpdateAccountDataHandler(IRepository<Domain.Account.Account> repository, IJobService jobService, ICurrentUser currentUser)
+    public UpdateAccountDataCommandHandler(IRepository<Domain.Account.Account> repository, IJobService jobService, ICurrentUser currentUser)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
