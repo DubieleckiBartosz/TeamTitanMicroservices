@@ -34,7 +34,7 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
         }
         else
         {
-            //await _repository.UpdateWithSnapshotAsync<AccountSnapshot>(account);
+            await _repository.UpdateWithSnapshotAsync<AccountSnapshot>(account);
         }
 
         return Unit.Value;
