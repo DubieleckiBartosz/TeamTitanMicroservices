@@ -41,6 +41,7 @@ public class ActivateAccountHandlerTests : CommandHandlerBaseTests<ActivateAccou
 
         await Handler.Handle(request, CancellationToken.None);
 
-        AggregateRepositoryMock.Verify(v => v.UpdateAsync(It.IsAny<Domain.Account.Account>()), Times.Once);
+        AggregateRepositoryMock.Verify(v =>
+            v.UpdateAsync(It.IsAny<Domain.Account.Account>()), Times.Once);
     }
 }
