@@ -35,13 +35,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Implementations", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{7FC0871A-E18D-4661-8670-DFE1EAA38CD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.API", "src\Services\Identity\Identity.API\Identity.API.csproj", "{C4BF3FE7-EBF3-470F-95F0-A244A8D098E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API", "src\Services\Identity\Identity.API\Identity.API.csproj", "{C4BF3FE7-EBF3-470F-95F0-A244A8D098E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Infrastructure", "src\Services\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj", "{3EE35428-360D-4E30-B910-35B6D5505019}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Infrastructure", "src\Services\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj", "{3EE35428-360D-4E30-B910-35B6D5505019}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Application", "src\Services\Identity\Identity.Application\Identity.Application.csproj", "{96522A74-6D20-43F2-B23F-AE072276686A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Application", "src\Services\Identity\Identity.Application\Identity.Application.csproj", "{96522A74-6D20-43F2-B23F-AE072276686A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Domain", "src\Services\Identity\Identity.Domain\Identity.Domain.csproj", "{13C14BCF-FBDD-46ED-BD56-E9E27E4A8FEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Domain", "src\Services\Identity\Identity.Domain\Identity.Domain.csproj", "{13C14BCF-FBDD-46ED-BD56-E9E27E4A8FEE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E5C3EE0D-0DD7-4A73-A15A-67A68BE00317}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.IntegrationTests", "src\Services\Calculator\Tests\Calculator.IntegrationTests\Calculator.IntegrationTests.csproj", "{99B33975-8393-48FD-BAF6-6B2CF6169331}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.UnitTests", "src\Services\Calculator\Tests\Calculator.UnitTests\Calculator.UnitTests.csproj", "{B9399114-3200-496D-8691-D23A4C04FEA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +111,14 @@ Global
 		{13C14BCF-FBDD-46ED-BD56-E9E27E4A8FEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13C14BCF-FBDD-46ED-BD56-E9E27E4A8FEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13C14BCF-FBDD-46ED-BD56-E9E27E4A8FEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99B33975-8393-48FD-BAF6-6B2CF6169331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99B33975-8393-48FD-BAF6-6B2CF6169331}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99B33975-8393-48FD-BAF6-6B2CF6169331}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99B33975-8393-48FD-BAF6-6B2CF6169331}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9399114-3200-496D-8691-D23A4C04FEA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9399114-3200-496D-8691-D23A4C04FEA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9399114-3200-496D-8691-D23A4C04FEA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9399114-3200-496D-8691-D23A4C04FEA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +143,9 @@ Global
 		{3EE35428-360D-4E30-B910-35B6D5505019} = {7FC0871A-E18D-4661-8670-DFE1EAA38CD1}
 		{96522A74-6D20-43F2-B23F-AE072276686A} = {7FC0871A-E18D-4661-8670-DFE1EAA38CD1}
 		{13C14BCF-FBDD-46ED-BD56-E9E27E4A8FEE} = {7FC0871A-E18D-4661-8670-DFE1EAA38CD1}
+		{E5C3EE0D-0DD7-4A73-A15A-67A68BE00317} = {A87E1EC8-EDEB-49AB-8326-2B0C6A9B27C4}
+		{99B33975-8393-48FD-BAF6-6B2CF6169331} = {E5C3EE0D-0DD7-4A73-A15A-67A68BE00317}
+		{B9399114-3200-496D-8691-D23A4C04FEA7} = {E5C3EE0D-0DD7-4A73-A15A-67A68BE00317}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6FB9205-7C78-4F1D-9BD6-1DBC3C5958C2}
