@@ -12,6 +12,12 @@ public class Period : ValueObject
     }
 
     public static Period Create(DateTime from, DateTime to) => new Period(from, to);
+
+    public override string ToString()
+    {
+        return Value;
+    }
+
     protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return this.Value;

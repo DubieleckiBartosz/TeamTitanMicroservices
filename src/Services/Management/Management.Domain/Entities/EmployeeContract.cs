@@ -6,7 +6,7 @@ namespace Management.Domain.Entities;
 
 public class EmployeeContract : Entity
 {
-    public int DepartmentId { get; } 
+    public int DepartmentId { get; }
     public string Position { get; }
     public string ContractNumber { get; }
     public ContractType ContractType { get; }
@@ -17,15 +17,15 @@ public class EmployeeContract : Entity
     public TimeRange TimeRange { get; }
     public int NumberHoursPerDay { get; }
     public int FreeDaysPerYear { get; }
-    public string BankAccountNumber { get; }
-    public bool PaidIntoAccount { get; }
-    //payment date
+    public string BankAccountNumber { get; } 
+    public bool PaidIntoAccount { get; } 
+    public int PaymentMonthDay { get; set; }
     public string CreatedBy { get; }
 
     private EmployeeContract(int departmentId, string position,
         ContractType contractType, SettlementType? settlementType, decimal salary, TimeRange timeRange,
         int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy,
-        decimal? hourlyRate, decimal? overtimeRate)
+        decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     {
         DepartmentId = departmentId;
         Position = position;
@@ -41,16 +41,16 @@ public class EmployeeContract : Entity
         CreatedBy = createdBy;
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
+        PaymentMonthDay = paymentMonthDay;
     }
 
     public static EmployeeContract Create(int departmentId, string position,
         ContractType contractType, SettlementType? settlementType, decimal salary, TimeRange timeRange,
         int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy,
-        decimal? hourlyRate, decimal? overtimeRate)
+        decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     {
         return new EmployeeContract(departmentId, position, contractType, settlementType, salary, timeRange,
             numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, createdBy, hourlyRate,
-            overtimeRate);
+            overtimeRate, paymentMonthDay);
     }
-
-} 
+}

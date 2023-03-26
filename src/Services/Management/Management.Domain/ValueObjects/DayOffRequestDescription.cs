@@ -12,6 +12,12 @@ public class DayOffRequestDescription : ValueObject
     }
 
     public static DayOffRequestDescription CreateReason(string value) => new DayOffRequestDescription(value);
+
+    public override string ToString()
+    {
+        return Value;
+    }
+
     protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return this.Value;

@@ -12,6 +12,10 @@ public class DepartmentName : ValueObject
     }
 
     public static DepartmentName Create(string value) => new DepartmentName(value);
+    public override string ToString()
+    {
+        return Value;
+    }
     protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return this.Value;

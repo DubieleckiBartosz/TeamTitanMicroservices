@@ -17,5 +17,22 @@ public class Contact : ValueObject
     {
         yield return this.PhoneNumber;
         yield return this.Email;
+    } 
+
+    protected bool Equals(Contact? other)
+    {
+        if (other == null || GetType() != other.GetType())
+        {
+            return false;
+        }
+
+        Contact obj = (Contact)other;
+
+        return PhoneNumber == obj.PhoneNumber || Email == obj.Email;
+    }
+
+    public override int GetHashCode()
+    {
+        return (PhoneNumber + Email).GetHashCode();
     }
 }
