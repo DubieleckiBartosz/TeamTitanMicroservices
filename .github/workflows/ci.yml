@@ -20,7 +20,7 @@ jobs:
         with:
           dotnet-version: '6.0.x'
       - name: Restore dependencies
-        run: dotnet restore  
+        run: dotnet restore TeamTitanMicroservices.sln
       - name: Run Calculator Service Tests
         if: ${{ contains(github.head_ref, 'Calculator') }}
         run: dotnet test ${{ env.CALCULATOR_TESTS_PATH }}
