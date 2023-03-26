@@ -23,4 +23,4 @@ jobs:
         run: dotnet restore  
       - name: Run Calculator Service Tests
         if: ${{ contains(github.head_ref, 'Calculator') }}
-        run: dotnet test ${{ env.CALCULATOR_TESTS_PATH }}/* 
+        run: dotnet test ${{ env.CALCULATOR_TESTS_PATH }}
