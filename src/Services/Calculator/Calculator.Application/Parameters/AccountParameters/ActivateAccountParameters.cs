@@ -6,6 +6,10 @@ public class ActivateAccountParameters
 {
     public Guid AccountId { get; init; }
 
+    public ActivateAccountParameters()
+    {
+    }
+
     [JsonConstructor]
     public ActivateAccountParameters(Guid accountId)
     {
