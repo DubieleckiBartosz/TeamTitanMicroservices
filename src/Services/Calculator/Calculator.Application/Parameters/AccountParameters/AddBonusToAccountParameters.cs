@@ -7,6 +7,10 @@ public class AddBonusToAccountParameters
     public Guid AccountId { get; init; }
     public decimal Amount { get; init; }
 
+    public AddBonusToAccountParameters()
+    {
+    }
+
     [JsonConstructor]
     public AddBonusToAccountParameters(Guid accountId, decimal amount)
     {

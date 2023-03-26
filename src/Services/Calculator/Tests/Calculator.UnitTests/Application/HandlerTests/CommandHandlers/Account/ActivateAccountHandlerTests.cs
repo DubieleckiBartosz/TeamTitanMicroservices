@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using Calculator.Application.Features.Account.Commands.ActivateAccount;
 using Calculator.Application.Parameters.AccountParameters;
-using Calculator.Domain.Account.Snapshots;
 using Calculator.UnitTests.Application.HandlerTests.ModelGenerators;
 using MediatR;
 using Moq;
@@ -19,7 +18,7 @@ public class ActivateAccountHandlerTests : CommandHandlerBaseTests<ActivateAccou
     {
         var parameters = Fixture.Create<ActivateAccountParameters>();
         var request = ActivateAccountCommand.Create(parameters);
-        AggregateRepositoryMock.Setup(_ => _.GetAggregateFromSnapshotAsync<AccountSnapshot>(It.IsAny<Guid>()))
+        AggregateRepositoryMock.Setup(_ => _.GetAsync(It.IsAny<Guid>()))
             .ReturnsAsync(() => null);
 
         var message =
