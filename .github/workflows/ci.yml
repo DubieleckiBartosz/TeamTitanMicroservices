@@ -8,7 +8,7 @@ on:
       - '*/Calculator*'
 
 env: 
-  CALCULATOR_TESTS_PATH: 'src/Services/Calculator/Tests/Calculator.UnitTests/'
+  CALCULATOR_TESTS_PATH: 'src/Services/Calculator/Tests/Calculator.UnitTests'
 
 jobs:
   calculator-tests:
