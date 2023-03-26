@@ -12,7 +12,6 @@ namespace Calculator.UnitTests.Application.HandlerTests.CommandHandlers.Account;
 public class ActivateAccountHandlerTests : CommandHandlerBaseTests<ActivateAccountCommandHandler, ActivateAccountCommand
     , Unit, Domain.Account.Account>
 {
-
     [Fact]
     public async Task Should_Throw_NotFoundException_When_Account_Not_Found()
     {
@@ -29,7 +28,7 @@ public class ActivateAccountHandlerTests : CommandHandlerBaseTests<ActivateAccou
 
     [Fact]
     public async Task Should_Update_Account()
-    { 
+    {
         var parameters = Fixture.Create<ActivateAccountParameters>();
         var request = ActivateAccountCommand.Create(parameters);
         var account = Fixture.GenerateAccount();
@@ -39,7 +38,7 @@ public class ActivateAccountHandlerTests : CommandHandlerBaseTests<ActivateAccou
         CurrentUserMock.SetupGet(_ => _.OrganizationCode).Returns(organizationCode);
         AggregateRepositoryMock.Setup(_ => _.GetAsync(It.IsAny<Guid>()))
             .ReturnsAsync(account);
-         
+
         await Handler.Handle(request, CancellationToken.None);
 
         AggregateRepositoryMock.Verify(v => v.UpdateAsync(It.IsAny<Domain.Account.Account>()), Times.Once);
