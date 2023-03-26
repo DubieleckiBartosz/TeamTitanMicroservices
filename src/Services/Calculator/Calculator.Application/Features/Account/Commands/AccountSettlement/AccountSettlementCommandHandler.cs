@@ -39,4 +39,4 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
 
         return Unit.Value;
     }
-}
+} 
