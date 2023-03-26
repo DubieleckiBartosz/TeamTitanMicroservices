@@ -13,10 +13,7 @@ public class TimeRange : ValueObject
         EndContract = endContract;
     }
 
-    public static TimeRange Create(DateTime startContract, DateTime? endContract)
-    {
-        return new TimeRange(startContract, endContract);
-    }
+    public static TimeRange Create(DateTime startContract, DateTime? endContract) => new TimeRange(startContract, endContract);
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {

@@ -8,27 +8,29 @@ namespace Management.Domain.Entities;
 public class Company : Entity, IAggregateRoot
 { 
     public int OwnerId { get; }
-    public ContactData ContactData { get; }
+    public CommunicationData CommunicationData { get; }
     public string CompanyCode { get; }
     public CompanyName CompanyName { get; }
     public OpeningHours? OpeningHours { get; }
     public CompanyStatus CompanyStatus { get; private set; }
     public List<Department> Departments { get; private set; }
 
-    private Company(CompanyName companyName, int ownerId, OpeningHours? openingHours, ContactData contactData)
+    private Company(CompanyName companyName, int ownerId, OpeningHours? openingHours,
+        CommunicationData communicationData, string uniqueCode)
     {
-        CompanyName = companyName; 
+        CompanyName = companyName;
         OwnerId = ownerId;
         OpeningHours = openingHours;
-        ContactData = contactData;
+        CommunicationData = communicationData;
         CompanyStatus = CompanyStatus.Active;
         Departments = new List<Department>();
-        CompanyCode = Guid.NewGuid().ToString().ToUpper();
+        CompanyCode = uniqueCode;
     }
 
-    public static Company CreateCompany(CompanyName companyName, int ownerId, OpeningHours? openingHours, ContactData contactData)
+    public static Company CreateCompany(CompanyName companyName, int ownerId, OpeningHours? openingHours,
+        CommunicationData communicationData, string uniqueCode)
     {
-        return new Company(companyName, ownerId, openingHours, contactData);
+        return new Company(companyName, ownerId, openingHours, communicationData, uniqueCode);
     }
 
     public void AddNewDepartment(string name)
@@ -40,7 +42,7 @@ public class Company : Entity, IAggregateRoot
 
         }
 
-        var newDepartment = Department.CreateDepartment(departmentName);
+        var newDepartment = Department.CreateDepartment(departmentName, CompanyCode);
         Departments ??= new List<Department>();
         this.Departments.Add(newDepartment);
     }
@@ -58,13 +60,13 @@ public class Company : Entity, IAggregateRoot
     public void UpdateAddress(string city, string street, string numberStreet, string postalCode)
     {
         var newAddress = Address.Create(city, street, numberStreet, postalCode);
-        this.ContactData.UpdateAddress(newAddress);
+        this.CommunicationData.UpdateAddress(newAddress);
     }
 
     public void UpdateContact(string phoneNumber, string email)
     {
         var newContact = Contact.Create(phoneNumber, email);
-        this.ContactData.UpdateContact(newContact);
+        this.CommunicationData.UpdateContact(newContact);
     }
 
     private Department? FindDepartmentByName(DepartmentName departmentName) => this.Departments.FirstOrDefault(_ => _.DepartmentName == departmentName);

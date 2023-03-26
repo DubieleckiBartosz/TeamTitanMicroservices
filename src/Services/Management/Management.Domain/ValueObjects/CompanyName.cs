@@ -15,5 +15,9 @@ public class CompanyName : ValueObject
     protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return this.Value;
+    } 
+    public override string ToString()
+    {
+        return Value;
     }
 }
