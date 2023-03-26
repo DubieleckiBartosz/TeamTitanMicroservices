@@ -13,7 +13,7 @@ env:
 jobs:
   calculator-tests:
     runs-on: ubuntu-latest
-    if: contains(github.ref, 'calculator')
+    if: contains(github.ref, 'Calculator')
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core SDK
