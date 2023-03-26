@@ -9,7 +9,8 @@ using Shared.Implementations.Tools;
 
 namespace Calculator.UnitTests.Application.HandlerTests.CommandHandlers.Account;
 
-public class AccountSettlementCommandHandlerTests : CommandHandlerBaseTests<AccountSettlementCommandHandler, AccountSettlementCommand, Unit, Domain.Account.Account>
+public class AccountSettlementCommandHandlerTests : CommandHandlerBaseTests<AccountSettlementCommandHandler,
+    AccountSettlementCommand, Unit, Domain.Account.Account>
 {
     [Fact]
     public async Task Should_Throw_NotFoundException_When_Account_Not_Found()
@@ -31,12 +32,12 @@ public class AccountSettlementCommandHandlerTests : CommandHandlerBaseTests<Acco
         account.Details.SetNewValue(nameof(account.Details.SettlementDayMonth), 10);
 
         var request = Fixture.Create<AccountSettlementCommand>();
-      
+
         AggregateRepositoryMock.Setup(_ => _.GetAggregateFromSnapshotAsync<AccountSnapshot>(It.IsAny<Guid>()))
             .ReturnsAsync(account);
 
         await Handler.Handle(request, CancellationToken.None);
-         
+
         AggregateRepositoryMock.Verify(v => v.UpdateAsync(It.IsAny<Domain.Account.Account>()), Times.Once);
         AggregateRepositoryMock.Verify(
             v => v.UpdateWithSnapshotAsync<AccountSnapshot>(It.IsAny<Domain.Account.Account>()), Times.Never);
