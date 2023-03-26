@@ -100,7 +100,7 @@ public static class SharedConfigurations
         builder.Services.GetMediatR(types);
         builder.RegisterRabbitMq();
 
-        builder.Services.Configure<EventStoreOptions>(builder.Configuration.GetSection("EventStoreOptions"));
+        builder.Services.Configure<StoreOptions>(builder.Configuration.GetSection("StoreOptions"));
 
         return builder;
     }
@@ -120,11 +120,14 @@ public static class SharedConfigurations
 
     public static IServiceCollection ConfigurationMongoOutboxDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        var options = new MongoOutboxOptions();
-        configuration.GetSection(nameof(MongoOutboxOptions)).Bind(options);
+        var options = new StoreOptions();
+        configuration.GetSection(nameof(StoreOptions)).Bind(options);
 
+        var connectionString = options.ConnectionString;
+        var database = options.DatabaseName;
+        
         services.Configure<MongoOutboxOptions>(configuration.GetSection(nameof(MongoOutboxOptions)));
-        services.AddSingleton<MongoContext>(_ => new MongoContext(options.ConnectionString, options.DatabaseName));
+        services.AddSingleton<MongoContext>(_ => new MongoContext(connectionString, database));
 
         return services;
     }

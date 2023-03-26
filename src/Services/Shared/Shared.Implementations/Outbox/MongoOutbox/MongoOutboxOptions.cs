@@ -2,7 +2,5 @@
 
 public class MongoOutboxOptions
 {
-    public bool DeleteAfter { get; set; } 
-    public string ConnectionString { get; set; }
-    public string DatabaseName { get; set; }
+    public bool DeleteAfter { get; set; }  
 }

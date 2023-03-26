@@ -1,7 +1,9 @@
 {
   "MongoOutboxOptions": {
     "DeleteAfter": false,
-    "CollectionName": "Messages",
+    "CollectionName": "Messages"
+  },
+  "StoreOptions": {
     "DatabaseName": "TeamTitanDatabase",
     "ConnectionString": "mongodb://rootuser:rootpass@localhost:27018"
   },
