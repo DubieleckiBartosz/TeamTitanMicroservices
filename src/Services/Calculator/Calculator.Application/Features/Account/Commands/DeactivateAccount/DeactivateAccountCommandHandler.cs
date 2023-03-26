@@ -7,12 +7,12 @@ using Shared.Implementations.Validators;
 
 namespace Calculator.Application.Features.Account.Commands.DeactivateAccount;
 
-public class DeactivateAccountHandler : ICommandHandler<DeactivateAccountCommand, Unit>
+public class DeactivateAccountCommandHandler : ICommandHandler<DeactivateAccountCommand, Unit>
 {
     private readonly IRepository<Domain.Account.Account> _repository;
     private readonly ICurrentUser _currentUser;
 
-    public DeactivateAccountHandler(IRepository<Domain.Account.Account> repository, ICurrentUser currentUser)
+    public DeactivateAccountCommandHandler(IRepository<Domain.Account.Account> repository, ICurrentUser currentUser)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));

@@ -4,11 +4,11 @@ using Shared.Implementations.EventStore.Repositories;
 
 namespace Calculator.Application.Features.Account.Commands.InitiationAccount;
 
-public class InitiationAccountHandler : ICommandHandler<InitiationAccountCommand, Unit>
+public class InitiationAccountCommandHandler : ICommandHandler<InitiationAccountCommand, Unit>
 {
     private readonly IRepository<Domain.Account.Account> _repository;
 
-    public InitiationAccountHandler(IRepository<Domain.Account.Account> repository)
+    public InitiationAccountCommandHandler(IRepository<Domain.Account.Account> repository)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }

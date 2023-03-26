@@ -6,12 +6,12 @@ using Shared.Implementations.Validators;
 
 namespace Calculator.Application.Features.Account.Commands.AddPieceProduct;
 
-public class AddPieceProductHandler : ICommandHandler<AddPieceProductCommand, Unit>
+public class AddPieceProductCommandHandler : ICommandHandler<AddPieceProductCommand, Unit>
 {
     private readonly IRepository<Domain.Account.Account> _repository;
     private readonly ICurrentUser _currentUser;
 
-    public AddPieceProductHandler(IRepository<Domain.Account.Account> repository, ICurrentUser currentUser)
+    public AddPieceProductCommandHandler(IRepository<Domain.Account.Account> repository, ICurrentUser currentUser)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
