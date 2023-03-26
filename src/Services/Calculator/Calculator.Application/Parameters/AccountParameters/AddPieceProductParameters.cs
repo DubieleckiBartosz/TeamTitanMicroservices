@@ -10,6 +10,10 @@ public class AddPieceProductParameters
     public Guid AccountId { get; init; }
     public DateTime? Date { get; init; }
 
+    public AddPieceProductParameters()
+    {
+    }
+
     [JsonConstructor]
     public AddPieceProductParameters(Guid pieceworkProductId, decimal quantity, decimal currentPrice, Guid accountId,
         DateTime? date)
