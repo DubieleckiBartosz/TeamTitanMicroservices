@@ -1,5 +1,5 @@
 ﻿namespace Management.Application.Features.Department.Queries.GetDepartmentsByCompanyId;
 
-public class GetDepartmentsByCompanyIdQuery
+public class DepartmentsByCompanyIdQuery
 {
 }

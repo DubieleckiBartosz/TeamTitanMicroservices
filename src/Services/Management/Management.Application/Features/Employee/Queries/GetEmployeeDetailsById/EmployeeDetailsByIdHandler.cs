@@ -1,5 +1,5 @@
 ﻿namespace Management.Application.Features.Employee.Queries.GetEmployeeDetailsById;
 
-public class GetEmployeeDetailsByIdQuery
+public class EmployeeDetailsByIdHandler
 {
 }

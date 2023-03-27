@@ -1,8 +1,8 @@
 ﻿namespace Management.Application.Features.Company.Commands.CreateCompany;
 
-public class CreateCompanyCommandHandler : ICommandHandler<CreateCompanyCommand, int>
+public class CreateCompanyHandler : ICommandHandler<CreateCompanyCommand, int>
 {
-    public CreateCompanyCommandHandler()
+    public CreateCompanyHandler()
     {
         
     }
