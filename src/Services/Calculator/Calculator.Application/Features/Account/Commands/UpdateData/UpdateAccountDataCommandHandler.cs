@@ -6,6 +6,7 @@ using Shared.Implementations.EventStore.Repositories;
 using Shared.Implementations.Validators;
 using Shared.Implementations.Background;
 using Shared.Implementations.Services;
+using Calculator.Domain.Account.Snapshots;
 
 namespace Calculator.Application.Features.Account.Commands.UpdateData;
 
@@ -24,7 +25,7 @@ public class UpdateAccountDataCommandHandler : ICommandHandler<UpdateAccountData
 
     public async Task<Unit> Handle(UpdateAccountDataCommand request, CancellationToken cancellationToken)
     {
-        var account = await _repository.GetAsync(request.AccountId);
+        var account = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
 
         account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 

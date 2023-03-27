@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using Calculator.Application.Features.Account.Commands.AddBonus;
 using Calculator.Application.Parameters.AccountParameters;
+using Calculator.Domain.Account.Snapshots;
 using Calculator.UnitTests.Application.HandlerTests.ModelGenerators;
 using MediatR;
 using Moq;
@@ -17,7 +18,7 @@ public class AddBonusToAccountCommandHandlerTests : CommandHandlerBaseTests<AddB
     {
         var parameters = Fixture.Create<AddBonusToAccountParameters>();
         var request = AddBonusToAccountCommand.Create(parameters);
-        AggregateRepositoryMock.Setup(_ => _.GetAsync(It.IsAny<Guid>()))
+        AggregateRepositoryMock.Setup(_ => _.GetAggregateFromSnapshotAsync<AccountSnapshot>(It.IsAny<Guid>()))
             .ReturnsAsync(() => null);
 
         var message =
@@ -36,7 +37,7 @@ public class AddBonusToAccountCommandHandlerTests : CommandHandlerBaseTests<AddB
         var organizationCode = account.Details.CompanyCode;
 
         CurrentUserMock.SetupGet(_ => _.OrganizationCode).Returns(organizationCode);
-        AggregateRepositoryMock.Setup(_ => _.GetAsync(It.IsAny<Guid>()))
+        AggregateRepositoryMock.Setup(_ => _.GetAggregateFromSnapshotAsync<AccountSnapshot>(It.IsAny<Guid>()))
             .ReturnsAsync(account);
 
         await Handler.Handle(request, CancellationToken.None);
