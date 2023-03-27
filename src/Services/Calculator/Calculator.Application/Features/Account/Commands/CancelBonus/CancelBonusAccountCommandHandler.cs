@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Calculator.Domain.Account.Snapshots;
+using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
 using Shared.Implementations.Services;
@@ -19,7 +20,7 @@ public class CancelBonusAccountCommandHandler : ICommandHandler<CancelBonusAccou
 
     public async Task<Unit> Handle(CancelBonusAccountCommand request, CancellationToken cancellationToken)
     {
-        var bonus = await _repository.GetAsync(request.AccountId);
+        var bonus = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
 
         bonus.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 

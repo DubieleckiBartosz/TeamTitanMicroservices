@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Calculator.Domain.Account.Snapshots;
+using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
 using Shared.Implementations.Services;
@@ -19,7 +20,7 @@ public class ChangeOvertimeRateCommandHandler : ICommandHandler<ChangeOvertimeRa
 
     public async Task<Unit> Handle(ChangeOvertimeRateCommand request, CancellationToken cancellationToken)
     {
-        var account = await _repository.GetAsync(request.AccountId);
+        var account = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
 
         account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
