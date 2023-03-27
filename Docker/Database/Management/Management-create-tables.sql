@@ -36,8 +36,7 @@ BEGIN
 	CREATE TABLE Employees(
 	Id INT IDENTITY(1, 1) PRIMARY KEY,
 	AccountId UNIQUEIDENTIFIER NULL, 
-	DepartmentId INT NOT NULL FOREIGN KEY REFERENCES Departments(Id),
-	ContactId INT NOT NULL FOREIGN KEY REFERENCES ContactDetails(Id),
+	DepartmentId INT NOT NULL FOREIGN KEY REFERENCES Departments(Id), 
 	EmployeeCode VARCHAR(50) NULL, 
 	[Name] VARCHAR (50) NOT NULL,
 	Surname VARCHAR (50) NOT NULL,
@@ -48,6 +47,23 @@ BEGIN
 ) 
 END
 
+--ContactDetails
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ContactDetails' and xtype='U')
+BEGIN
+CREATE TABLE ContactDetails(
+	Id INT IDENTITY(1, 1) PRIMARY KEY,
+	EmployeeId INT NULL FOREIGN KEY REFERENCES Employees(Id),
+	CompanyId INT NULL FOREIGN KEY REFERENCES Companies(Id), 
+	City VARCHAR(50) NOT NULL,
+	Street VARCHAR(50) NOT NULL,
+	NumberStreet VARCHAR(10) NOT NULL,
+	PostalCode VARCHAR(10) NOT NULL,
+	PhoneNumber VARCHAR(20) NOT NULL,
+	Email VARCHAR(50) NOT NULL,
+	Created DATETIME DEFAULT GETDATE(),
+	Modified DATETIME DEFAULT GETDATE()
+)
+END 
 
 --EmployeeContracts table
 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='EmployeeContracts' and xtype='U')
@@ -92,20 +108,3 @@ BEGIN
 ) 
 END
 
---ContactDetails
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ContactDetails' and xtype='U')
-BEGIN
-CREATE TABLE ContactDetails(
-	Id INT IDENTITY(1, 1) PRIMARY KEY,
-	EmployeeId INT NULL FOREIGN KEY REFERENCES Employees(Id),
-	CompanyId INT NULL FOREIGN KEY REFERENCES Companies(Id), 
-	City VARCHAR(50) NOT NULL,
-	Street VARCHAR(50) NOT NULL,
-	NumberStreet VARCHAR(10) NOT NULL,
-	PostalCode VARCHAR(10) NOT NULL,
-	PhoneNumber VARCHAR(20) NOT NULL,
-	Email VARCHAR(50) NOT NULL,
-	Created DATETIME DEFAULT GETDATE(),
-	Modified DATETIME DEFAULT GETDATE()
-)
-END
