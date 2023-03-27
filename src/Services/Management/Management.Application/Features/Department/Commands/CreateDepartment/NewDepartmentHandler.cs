@@ -1,5 +1,5 @@
 ﻿namespace Management.Application.Features.Department.Commands.CreateDepartment;
 
-public class CreateDepartmentCommand
+public class NewDepartmentHandler
 {
 }

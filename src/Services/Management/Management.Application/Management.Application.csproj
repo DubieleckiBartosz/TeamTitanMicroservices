@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Contract\Commands\UpdateContract\" />
     <Folder Include="NotificationHandlers\" />
   </ItemGroup>
 
