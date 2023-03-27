@@ -14,6 +14,10 @@ COPY ./Database/Calculator/Calculator-create-db.sql ./
 COPY ./Database/Calculator/Calculator-create-tables.sql ./
 COPY ./Database/Calculator/Calculator-create-storedProcedures.sql ./ 
 COPY ./Database/Background/Background-create-db.sql ./ 
+COPY ./Database/Management/Management-create-db.sql ./
+COPY ./Database/Management/Management-create-tables.sql ./
+COPY ./Database/Management/Management-create-storedProcedures.sql ./ 
+
 COPY entrypoint.sh ./ 
 COPY setupsql.sh ./ 
 

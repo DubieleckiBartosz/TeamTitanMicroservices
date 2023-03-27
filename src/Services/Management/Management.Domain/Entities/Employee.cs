@@ -8,7 +8,8 @@ public class Employee : Entity
     private readonly HashSet<EmployeeContract> _employeeContracts = new();
     private readonly HashSet<DayOffRequest> _dayOffRequests = new();
 
-    public Guid? AccountId { get; private set; } 
+    public Guid? AccountId { get; private set; }
+    public int DepartmentId { get; }
     public string EmployeeCode { get; }
     public string Name { get; }
     public string Surname { get; }
@@ -50,13 +51,14 @@ public class Employee : Entity
     /// <summary>
     /// Creating user
     /// </summary>
+    /// <param name="departmentId"></param>
     /// <param name="employeeCode"></param>
     /// <param name="name"></param>
     /// <param name="surname"></param>
     /// <param name="birthday"></param>
     /// <param name="personIdentifier"></param>
     /// <param name="communicationData"></param>
-    private Employee(string employeeCode, string name, string surname, DateTime birthday,
+    private Employee(int departmentId, string employeeCode, string name, string surname, DateTime birthday,
         string? personIdentifier, CommunicationData communicationData)
     {
         EmployeeCode = employeeCode; 
@@ -65,11 +67,13 @@ public class Employee : Entity
         PersonIdentifier = personIdentifier;
         Birthday = birthday; 
         CommunicationData = communicationData;
+        DepartmentId = departmentId;
     }
 
     /// <summary>
     /// Load all data
     /// </summary>
+    /// <param name="departmentId"></param>
     /// <param name="accountId"></param> 
     /// <param name="employeeCode"></param>
     /// <param name="name"></param>
@@ -79,9 +83,9 @@ public class Employee : Entity
     /// <param name="communicationData"></param>
     /// <param name="contracts"></param>
     /// <param name="dayOffRequests"></param>
-    private Employee(int id, Guid? accountId, string employeeCode, string name, string surname, DateTime birthday,
+    private Employee(int id, int departmentId, Guid? accountId, string employeeCode, string name, string surname, DateTime birthday,
         string? personIdentifier, CommunicationData communicationData, List<EmployeeContract> contracts,
-        List<DayOffRequest> dayOffRequests) : this(employeeCode, name, surname, birthday,
+        List<DayOffRequest> dayOffRequests) : this(departmentId, employeeCode, name, surname, birthday,
         personIdentifier, communicationData)
     {
         Id = id;
@@ -90,17 +94,17 @@ public class Employee : Entity
         dayOffRequests?.ForEach(_ => _dayOffRequests.Add(_)); 
     }
 
-    public static Employee Create(string employeeCode, string name, string surname, DateTime birthday,
+    public static Employee Create(int departmentId, string employeeCode, string name, string surname, DateTime birthday,
         string? personIdentifier, CommunicationData communicationData)
     {
-        return new Employee(employeeCode, name, surname, birthday, personIdentifier, communicationData);
+        return new Employee(departmentId, employeeCode, name, surname, birthday, personIdentifier, communicationData);
     }
 
-    public static Employee Load(int id, Guid? accountId, string employeeCode, string name, string surname, DateTime birthday,
+    public static Employee Load(int id, int departmentId, Guid? accountId, string employeeCode, string name, string surname, DateTime birthday,
         string? personIdentifier, CommunicationData communicationData, List<EmployeeContract> contracts,
         List<DayOffRequest> dayOffRequests)
     {
-        return new Employee(id, accountId, employeeCode, name, surname, birthday,
+        return new Employee(id, departmentId, accountId, employeeCode, name, surname, birthday,
             personIdentifier, communicationData, contracts,
             dayOffRequests);
     }

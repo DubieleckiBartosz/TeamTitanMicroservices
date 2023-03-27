@@ -12,6 +12,9 @@ SCRIPTS[5]="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P sql123456(!) -d ma
 SCRIPTS[6]="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P sql123456(!) -d TeamTitanCalculator -i Calculator-create-tables.sql" 
 SCRIPTS[7]="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P sql123456(!) -d TeamTitanCalculator -i Calculator-create-storedProcedures.sql" 
 SCRIPTS[8]="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P sql123456(!) -d master -i Background-create-db.sql" 
+SCRIPTS[9]="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P sql123456(!) -d master -i Management-create-db.sql" 
+SCRIPTS[10]="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P sql123456(!) -d TeamTitanManagement -i Management-create-tables.sql" 
+SCRIPTS[11]="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P sql123456(!) -d TeamTitanManagement -i Management-create-storedProcedures.sql" 
 
 for ((i = 0; i < ${#SCRIPTS[@]}; i++))
 do

@@ -6,7 +6,6 @@ namespace Management.Domain.Entities;
 
 public class EmployeeContract : Entity
 {
-    public int DepartmentId { get; }
     public string Position { get; }
     public string ContractNumber { get; }
     public ContractType ContractType { get; }
@@ -22,12 +21,11 @@ public class EmployeeContract : Entity
     public int PaymentMonthDay { get; set; }
     public string CreatedBy { get; }
 
-    private EmployeeContract(int departmentId, string position,
+    private EmployeeContract(string position,
         ContractType contractType, SettlementType? settlementType, decimal salary, TimeRange timeRange,
         int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
-    {
-        DepartmentId = departmentId;
+    { 
         Position = position;
         ContractNumber = Guid.NewGuid().ToString();
         ContractType = contractType;
@@ -44,12 +42,12 @@ public class EmployeeContract : Entity
         PaymentMonthDay = paymentMonthDay;
     }
 
-    public static EmployeeContract Create(int departmentId, string position,
+    public static EmployeeContract Create(string position,
         ContractType contractType, SettlementType? settlementType, decimal salary, TimeRange timeRange,
         int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     {
-        return new EmployeeContract(departmentId, position, contractType, settlementType, salary, timeRange,
+        return new EmployeeContract(position, contractType, settlementType, salary, timeRange,
             numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, createdBy, hourlyRate,
             overtimeRate, paymentMonthDay);
     }
