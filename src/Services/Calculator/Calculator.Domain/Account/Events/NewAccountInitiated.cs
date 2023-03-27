@@ -2,7 +2,7 @@
 
 namespace Calculator.Domain.Account.Events;
 
-public record NewAccountInitiated(string CompanyCode, string AccountCode, string CreatedBy, Guid AccountId) : IEvent
+public record NewAccountInitiated(string CompanyCode, string AccountOwnerCode, string CreatedBy, Guid AccountId) : IEvent
 {
     public static NewAccountInitiated Create(string companyCode, string accountOwnerCode, string createdBy, Guid accountId)
     {

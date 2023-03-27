@@ -105,7 +105,7 @@ public class AccountReader : IRead
 
     public static AccountReader Create(NewAccountInitiated @event)
     {
-        return new AccountReader(@event.AccountId, @event.AccountCode, @event.CompanyCode, @event.CreatedBy);
+        return new AccountReader(@event.AccountId, @event.AccountOwnerCode, @event.CompanyCode, @event.CreatedBy);
     }
 
     public static AccountReader Load(Guid id, string accountOwner, string companyCode, CountingType countingType,

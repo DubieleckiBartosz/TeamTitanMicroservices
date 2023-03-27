@@ -135,9 +135,9 @@ public class AccountDetails
             workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth);
     }
 
-    public static AccountDetails Init(string accountOwnerExternalId, string companyCode, string createdBy)
+    public static AccountDetails Init(string accountOwner, string companyCode, string createdBy)
     {
-        return new AccountDetails(accountOwnerExternalId, companyCode, createdBy);
+        return new AccountDetails(accountOwner, companyCode, createdBy);
     }
 
     public void AssignData(CountingType countingType,

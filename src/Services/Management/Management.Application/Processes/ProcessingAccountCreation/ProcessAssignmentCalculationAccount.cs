@@ -21,8 +21,8 @@ public class ProcessAssignmentCalculationAccount : IEventHandler<CalculationAcco
 
         var data = notification.DomainEvent;
         var accountId = data.AccountId;
-        var code = data.AccountCode;
-        var command = AssignAccountCommand.Create(code, accountId);
+        var code = data.AccountOwnerCode;
+        var command = CalculationAccountCommand.Create(code, accountId);
         
         await _commandBus.Send(command, cancellationToken);
     }

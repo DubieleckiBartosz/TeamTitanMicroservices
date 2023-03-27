@@ -6,12 +6,11 @@ public abstract class Entity
 {
     public int Id { get; protected set; }
     public int Version { get; protected set; }
-    public Watcher? Watcher { get; protected set; } 
-
-    public IEnumerable<IDomainNotification> Events => _events;
+    public Watcher? Watcher { get; protected set; }  
 
     private readonly List<IDomainNotification> _events = new();
     private bool _versionIncremented;
+    public List<IDomainNotification> Events => _events;
 
     protected void AddEvent(IDomainNotification @event)
     {

@@ -9,30 +9,24 @@ public class Company : Entity, IAggregateRoot
 {
     private readonly HashSet<Department> _departments = new();
     public int OwnerId { get; }
-    public CommunicationData CommunicationData { get; }
+    public CommunicationData CommunicationData { get; private set; }
     public string CompanyCode { get; }
-    public CompanyName CompanyName { get; }
-    public OpeningHours? OpeningHours { get; }
+    public bool IsConfirmed { get; private set; }
+    public CompanyName CompanyName { get; private set; }
+    public OpeningHours? OpeningHours { get; private set; }
     public CompanyStatus CompanyStatus { get; private set; }
     public List<Department> Departments => _departments.ToList();
 
 
     /// <summary>
     /// Creating new company
-    /// </summary>
-    /// <param name="companyName"></param>
-    /// <param name="ownerId"></param>
-    /// <param name="openingHours"></param>
-    /// <param name="communicationData"></param>
+    /// </summary> 
+    /// <param name="ownerId"></param> 
     /// <param name="uniqueCode"></param>
-    private Company(CompanyName companyName, int ownerId, OpeningHours? openingHours,
-        CommunicationData communicationData, string uniqueCode)
+    private Company(int ownerId, string uniqueCode)
     {
-        CompanyName = companyName;
+        IsConfirmed = false;
         OwnerId = ownerId;
-        OpeningHours = openingHours;
-        CommunicationData = communicationData;
-        CompanyStatus = CompanyStatus.Active;
         CompanyCode = uniqueCode;
     }
 
@@ -49,17 +43,19 @@ public class Company : Entity, IAggregateRoot
     /// <param name="departments"></param>
     private Company(int id, int ownerId, CommunicationData communicationData, string companyCode,
         CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments)
-        : this(companyName, ownerId, openingHours, communicationData, companyCode)
+        : this( ownerId, companyCode)
     {
         Id = id;
+        CommunicationData = communicationData;
+        CompanyName = companyName;
+        OpeningHours = openingHours;
         CompanyStatus = companyStatus;
         departments.ForEach(_ => _departments.Add(_));
     }
 
-    public static Company CreateCompany(CompanyName companyName, int ownerId, OpeningHours? openingHours,
-        CommunicationData communicationData, string uniqueCode)
+    public static Company Init(int ownerId, string uniqueCode)
     {
-        return new Company(companyName, ownerId, openingHours, communicationData, uniqueCode);
+        return new Company(ownerId, uniqueCode);
     }
 
     public static Company Load(int id, int ownerId, CommunicationData communicationData, string companyCode,
@@ -67,6 +63,16 @@ public class Company : Entity, IAggregateRoot
     {
         return new Company(id, ownerId, communicationData, companyCode,
             companyName, openingHours, companyStatus, departments);
+    }
+
+    public void UpdateData(CompanyName companyName, OpeningHours? openingHours, CommunicationData communicationData)
+    {
+        OpeningHours = openingHours;
+        CommunicationData = communicationData; 
+        CompanyName = companyName;
+
+        IsConfirmed = true;
+        CompanyStatus = CompanyStatus.Active; 
     }
 
     public void AddNewDepartment(string name)
@@ -78,7 +84,7 @@ public class Company : Entity, IAggregateRoot
 
         }
 
-        var newDepartment = Department.CreateDepartment(departmentName, CompanyCode); 
+        var newDepartment = Department.CreateDepartment(departmentName); 
         this._departments.Add(newDepartment);
     }
 

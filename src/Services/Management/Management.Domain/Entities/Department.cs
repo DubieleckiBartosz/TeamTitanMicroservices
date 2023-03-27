@@ -28,7 +28,7 @@ public class Department : Entity
         var contact = Contact.Create(phoneNumber, email);
 
         var communicationData = CommunicationData.Create(address, contact);
-        var newEmployee = Employee.Create(code, name, surname, birthday, personIdentifier, communicationData);
+        var newEmployee = Employee.Create(this.Id, code, name, surname, birthday, personIdentifier, communicationData);
 
         //Validation
         _employees.Add(newEmployee);
