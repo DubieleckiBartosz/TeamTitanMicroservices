@@ -6,19 +6,17 @@ namespace Management.Domain.Entities;
 public class Department : Entity
 {
     private readonly HashSet<Employee> _employees = new();
-    public string CompanyCode { get; }
     public DepartmentName DepartmentName { get; }
     public List<Employee> Employees => _employees.ToList();
 
-    private Department(DepartmentName departmentName, string companyCode)
+    private Department(DepartmentName departmentName)
     {
-        CompanyCode = companyCode;
         DepartmentName = departmentName;
     }
 
-    public static Department CreateDepartment(DepartmentName departmentName, string companyCode)
+    public static Department CreateDepartment(DepartmentName departmentName)
     {
-        return new(departmentName, companyCode);
+        return new(departmentName);
     }
 
     //var code = EmployeeCodeGenerator.Generate(CompanyCode);
