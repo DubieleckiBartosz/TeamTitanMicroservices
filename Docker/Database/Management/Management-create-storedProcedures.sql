@@ -1,28 +1,22 @@
 SET QUOTED_IDENTIFIER ON;
 GO
 
-CREATE OR ALTER PROCEDURE company_newComany_I
+CREATE OR ALTER PROCEDURE company_initComany_I
 	@companyStatus INT,
+	@isConfirmed BIT,
 	@companyCode VARCHAR(50),
-	@companyName VARCHAR(250),
-	@openFrom INT,
-	@openTo INT,
 	@ownerId INT
 AS
 BEGIN
 	INSERT INTO [dbo].[Companies]
 			   ([CompanyStatus],
-				[CompanyCode],
-				[CompanyName],
-				[OpenFrom],
-				[OpenTo],
+				[CompanyCode],  
+				[IsConfirmed],
 				[OwnerId]) 
 		 VALUES
 			   (@companyStatus, 
-			    @companyCode,
-			    @companyName, 
-			    @openFrom, 
-			    @openTo, 
+			    @companyCode,  
+			    @isConfirmed,  
 			    @ownerId)
 END 
 GO

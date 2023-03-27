@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace Management.Application.Parameters;
+namespace Management.Application.Parameters.CompanyParameters;
 
-public class CreateCompanyParameters
+public class CompleteDataParameters
 {
     public string CompanyName { get; init; }
     public int? From { get; init; }
@@ -14,8 +14,13 @@ public class CreateCompanyParameters
     public string PhoneNumber { get; init; }
     public string Email { get; init; }
 
+    //For tests
+    public CompleteDataParameters()
+    {
+    }
+
     [JsonConstructor]
-    public CreateCompanyParameters(string companyName, int? from, int? to, string city, string street,
+    public CompleteDataParameters(string companyName, int? from, int? to, string city, string street,
         string numberStreet, string postalCode, string phoneNumber, string email)
     {
         CompanyName = companyName;

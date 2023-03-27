@@ -8,6 +8,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared.Implementations\Shared.Implementations.csproj" />
+    <ProjectReference Include="..\Management.Domain\Management.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Converters\" />
+    <Folder Include="Models\DataAccessObjects\Company\" />
+    <Folder Include="Models\DataAccessObjects\Department\" />
+    <Folder Include="Models\DataAccessObjects\Employee\" />
+    <Folder Include="Templates\" />
+    <Folder Include="Parameters\EmployeeParameters\" />
+    <Folder Include="Parameters\DepartmentParameters\" />
   </ItemGroup>
 
 </Project>

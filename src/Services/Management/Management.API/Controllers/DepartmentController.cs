@@ -5,9 +5,9 @@ namespace Management.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class EmployeeController : BaseController
+public class DepartmentController : BaseController
 {
-    public EmployeeController(ICommandBus commandBus, IQueryBus queryBus) : base(commandBus, queryBus)
+    public DepartmentController(ICommandBus commandBus, IQueryBus queryBus) : base(commandBus, queryBus)
     {
     }
 }

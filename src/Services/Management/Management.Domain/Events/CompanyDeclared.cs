@@ -2,6 +2,6 @@
 
 namespace Management.Domain.Events;
 
-public class CompanyCreated : IDomainNotification
+public class CompanyDeclared : IDomainNotification
 {
 }

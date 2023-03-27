@@ -8,7 +8,7 @@ public partial class Account
     private void Initiated(NewAccountInitiated @event)
     {
         Id = @event.AccountId;
-        Details = AccountDetails.Init(@event.AccountCode, @event.CompanyCode, @event.CreatedBy);
+        Details = AccountDetails.Init(@event.AccountOwnerCode, @event.CompanyCode, @event.CreatedBy);
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
     }
