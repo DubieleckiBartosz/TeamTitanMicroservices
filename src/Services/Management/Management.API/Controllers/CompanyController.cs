@@ -1,4 +1,6 @@
-﻿using Management.Application.Features.Company.Commands.InitCompany;
+﻿using Management.Application.Features.Company.Commands.CompleteData;
+using Management.Application.Features.Company.Commands.InitCompany;
+using Management.Application.Parameters.CompanyParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Implementations.Abstractions;
@@ -13,6 +15,16 @@ public class CompanyController : BaseController
     {
     }
 
+    [Authorize(Roles = "Owner")]
+    [HttpPut("[action]")]
+    public async Task<IActionResult> CompleteCompanyData([FromBody] CompleteDataParameters parameters)
+    {
+        var command = CompleteDataCommand.Create(parameters);
+        var result = await CommandBus.Send(command);
+
+        return Ok(result);
+    }
+
     [Authorize(Roles = "User")]
     [HttpPost("[action]")]
     public async Task<IActionResult> InitCompany()
@@ -21,5 +33,5 @@ public class CompanyController : BaseController
         var result = await CommandBus.Send(command);
 
         return Ok(result);
-    }
+    } 
 }
