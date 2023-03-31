@@ -1,25 +1,43 @@
 ﻿using Management.Application.Contracts.Repositories;
+using Management.Domain.Entities;
+using Management.Domain.ValueObjects;
 using MediatR;
+using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
 
 namespace Management.Application.Features.Company.Commands.CompleteData;
 
 public class CompleteDataHandler : ICommandHandler<CompleteDataCommand, Unit>
 {
-    private readonly ICurrentUser _currentUser;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUser _currentUser; 
     private readonly ICompanyRepository _companyRepository;
 
     public CompleteDataHandler(ICurrentUser currentUser, IUnitOfWork unitOfWork)
     {
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-        _companyRepository = unitOfWork.CompanyRepository;
+        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser)); 
+        _companyRepository = unitOfWork?.CompanyRepository ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
     public async Task<Unit> Handle(CompleteDataCommand request, CancellationToken cancellationToken)
     {
-        var company = _companyRepository.GetCompanyByOwnerCodeAsync(_currentUser.VerificationCode!);
+        //[TODO] The company name must be unique within the scope of the database
+        var company = await _companyRepository.GetCompanyByOwnerCodeAsync(_currentUser.VerificationCode!);
+        if (company == null)
+        {
+            throw new NotFoundException("Company not found by verification code", "Company not found");
+        }
+
+        var name = CompanyName.Create(request.CompanyName);
+        var openingHours = request.From.HasValue && request.To.HasValue
+            ? OpeningHours.Create(request.From!.Value, request.To!.Value)
+            : null;
+        var address = Address.Create(request.City, request.Street, request.NumberStreet, request.PostalCode);
+        var contact = Contact.Create(request.PhoneNumber, request.Email);
+        var communicationData = CommunicationData.Create(address, contact);
+
+        company.UpdateData(name, openingHours, communicationData);
+
+        await _companyRepository.CompleteDataAsync(company);
 
         return Unit.Value;
     }
