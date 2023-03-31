@@ -7,16 +7,20 @@ namespace Management.Application.Features.Company.Commands.CompleteData;
 public class CompleteDataHandler : ICommandHandler<CompleteDataCommand, Unit>
 {
     private readonly ICurrentUser _currentUser;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ICompanyRepository _companyRepository;
 
-    public CompleteDataHandler(ICurrentUser currentUser, ICompanyRepository companyRepository)
+    public CompleteDataHandler(ICurrentUser currentUser, IUnitOfWork unitOfWork)
     {
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _companyRepository = companyRepository ?? throw new ArgumentNullException(nameof(companyRepository));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _companyRepository = unitOfWork.CompanyRepository;
     }
 
     public async Task<Unit> Handle(CompleteDataCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var company = _companyRepository.GetCompanyByOwnerCodeAsync(_currentUser.VerificationCode!);
+
+        return Unit.Value;
     }
 }

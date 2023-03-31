@@ -50,4 +50,20 @@ public class EmailRepository : IEmailRepository
                 HttpStatusCode.InternalServerError);
         }
     }
+
+    public async Task SendAsync(string recipient, string template, string subject, string serviceName, EmailOptions emailOptions)
+    {
+        var mail = CreateEmailForSend(new List<string> { recipient }, serviceName, template, subject);
+        await SendEmailAsync(mail, emailOptions);
+    }
+    private EmailDetails CreateEmailForSend(List<string> recipients, string from, string body, string subjectMail)
+    {
+        return new EmailDetails
+        {
+            Body = body,
+            Subject = subjectMail,
+            Recipients = recipients,
+            FromName = from
+        };
+    }
 }

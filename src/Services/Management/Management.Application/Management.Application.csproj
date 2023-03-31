@@ -16,7 +16,6 @@
     <Folder Include="Models\DataAccessObjects\Company\" />
     <Folder Include="Models\DataAccessObjects\Department\" />
     <Folder Include="Models\DataAccessObjects\Employee\" />
-    <Folder Include="Templates\" />
     <Folder Include="Parameters\EmployeeParameters\" />
     <Folder Include="Parameters\DepartmentParameters\" />
   </ItemGroup>

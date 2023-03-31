@@ -2,6 +2,4 @@
 
 namespace Management.Domain.Events;
 
-public class CompanyDeclared : IDomainNotification
-{
-}
+public record CompanyDeclared(string CompanyCode, string OwnerCode) : IDomainNotification;

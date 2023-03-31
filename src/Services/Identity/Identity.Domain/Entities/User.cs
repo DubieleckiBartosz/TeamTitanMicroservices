@@ -175,14 +175,17 @@ public class User : Entity, IAggregateRoot
         Roles.Add(role);
     }
 
-    public void MarkAsOwner()
+    public void MarkAsOwner(string verificationCode, string organizationCode)
     {
         if (VerificationCode != null)
         {
             throw new BusinessException(BusinessRuleErrorMessages.UniqueUserRoleErrorMessage,
                 BusinessExceptionTitles.UniqueRoleTitle);
         }
-         
+          
+        OrganizationCode = organizationCode;
+        VerificationCode = verificationCode;
+
         this.AddNewRole(Role.Owner);
     }
 

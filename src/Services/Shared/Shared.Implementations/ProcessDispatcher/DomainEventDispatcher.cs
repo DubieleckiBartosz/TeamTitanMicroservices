@@ -16,8 +16,8 @@ public class DomainEventDispatcher : IDomainEventDispatcher
         this._loggerManager = loggerManager ?? throw new ArgumentNullException(nameof(loggerManager));
     }
 
-    public async Task DispatchEventsAsync<T>(T entity, TransactionDelegates.CommitTransaction commit = null,
-        TransactionDelegates.RollbackTransaction rollback = null)
+    public async Task DispatchEventsAsync<T>(T entity, TransactionDelegates.CommitTransaction? commit = null,
+        TransactionDelegates.RollbackTransaction? rollback = null)
         where T : Entity
     {
         if (entity == null)

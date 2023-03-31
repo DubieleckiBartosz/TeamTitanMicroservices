@@ -146,7 +146,27 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
                 ExceptionIdentityTitles.NewUserRole, HttpStatusCode.InternalServerError, null);
         }
     }
-      
+     
+    public async Task AddToOwnerAsync(User user)
+    {
+        var param = new DynamicParameters();
+
+        var roleId = user.Roles.LastOrDefault()?.Id;
+        param.Add("@userId", user.Id);
+        param.Add("@role", roleId);
+        param.Add("@verificationCode", user.VerificationCode);
+        param.Add("@organizationCode", user.OrganizationCode);
+
+        var result =
+            await this.ExecuteAsync("user_addToOwnerRole_U", param,
+                commandType: CommandType.StoredProcedure);
+        if (result <= 0)
+        {
+            throw new IdentityResultException(ExceptionIdentityMessages.NewRoleForUserFailed,
+                ExceptionIdentityTitles.NewUserRole, HttpStatusCode.InternalServerError, null);
+        }
+    }
+
     public async Task<int> CreateAsync(User user)
     {
         var param = new DynamicParameters();

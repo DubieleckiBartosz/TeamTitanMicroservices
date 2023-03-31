@@ -64,9 +64,12 @@ public class TransactionSupervisor : ITransaction
     {
         try
         {
-            this._loggerManager.LogInformation(null, message: "Rollback start.");
-            this._transaction?.Rollback();
-            this._loggerManager.LogInformation(null, message: "Rollback OK.");
+            if (_transaction != null)
+            {
+                this._loggerManager.LogInformation(null, message: "Rollback start.");
+                this._transaction?.Rollback();
+                this._loggerManager.LogInformation(null, message: "Rollback OK.");
+            }
         }
         catch
         {

@@ -7,6 +7,7 @@ public interface ICompanyRepository
     Task<bool> CompanyCodeExistsAsync(string companyCode);
     Task InitCompanyAsync(Company company);
     Task CompleteDataAsync(Company company);
+    Task<Company> GetCompanyByOwnerCodeAsync(string ownerCode);
     Task<Company> GetCompanyByCodeAsync(string companyCode); 
     Task<Company> GetCompanyWithDepartmentsByCodeAsync(string companyCode); 
 }

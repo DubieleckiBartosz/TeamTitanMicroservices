@@ -25,7 +25,7 @@ builder.Configuration.AddJsonFile(Path.Combine(commonFolder, "SharedSettings.jso
 
 builder.GetDependencyInjectionInfrastructure();
 
-builder.EventStoreConfiguration(_ => new List<IProjection>
+builder.StoreConfiguration(_ => new List<IProjection>
     {
         new AccountProjection(_.GetService<IAccountRepository>()!),
         new ProductProjection(_.GetService<IProductRepository>()!)
