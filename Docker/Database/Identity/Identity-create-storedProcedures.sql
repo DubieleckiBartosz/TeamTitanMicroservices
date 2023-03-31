@@ -196,6 +196,41 @@ BEGIN
 END
 GO
 
+ 
+CREATE OR ALTER PROCEDURE [dbo].[user_addToOwnerRole_U] 
+	@userId INT, 
+	@role INT,
+	@verificationCode VARCHAR(50),
+    @organizationCode VARCHAR(50)
+AS 
+BEGIN 
+	BEGIN TRY  
+		BEGIN TRANSACTION; 
+			UPDATE ApplicationUsers 
+			SET VerificationCode = @verificationCode,
+				OrganizationCode = @organizationCode
+			WHERE Id = @userId
+
+			INSERT INTO UserRoles(UserId, RoleId, VerificationCode) 
+			VALUES (@userId, @role, @verificationCode); 
+
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH 
+END
+GO
+
 CREATE OR ALTER PROCEDURE [dbo].[user_clearResetToken_U] 
 	@userId INT 
 AS 

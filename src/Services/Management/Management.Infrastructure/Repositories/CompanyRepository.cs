@@ -26,6 +26,11 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
         throw new NotImplementedException();
     }
 
+    public Task<Company> GetCompanyByOwnerCodeAsync(string ownerCode)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Company> GetCompanyByCodeAsync(string companyCode)
     {
         throw new NotImplementedException();

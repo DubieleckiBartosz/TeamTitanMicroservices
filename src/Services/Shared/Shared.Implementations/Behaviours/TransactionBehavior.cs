@@ -21,8 +21,7 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
-    {
-        _loggerManager.LogInformation(null, "test log");
+    { 
         var hasTransactionAttribute = this._requestHandler.GetType()
             .GetCustomAttributes(typeof(WithTransactionAttribute), false).Any();
 
@@ -34,10 +33,11 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         {
             try
             {
+                var requestName = request.GetType().FullName;
                 this._loggerManager.LogInformation(
-                    $"The transaction will be created by {request.GetType().FullName} ------ HANDLER WITH TRANSACTION ------- ");
+                    $"The transaction will be created by {requestName} ------ HANDLER WITH TRANSACTION ------- ");
 
-                await this._transaction.GetOpenOrCreateTransaction();
+                await _transaction.GetOpenOrCreateTransaction();
 
                 var response = await next();
 
@@ -46,13 +46,15 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
                 if (result)
                 {
                     this._loggerManager.LogInformation(
-                        $"Committed transaction {request.GetType().FullName} ------ COMMITTED TRANSACTION IN HANDLER ------- ");
+                        $"Committed transaction {requestName} ------ COMMITTED TRANSACTION IN HANDLER ------- ");
                 }
 
                 return response;
             }
             catch (Exception ex)
             {
+                this._transaction.Rollback();
+
                 this._loggerManager.LogError(new
                 {
                     Message = "ERROR Handling transaction.",

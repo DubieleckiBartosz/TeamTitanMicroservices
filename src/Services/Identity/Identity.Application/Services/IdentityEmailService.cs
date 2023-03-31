@@ -24,7 +24,7 @@ public class IdentityEmailService : IIdentityEmailService
         var dictData = TemplateCreator.TemplateRegisterAccount(userName, code);
         var template = Templates.GetConfirmAccountTemplate().GetTemplateReplaceData(dictData);
 
-        await SendAsync(recipient, template, MessageSubjects.AccountConfirmation);
+        await _emailRepository.SendAsync(recipient, template, MessageSubjects.AccountConfirmation, Service, _options);
     }
 
     public async Task SendEmailResetPasswordAsync(string recipient, string resetToken, string origin)
@@ -32,7 +32,7 @@ public class IdentityEmailService : IIdentityEmailService
         var dictData = TemplateCreator.TemplateResetPassword(resetToken, origin);
         var template = Templates.GetResetPasswordTemplate().GetTemplateReplaceData(dictData);
 
-        await SendAsync(recipient, template, MessageSubjects.ResetPassword);
+        await _emailRepository.SendAsync(recipient, template, MessageSubjects.ResetPassword, Service, _options);
     }
 
     public async Task SendEmailInitUserOrganizationAsync(string recipient, string userCode, string organizationCode)
@@ -40,23 +40,6 @@ public class IdentityEmailService : IIdentityEmailService
         var dictData = TemplateCreator.TemplateInitUser(userCode, organizationCode);
         var template = Templates.GetUniqueCodeTemplate().GetTemplateReplaceData(dictData);
 
-        await SendAsync(recipient, template, MessageSubjects.Code);
-    }
-
-    private async Task SendAsync(string recipient, string template, string subject)
-    {
-        var mail = CreateEmailForSend(new List<string> { recipient }, Service, template, subject);
-        await _emailRepository.SendEmailAsync(mail, _options);
-    }
-
-    private EmailDetails CreateEmailForSend(List<string> recipients, string from, string body, string subjectMail)
-    {
-        return new EmailDetails
-        {
-            Body = body,
-            Subject = subjectMail,
-            Recipients = recipients,
-            FromName = from
-        };
-    }
+        await _emailRepository.SendAsync(recipient, template, MessageSubjects.Code, Service, _options);
+    } 
 }

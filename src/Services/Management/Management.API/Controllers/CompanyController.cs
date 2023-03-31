@@ -1,5 +1,5 @@
 ﻿using Management.Application.Features.Company.Commands.InitCompany;
-using Management.Application.Parameters.CompanyParameters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Implementations.Abstractions;
 
@@ -13,6 +13,7 @@ public class CompanyController : BaseController
     {
     }
 
+    [Authorize(Roles = "User")]
     [HttpPost("[action]")]
     public async Task<IActionResult> InitCompany()
     {

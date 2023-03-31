@@ -17,6 +17,7 @@ public interface IUserRepository
     Task<User?> FindByEmailAsync(string email);
     Task UpdateAsync(User user);
     Task AddToRoleAsync(User user);
+    Task AddToOwnerAsync(User user);
     Task<List<string>> GetUserRolesAsync(User user);
     Task ClearResetTokenAsync(User user);
     Task ClearTokens();

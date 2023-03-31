@@ -19,6 +19,7 @@ using Shared.Implementations.Utils;
 using System.Net;
 using System.Text;
 using Shared.Implementations.Services;
+using Shared.Implementations.Tools;
 
 namespace Identity.Application.Services;
 
@@ -260,9 +261,13 @@ public class UserService : IUserService
         if (userOwnerRoleDto == null)
         {
             throw new ArgumentNullException(nameof(userOwnerRoleDto));
-        }
+        } 
 
-        var user = await this._userRepository.FindByEmailAsync(userOwnerRoleDto.Email);
+        var recipient = userOwnerRoleDto.Recipient.Decrypt("fWj4aKQ4K4caBjcH");
+        var ownerCode = userOwnerRoleDto.OwnerCode.Decrypt("fWj4aKQ4K4caBjcH");
+        var organization = userOwnerRoleDto.Organization.Decrypt("fWj4aKQ4K4caBjcH");
+
+        var user = await this._userRepository.FindByEmailAsync(recipient);
         if (user == null)
         {
             throw new IdentityResultException(ExceptionIdentityMessages.UserNotFound,
@@ -275,9 +280,9 @@ public class UserService : IUserService
                 ExceptionIdentityTitles.UserByEmail, HttpStatusCode.BadRequest, null);
         }
 
-        user.MarkAsOwner();
+        user.MarkAsOwner(ownerCode, organization);
 
-        await this._userRepository.AddToRoleAsync(user);
+        await this._userRepository.AddToOwnerAsync(user);
 
         return Response<string>.Ok(ResponseStrings.OperationSuccess);
     }

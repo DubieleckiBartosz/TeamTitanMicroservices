@@ -2,12 +2,20 @@
 using Identity.Application.Contracts.Services;
 using Identity.Application.Models.DataTransferObjects;
 using Identity.Application.Models.Parameters;
+using Identity.Application.Utils;
 using Identity.Application.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Identity.API.Controllers;
+
+public record InitCompanyMessageDto
+{
+    public string Organization { get; init; } = default!;
+    public string OwnerCode { get; init; } = default!;
+    public string Recipient { get; init; } = default!; 
+}
 
 [Route("api/[controller]")]
 [ApiController]
@@ -18,7 +26,20 @@ public class AccountController : ControllerBase
     public AccountController(IUserService userService)
     {
         _userService = userService;
+    } 
+
+    [ProducesResponseType(401)]
+    [ProducesResponseType(typeof(object), 400)]
+    [ProducesResponseType(typeof(object), 500)]
+    [ProducesResponseType(typeof(Response<string>), 200)]
+    [SwaggerOperation(Summary = "Add user to owner role")]
+    [HttpGet("new-owner")]
+    public async Task<IActionResult> AddOwnerRoleToUser([FromQuery] UserOwnerRoleParameters parameters)
+    {
+        var result = await this._userService.AddToOwnerRoleAsync(new UserOwnerRoleDto(parameters));
+        return Ok(result);
     }
+
 
     [Authorize]
     [ProducesResponseType(typeof(object), 400)]
@@ -166,20 +187,7 @@ public class AccountController : ControllerBase
         var result = await this._userService.AddToRoleAsync(new UserNewRoleDto(parameters));
         return Ok(result);
     }
-
-    [Authorize]
-    [ProducesResponseType(401)]
-    [ProducesResponseType(typeof(object), 400)]
-    [ProducesResponseType(typeof(object), 500)]
-    [ProducesResponseType(typeof(Response<string>), 200)]
-    [SwaggerOperation(Summary = "Add user to owner role")]
-    [HttpPut("[action]")]
-    public async Task<IActionResult> AddOwnerRoleToUser([FromBody] UserOwnerRoleParameters parameters)
-    {
-        var result = await this._userService.AddToOwnerRoleAsync(new UserOwnerRoleDto(parameters));
-        return Ok(result);
-    }
-
+     
     [Authorize]
     [ProducesResponseType(401)]
     [ProducesResponseType(typeof(object), 403)]

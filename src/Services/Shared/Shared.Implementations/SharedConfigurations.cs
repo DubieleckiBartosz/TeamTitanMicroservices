@@ -24,6 +24,8 @@ using Shared.Implementations.EventStore.Repositories;
 using Shared.Implementations.Snapshot;
 using Hangfire;
 using Shared.Implementations.Background;
+using Shared.Implementations.Dapper;
+using Shared.Implementations.ProcessDispatcher;
 
 namespace Shared.Implementations;
 
@@ -64,6 +66,17 @@ public static class SharedConfigurations
         return services;
     }
 
+    public static WebApplicationBuilder RegisterTransactions(this WebApplicationBuilder builder, Func<IConfiguration, string> connectionFunc)
+    {
+        builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+        builder.Services.AddScoped<ITransaction, TransactionSupervisor>(_ =>
+            new TransactionSupervisor(_.GetService<ILoggerManager<TransactionSupervisor>>()!, connectionFunc.Invoke(builder.Configuration)));
+
+        return builder;
+    }
+
+
     public static IServiceCollection GetFullDependencyInjection(this IServiceCollection services,
         Func<IServiceProvider, List<IProjection>>? projectionFunc)
     {
@@ -77,6 +90,7 @@ public static class SharedConfigurations
         services.AddScoped<IEventStore, EventStore.EventStore>(_ =>
             new EventStore.EventStore(_.GetService<IStore>() ?? throw new ArgumentNullException(nameof(IStore)),
                 projectionFunc?.Invoke(_)));
+
         services.AddScoped<ISnapshotStore, SnapshotStore>();
 
         services.AddScoped<IOutboxListener, OutboxListener>();
@@ -89,11 +103,11 @@ public static class SharedConfigurations
 
         //PIPELINES
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviour<,>));
-
+       
         return services;
     } 
 
-    public static WebApplicationBuilder EventStoreConfiguration(this WebApplicationBuilder builder, Func<IServiceProvider, List<IProjection>>? projectionFunc = null, params Type[] types)
+    public static WebApplicationBuilder StoreConfiguration(this WebApplicationBuilder builder, Func<IServiceProvider, List<IProjection>>? projectionFunc = null, params Type[] types)
     {
         builder.Services.ConfigurationMongoOutboxDatabase(builder.Configuration);
         builder.Services.GetFullDependencyInjection(projectionFunc);

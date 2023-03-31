@@ -1,4 +1,5 @@
-﻿using Management.Domain.Statuses;
+﻿using Management.Domain.Events;
+using Management.Domain.Statuses;
 using Management.Domain.ValueObjects;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
@@ -11,6 +12,7 @@ public class Company : Entity, IAggregateRoot
     public int OwnerId { get; }
     public CommunicationData CommunicationData { get; private set; }
     public string CompanyCode { get; }
+    public string OwnerCode { get; }
     public bool IsConfirmed { get; private set; }
     public CompanyName CompanyName { get; private set; }
     public OpeningHours? OpeningHours { get; private set; }
@@ -22,12 +24,16 @@ public class Company : Entity, IAggregateRoot
     /// Creating new company
     /// </summary> 
     /// <param name="ownerId"></param> 
-    /// <param name="uniqueCode"></param>
-    private Company(int ownerId, string uniqueCode)
+    /// <param name="companyCode"></param>
+    /// <param name="ownerCode"></param>
+    private Company(int ownerId, string companyCode, string ownerCode)
     {
         IsConfirmed = false;
+        OwnerCode = ownerCode;
         OwnerId = ownerId;
-        CompanyCode = uniqueCode;
+        CompanyCode = companyCode;
+
+        Events.Add(new CompanyDeclared(CompanyCode, OwnerCode));
     }
 
     /// <summary>
@@ -35,33 +41,36 @@ public class Company : Entity, IAggregateRoot
     /// </summary>
     /// <param name="id"></param>
     /// <param name="ownerId"></param>
+    /// <param name="ownerCode"></param>
     /// <param name="communicationData"></param>
     /// <param name="companyCode"></param>
     /// <param name="companyName"></param>
     /// <param name="openingHours"></param>
     /// <param name="companyStatus"></param>
     /// <param name="departments"></param>
-    private Company(int id, int ownerId, CommunicationData communicationData, string companyCode,
+    private Company(int id, int ownerId, string ownerCode, CommunicationData communicationData, string companyCode,
         CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments)
-        : this( ownerId, companyCode)
+        : this(ownerId, companyCode, ownerCode)
     {
-        Id = id;
+        Id = id; 
         CommunicationData = communicationData;
         CompanyName = companyName;
         OpeningHours = openingHours;
         CompanyStatus = companyStatus;
+
         departments.ForEach(_ => _departments.Add(_));
     }
 
-    public static Company Init(int ownerId, string uniqueCode)
+    public static Company Init(int ownerId, string uniqueCode, string ownerCode)
     {
-        return new Company(ownerId, uniqueCode);
+        return new Company(ownerId, uniqueCode, ownerCode);
     }
 
-    public static Company Load(int id, int ownerId, CommunicationData communicationData, string companyCode,
+    public static Company Load(int id, int ownerId, string ownerCode, CommunicationData communicationData,
+        string companyCode,
         CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments)
     {
-        return new Company(id, ownerId, communicationData, companyCode,
+        return new Company(id, ownerId, ownerCode, communicationData, companyCode,
             companyName, openingHours, companyStatus, departments);
     }
 
