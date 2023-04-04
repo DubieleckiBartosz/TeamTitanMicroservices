@@ -17,6 +17,9 @@ public class CreateEmployeeParameters
     public string PhoneNumber { get; init; }
     public string Email { get; init; }
 
+    /// <summary>
+    /// For tests
+    /// </summary>
     public CreateEmployeeParameters()
     {
     }

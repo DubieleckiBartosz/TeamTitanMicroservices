@@ -140,9 +140,12 @@ public class Employee : Entity
         this.CommunicationData.UpdateAddress(newAddress);
     }
 
-    public void UpdateContact(string phoneNumber, string email)
+    public void UpdateContact(string? phoneNumber, string? email)
     {
-        var newContact = Contact.Create(phoneNumber, email);
-        this.CommunicationData.UpdateContact(newContact);
-    } 
+        var newContact = Contact.Create(
+            phoneNumber ?? CommunicationData.Contact.PhoneNumber,
+            email ?? CommunicationData.Contact.Email);
+
+        CommunicationData.UpdateContact(newContact);
+    }
 }

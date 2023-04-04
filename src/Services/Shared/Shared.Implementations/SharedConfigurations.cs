@@ -109,19 +109,20 @@ public static class SharedConfigurations
 
     public static WebApplicationBuilder StoreConfiguration(this WebApplicationBuilder builder, Func<IServiceProvider, List<IProjection>>? projectionFunc = null, params Type[] types)
     {
-        builder.Services.ConfigurationMongoOutboxDatabase(builder.Configuration);
+        builder.Services.ConfigurationMongoDatabase(builder.Configuration);
         builder.Services.GetFullDependencyInjection(projectionFunc);
         builder.Services.GetMediatR(types);
         builder.RegisterRabbitMq();
 
         builder.Services.Configure<StoreOptions>(builder.Configuration.GetSection("StoreOptions"));
+        builder.Services.Configure<MongoOutboxOptions>(builder.Configuration.GetSection(nameof(MongoOutboxOptions)));
 
         return builder;
     }
 
     public static void RegisterRabbitMq(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<IRabbitBase, RabbitBase>();
+        builder.Services.AddSingleton<IRabbitBase, RabbitBase>(); 
         builder.Services.Configure<RabbitOptions>(builder.Configuration.GetSection("RabbitOptions"));
     }
 
@@ -132,7 +133,7 @@ public static class SharedConfigurations
         return builder;
     }
 
-    public static IServiceCollection ConfigurationMongoOutboxDatabase(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigurationMongoDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         var options = new StoreOptions();
         configuration.GetSection(nameof(StoreOptions)).Bind(options);
@@ -140,7 +141,6 @@ public static class SharedConfigurations
         var connectionString = options.ConnectionString;
         var database = options.DatabaseName;
         
-        services.Configure<MongoOutboxOptions>(configuration.GetSection(nameof(MongoOutboxOptions)));
         services.AddSingleton<MongoContext>(_ => new MongoContext(connectionString, database));
 
         return services;
