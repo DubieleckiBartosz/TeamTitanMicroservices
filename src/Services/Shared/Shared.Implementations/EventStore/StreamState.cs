@@ -1,7 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Shared.Implementations.Types;
-using System.Security.Cryptography;
 
 namespace Shared.Implementations.EventStore;
 
