@@ -12,14 +12,14 @@ public class LoggerManager<T> : ILoggerManager<T>
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public void LogInformation(object? obj, string? message = null) =>
+    public void LogInformation(object? obj = null, string? message = null) =>
         _logger.LogInformation(this.GetMessage(obj, message));
 
-    public void LogWarning(object? obj, string? message = null) => _logger.LogWarning(this.GetMessage(obj, message));
+    public void LogWarning(object? obj = null, string? message = null) => _logger.LogWarning(this.GetMessage(obj, message));
 
-    public void LogError(object? obj, string? message = null) => _logger.LogError(this.GetMessage(obj, message));
+    public void LogError(object? obj = null, string? message = null) => _logger.LogError(this.GetMessage(obj, message));
 
-    public void LogCritical(object? obj, string? message = null) =>
+    public void LogCritical(object? obj = null, string? message = null) =>
         _logger.LogCritical(this.GetMessage(obj, message));
 
     private string GetMessage(object? obj, string? message) => obj == null && message == null

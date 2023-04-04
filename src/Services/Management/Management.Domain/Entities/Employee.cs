@@ -1,5 +1,6 @@
 ﻿using Management.Domain.ValueObjects;
 using Shared.Domain.Base;
+using Shared.Domain.DomainExceptions;
 
 namespace Management.Domain.Entities;
 
@@ -73,6 +74,7 @@ public class Employee : Entity
     /// <summary>
     /// Load all data
     /// </summary>
+    /// <param name="id"></param>
     /// <param name="departmentId"></param>
     /// <param name="accountId"></param> 
     /// <param name="employeeCode"></param>
@@ -116,7 +118,7 @@ public class Employee : Entity
     
     public static Employee Load(string employeeCode, string name, string surname, string? personIdentifier, Guid? accountId)
     {
-        return new Employee( employeeCode, name, surname, personIdentifier, accountId);
+        return new Employee(employeeCode, name, surname, personIdentifier, accountId);
     }
 
     public void AssignAccount(Guid accountId)
@@ -129,8 +131,13 @@ public class Employee : Entity
         _employeeContracts.Add(contract);
     }
     
-    public void AddDayOffRequests(DayOffRequest dayOffRequest)
+    public void AddDayOffRequest(DayOffRequest dayOffRequest)
     {
+        if (DoesRangeDaysOffOverlap(dayOffRequest.DaysOff))
+        {
+            throw new BusinessException("Invalid range days", "Day off requests overlap");
+        }
+
         _dayOffRequests.Add(dayOffRequest);
     }
 
@@ -140,9 +147,18 @@ public class Employee : Entity
         this.CommunicationData.UpdateAddress(newAddress);
     }
 
-    public void UpdateContact(string phoneNumber, string email)
+    public void UpdateContact(string? phoneNumber, string? email)
     {
-        var newContact = Contact.Create(phoneNumber, email);
-        this.CommunicationData.UpdateContact(newContact);
-    } 
+        var newContact = Contact.Create(
+            phoneNumber ?? CommunicationData.Contact.PhoneNumber,
+            email ?? CommunicationData.Contact.Email);
+
+        CommunicationData.UpdateContact(newContact);
+    }
+
+    private bool DoesRangeDaysOffOverlap(RangeDaysOff newRange)
+    {
+        return DayOffRequests.Where(_ => _.Canceled == false)
+            .Any(_ => newRange.FromDate <= _.DaysOff.ToDate && newRange.ToDate >= _.DaysOff.FromDate);
+    }
 }

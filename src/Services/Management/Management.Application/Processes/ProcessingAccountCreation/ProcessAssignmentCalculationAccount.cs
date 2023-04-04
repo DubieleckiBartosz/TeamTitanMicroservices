@@ -1,4 +1,4 @@
-﻿using Management.Application.Features.Employee.Commands.AssignAccount;
+﻿using Management.Application.Features.Commands.Employee.AssignAccount;
 using Shared.Implementations.Decorators;
 using Shared.Implementations.EventStore;
 
