@@ -1,6 +1,6 @@
-﻿using Management.Application.Features.Company.Commands.CompleteData;
+﻿using Management.Application.Features.Commands.Company.CompleteData;
+using Management.Application.Features.Commands.Company.UpdateContact;
 using Management.Application.Features.Company.Commands.InitCompany;
-using Management.Application.Features.Company.Commands.UpdateContact;
 using Management.Application.Parameters.CompanyParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

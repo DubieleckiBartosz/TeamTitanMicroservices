@@ -9,6 +9,7 @@ public class DayOffRequest : Entity
 {
     public string CreatedBy { get; }
     public string? ConsideredBy { get; private set;}
+    public bool Canceled { get; private set;}
     public RangeDaysOff DaysOff { get; }
     public DayOffRequestCurrentStatus CurrentStatus { get; private set; }
     public ReasonType ReasonType { get; }
@@ -22,6 +23,7 @@ public class DayOffRequest : Entity
         CurrentStatus = DayOffRequestCurrentStatus.Initial;
         ReasonType = reasonType;
         Description = description;
+        Canceled = false;
     }
 
     public static DayOffRequest Create(string createdBy, RangeDaysOff daysOff, ReasonType reasonType,
@@ -34,5 +36,10 @@ public class DayOffRequest : Entity
     { 
         ConsideredBy = considerBy;
         CurrentStatus = newStatus;
+    }
+
+    public void Cancel()
+    { 
+        Canceled = true;
     }
 }

@@ -7,6 +7,7 @@ public interface IEmployeeRepository
     Task<Employee?> GetEmployeeByIdAsync(int id);
     Task<Employee?> GetEmployeeByCodeAsync(string code);
     Task AddAccountToEmployeeAsync(Employee employee);
+    Task AddDayOffRequestToEmployeeAsync(Employee employee);
     Task UpdateContactDataAsync(Employee employee);
     Task UpdateAddressAsync(Employee employee);
 }

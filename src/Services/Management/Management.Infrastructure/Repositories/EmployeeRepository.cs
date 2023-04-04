@@ -11,7 +11,27 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
     {
     }
 
-    public Task<Employee> GetEmployeeByCodeAsync(string code)
+    public Task<Employee?> GetEmployeeByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Employee?> GetEmployeeByCodeAsync(string code)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddAccountToEmployeeAsync(Employee employee)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateContactDataAsync(Employee employee)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateAddressAsync(Employee employee)
     {
         throw new NotImplementedException();
     }

@@ -11,7 +11,7 @@ public class DayOffRequestDescription : ValueObject
         Value = value;
     }
 
-    public static DayOffRequestDescription CreateReason(string value) => new DayOffRequestDescription(value);
+    public static DayOffRequestDescription CreateDescription(string value) => new DayOffRequestDescription(value);
 
     public override string ToString()
     {
