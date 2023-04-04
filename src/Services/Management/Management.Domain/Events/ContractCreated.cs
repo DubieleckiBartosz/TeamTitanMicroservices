@@ -2,6 +2,5 @@
 
 namespace Management.Domain.Events;
 
-public class ContractCreated : IDomainNotification
-{
-}
+public record ContractCreated(int CountingType, int WorkDayHours,
+    int SettlementDayMonth, Guid AccountId, DateTime? ExpirationDate) : IDomainNotification;

@@ -1,4 +1,5 @@
-﻿using Management.Domain.ValueObjects;
+﻿using Management.Domain.Events;
+using Management.Domain.ValueObjects;
 using Shared.Domain.Base;
 using Shared.Domain.DomainExceptions;
 
@@ -128,7 +129,19 @@ public class Employee : Entity
 
     public void AddContract(EmployeeContract contract)
     {
+        if (ContractsOverlap(contract))
+        {
+            throw new BusinessException("Invalid time range contract", "Time range of contracts overlap");
+        }
+
         _employeeContracts.Add(contract);
+
+        var countingType = contract.SettlementType.Id;
+        var workDayHours = contract.NumberHoursPerDay;
+        var settlementDayMonth = contract.PaymentMonthDay; 
+        var expirationDate = contract.TimeRange.EndContract;
+
+        Events.Add(new ContractCreated(countingType, workDayHours, settlementDayMonth, AccountId!.Value, expirationDate));
     }
     
     public void AddDayOffRequest(DayOffRequest dayOffRequest)
@@ -160,5 +173,11 @@ public class Employee : Entity
     {
         return DayOffRequests.Where(_ => _.Canceled == false)
             .Any(_ => newRange.FromDate <= _.DaysOff.ToDate && newRange.ToDate >= _.DaysOff.FromDate);
+    }
+
+    private bool ContractsOverlap(EmployeeContract newRange)
+    {
+        return Contracts.Any(_ =>
+            (newRange.TimeRange.StartContract <= _.TimeRange.EndContract) || _.TimeRange.EndContract == null);
     }
 }

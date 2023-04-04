@@ -9,21 +9,21 @@ public class EmployeeContract : Entity
     public string Position { get; }
     public string ContractNumber { get; }
     public ContractType ContractType { get; }
-    public SettlementType? SettlementType { get; }
+    public SettlementType SettlementType { get; }
     public decimal Salary { get; }
     public decimal? HourlyRate { get; }
     public decimal? OvertimeRate { get; }
     public TimeRange TimeRange { get; }
     public int NumberHoursPerDay { get; }
     public int FreeDaysPerYear { get; }
-    public string BankAccountNumber { get; } 
+    public string? BankAccountNumber { get; private set; } 
     public bool PaidIntoAccount { get; } 
-    public int PaymentMonthDay { get; set; }
-    public string CreatedBy { get; }
+    public int PaymentMonthDay { get; }
+    public string CreatedBy { get; } 
 
     private EmployeeContract(string position,
-        ContractType contractType, SettlementType? settlementType, decimal salary, TimeRange timeRange,
-        int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy,
+        ContractType contractType, SettlementType settlementType, decimal salary, TimeRange timeRange,
+        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     { 
         Position = position;
@@ -43,8 +43,8 @@ public class EmployeeContract : Entity
     }
 
     public static EmployeeContract Create(string position,
-        ContractType contractType, SettlementType? settlementType, decimal salary, TimeRange timeRange,
-        int numberHoursPerDay, int freeDaysPerYear, string bankAccountNumber, bool paidIntoAccount, string createdBy,
+        ContractType contractType, SettlementType settlementType, decimal salary, TimeRange timeRange,
+        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     {
         return new EmployeeContract(position, contractType, settlementType, salary, timeRange,

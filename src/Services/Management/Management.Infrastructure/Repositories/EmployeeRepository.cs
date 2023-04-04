@@ -26,6 +26,16 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         throw new NotImplementedException();
     }
 
+    public Task AddDayOffRequestToEmployeeAsync(Employee employee)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddContractToEmployeeAsync(Employee employee)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task UpdateContactDataAsync(Employee employee)
     {
         throw new NotImplementedException();
