@@ -9,14 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Identity.API.Controllers;
-
-public record InitCompanyMessageDto
-{
-    public string Organization { get; init; } = default!;
-    public string OwnerCode { get; init; } = default!;
-    public string Recipient { get; init; } = default!; 
-}
-
+  
 [Route("api/[controller]")]
 [ApiController]
 public class AccountController : ControllerBase

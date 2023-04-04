@@ -114,7 +114,7 @@ public class UserService : IUserService
         }
 
         var verificationCode = initUserOrganizationDto.UserCode;
-        var organizationCode = initUserOrganizationDto.OrganizationCode;
+        var organizationCode = _currentUser.OrganizationCode!;
 
         var newRole = this.CheckRole(initUserOrganizationDto.Role);
         var role = (int) newRole.ToEnum<Roles>();

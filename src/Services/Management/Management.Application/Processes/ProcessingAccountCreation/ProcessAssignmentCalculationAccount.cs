@@ -22,7 +22,7 @@ public class ProcessAssignmentCalculationAccount : IEventHandler<CalculationAcco
         var data = notification.DomainEvent;
         var accountId = data.AccountId;
         var code = data.AccountOwnerCode;
-        var command = CalculationAccountCommand.Create(code, accountId);
+        var command = AssignCalculationAccountCommand.Create(code, accountId);
         
         await _commandBus.Send(command, cancellationToken);
     }

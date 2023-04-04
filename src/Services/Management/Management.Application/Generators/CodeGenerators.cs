@@ -15,16 +15,11 @@ public class CodeGenerators
         return code;
     }
 
-    public static string PersonCompanyCodeGenerate(string companyCode, string position)
+    public static string PersonCompanyCodeGenerate(string companyCode)
     {
         if (string.IsNullOrEmpty(companyCode))
         {
             throw new ArgumentException("Company code cannot be null or empty.", nameof(companyCode));
-        }
-        
-        if (string.IsNullOrEmpty(position))
-        {
-            throw new ArgumentException("Role cannot be null or empty.", nameof(position));
         }
 
         var basedOn = companyCode.Substring(0, 4);
@@ -40,10 +35,9 @@ public class CodeGenerators
 
         // Take the first 8 characters of the hash to get a 32-bit integer.
         var randomInt = int.Parse(hash.Substring(0, 6), System.Globalization.NumberStyles.HexNumber);
-         
-        var roleString = position.Substring(0, 3).ToUpper();
-        var randomString = randomInt.ToString().Substring(0, 5).ToUpper();
-        var employeeCode = $"{roleString}{basedOn}{randomString}"; //12 characters
+          
+        var randomString = randomInt.ToString().Substring(0, 6).ToUpper();
+        var employeeCode = $"{basedOn}{randomString}";  
 
         return employeeCode;
     }

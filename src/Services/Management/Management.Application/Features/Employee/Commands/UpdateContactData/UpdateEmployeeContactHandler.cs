@@ -1,5 +1,5 @@
 ﻿namespace Management.Application.Features.Employee.Commands.UpdateContactData;
 
-public class UpdateCommunicationDataCommand
+public class UpdateEmployeeContactHandler
 {
 }

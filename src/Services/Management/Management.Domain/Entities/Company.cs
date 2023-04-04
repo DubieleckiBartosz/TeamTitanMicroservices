@@ -3,6 +3,7 @@ using Management.Domain.Statuses;
 using Management.Domain.ValueObjects;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
+using Shared.Domain.DomainExceptions;
 
 namespace Management.Domain.Entities;
 
@@ -90,7 +91,7 @@ public class Company : Entity, IAggregateRoot
         var currentDepartment = this.FindDepartmentByName(departmentName);
         if (currentDepartment == null)
         {
-
+            throw new BusinessException("Duplicate name", "The department name should be unique");
         }
 
         var newDepartment = Department.CreateDepartment(departmentName); 
@@ -106,19 +107,32 @@ public class Company : Entity, IAggregateRoot
         }
 
     }
-     
-    public void UpdateAddress(string city, string street, string numberStreet, string postalCode)
+
+    public void UpdateCommunicationData(
+        string? phoneNumber, string? email, string? city, string? street,
+        string? numberStreet, string? postalCode)
     {
+        phoneNumber ??= this.CommunicationData.Contact.PhoneNumber;
+        email ??= this.CommunicationData.Contact.PhoneNumber;
+        city ??= this.CommunicationData.Contact.PhoneNumber;
+        street ??= this.CommunicationData.Contact.PhoneNumber;
+        numberStreet ??= this.CommunicationData.Contact.PhoneNumber;
+        postalCode ??= this.CommunicationData.Contact.PhoneNumber;
+
         var newAddress = Address.Create(city, street, numberStreet, postalCode);
-        this.CommunicationData.UpdateAddress(newAddress);
-    }
+        CommunicationData.UpdateAddress(newAddress);
 
-    public void UpdateContact(string phoneNumber, string email)
-    {
         var newContact = Contact.Create(phoneNumber, email);
-        this.CommunicationData.UpdateContact(newContact);
+        CommunicationData.UpdateContact(newContact);
     }
 
-    private Department? FindDepartmentByName(DepartmentName departmentName) => this._departments.FirstOrDefault(_ => _.DepartmentName == departmentName);
-    private Department? FindDepartmentById(int departmentId) => this._departments.FirstOrDefault(_ => _.Id == departmentId);
+    private Department? FindDepartmentByName(DepartmentName departmentName)
+    {
+        return _departments.FirstOrDefault(_ => _.DepartmentName.Equals(departmentName));
+    }
+
+    private Department? FindDepartmentById(int departmentId)
+    {
+        return _departments.FirstOrDefault(_ => _.Id == departmentId);
+    }
 }

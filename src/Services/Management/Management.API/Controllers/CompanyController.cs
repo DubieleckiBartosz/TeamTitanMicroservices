@@ -1,5 +1,6 @@
 ﻿using Management.Application.Features.Company.Commands.CompleteData;
 using Management.Application.Features.Company.Commands.InitCompany;
+using Management.Application.Features.Company.Commands.UpdateContact;
 using Management.Application.Parameters.CompanyParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ public class CompanyController : BaseController
     {
     }
 
-    [Authorize(Roles = "Owner")]
+    [Authorize(Roles = "Admin,Owner")]
     [HttpPut("[action]")]
     public async Task<IActionResult> CompleteCompanyData([FromBody] CompleteDataParameters parameters)
     {
@@ -25,7 +26,19 @@ public class CompanyController : BaseController
         return Ok(result);
     }
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "Admin,Owner")]
+    [HttpPut("[action]")]
+    public async Task<IActionResult> UpdateCommunicationData(
+        [FromBody] UpdateCompanyContactParameters parameters)
+    {
+        var command = UpdateCompanyContactCommand.Create(parameters);
+        var result = await CommandBus.Send(command);
+
+        return Ok(result);
+    }
+
+
+    [Authorize(Roles = "Admin,User")]
     [HttpPost("[action]")]
     public async Task<IActionResult> InitCompany()
     {

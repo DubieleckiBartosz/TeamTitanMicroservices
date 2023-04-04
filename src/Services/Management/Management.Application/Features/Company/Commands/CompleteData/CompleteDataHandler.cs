@@ -20,7 +20,12 @@ public class CompleteDataHandler : ICommandHandler<CompleteDataCommand, Unit>
 
     public async Task<Unit> Handle(CompleteDataCommand request, CancellationToken cancellationToken)
     {
-        //[TODO] The company name must be unique within the scope of the database
+        var result = await _companyRepository.CompanyNameExistsAsync(request.CompanyName);
+        if (result)
+        {
+            throw new BadRequestException("Company name already exists.", "The company name must be unique");
+        }
+
         var company = await _companyRepository.GetCompanyByOwnerCodeAsync(_currentUser.VerificationCode!);
         if (company == null)
         {
