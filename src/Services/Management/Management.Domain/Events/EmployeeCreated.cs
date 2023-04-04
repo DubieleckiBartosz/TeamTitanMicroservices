@@ -2,6 +2,4 @@
 
 namespace Management.Domain.Events;
 
-public class EmployeeCreated : IDomainNotification
-{
-}
+public record EmployeeCreated(string AccountOwnerCode) : IDomainNotification;

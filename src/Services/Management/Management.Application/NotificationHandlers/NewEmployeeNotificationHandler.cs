@@ -1,5 +1,31 @@
-﻿namespace Management.Application.NotificationHandlers;
+﻿using Management.Application.NotificationHandlers.ProcessNotifications;
+using Management.Domain.Events;
+using MediatR; 
+using Shared.Implementations.Decorators;
+using Shared.Implementations.Services;
 
-public class NewEmployeeNotificationHandler
+namespace Management.Application.NotificationHandlers;
+
+public class NewEmployeeNotificationHandler : INotificationHandler<DomainNotification<EmployeeCreated>>
 {
+    private readonly ICurrentUser _currentUser;
+
+    public NewEmployeeNotificationHandler(ICurrentUser currentUser)
+    {
+        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+    }
+    public async Task Handle(DomainNotification<EmployeeCreated> notification, CancellationToken cancellationToken)
+    {
+        var domainEvent = notification?.DomainEvent;
+        if (domainEvent == null)
+        {
+            throw new ArgumentException(nameof(domainEvent) + "cannot be null.");
+        }
+
+        var processEvent = new NewAccountProcess(
+            domainEvent.AccountOwnerCode,
+            _currentUser.OrganizationCode!,
+            _currentUser.VerificationCode!);
+
+    }
 }

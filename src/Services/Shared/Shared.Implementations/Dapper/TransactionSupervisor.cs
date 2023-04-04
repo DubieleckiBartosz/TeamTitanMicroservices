@@ -26,11 +26,7 @@ public class TransactionSupervisor : ITransaction
     }
 
     public async Task<IDbTransaction?> GetOpenOrCreateTransaction()
-    {
-        this.TransactionIdGenerator();
-
-        this._loggerManager.LogInformation(
-            $"Begin transaction ------ TRANSACTION ------- : {this._transactionId}");
+    { 
         try
         {
             if (this._transaction != null)
@@ -38,8 +34,10 @@ public class TransactionSupervisor : ITransaction
                 return this._transaction;
             }
 
+            this.TransactionIdGenerator();
+            
             if (this._connection != null)
-            {
+            {  
                 this._transaction = this._connection.BeginTransaction();
                 return this._transaction;
             }

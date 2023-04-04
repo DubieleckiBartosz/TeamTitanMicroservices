@@ -1,4 +1,5 @@
-﻿using Management.Application.Contracts.Repositories;
+﻿using System.Data;
+using Management.Application.Contracts.Repositories;
 using Management.Domain.Entities;
 using Shared.Implementations.Dapper;
 using Shared.Implementations.Logging;
@@ -16,27 +17,38 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
         throw new NotImplementedException();
     }
 
-    public Task InitCompanyAsync(Company company)
+    public Task<bool> CompanyNameExistsAsync(string companyName)
     {
         throw new NotImplementedException();
     }
+
+    public Task InitCompanyAsync(Company company, IDbTransaction? transaction)
+    {
+        throw new NotImplementedException();
+    }
+
 
     public Task CompleteDataAsync(Company company)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Company> GetCompanyByOwnerCodeAsync(string ownerCode)
+    public Task AddNewDepartmentAsync(Company company)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Company> GetCompanyByCodeAsync(string companyCode)
+    public Task<Company?> GetCompanyByOwnerCodeAsync(string ownerCode)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Company> GetCompanyWithDepartmentsByCodeAsync(string companyCode)
+    public Task<Company?> GetCompanyByCodeAsync(string companyCode)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Company?> GetCompanyWithDepartmentsByCodeAsync(string companyCode)
     {
         throw new NotImplementedException();
     }

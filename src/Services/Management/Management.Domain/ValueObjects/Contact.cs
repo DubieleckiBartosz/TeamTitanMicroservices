@@ -19,7 +19,7 @@ public class Contact : ValueObject
         yield return this.Email;
     } 
 
-    protected bool Equals(Contact? other)
+    protected virtual bool Equals(Contact? other)
     {
         if (other == null || GetType() != other.GetType())
         {

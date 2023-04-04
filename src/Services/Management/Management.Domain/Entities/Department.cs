@@ -1,4 +1,5 @@
-﻿using Management.Domain.ValueObjects;
+﻿using Management.Domain.Events;
+using Management.Domain.ValueObjects;
 using Shared.Domain.Base;
 
 namespace Management.Domain.Entities;
@@ -19,19 +20,15 @@ public class Department : Entity
         return new(departmentName);
     }
 
-    //var code = EmployeeCodeGenerator.Generate(CompanyCode);
     public void AddNewEmployee(string code, string name, string surname, DateTime birthday,
-        string? personIdentifier, string city, string street, string numberStreet, string postalCode,
-        string phoneNumber, string email)
+        string? personIdentifier, Address address, Contact contact)
     {
-        var address = Address.Create(city, street, numberStreet, postalCode);
-        var contact = Contact.Create(phoneNumber, email);
-
         var communicationData = CommunicationData.Create(address, contact);
-        var newEmployee = Employee.Create(this.Id, code, name, surname, birthday, personIdentifier, communicationData);
+        var newEmployee = Employee.Create(Id, code, name, surname, birthday, personIdentifier, communicationData);
 
         //Validation
         _employees.Add(newEmployee);
+        Events.Add(new EmployeeCreated(code));
     }
 
     public void RemoveEmployee(int employeeId)

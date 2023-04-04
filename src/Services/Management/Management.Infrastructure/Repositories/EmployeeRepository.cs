@@ -1,4 +1,5 @@
 ﻿using Management.Application.Contracts.Repositories;
+using Management.Domain.Entities;
 using Shared.Implementations.Dapper;
 using Shared.Implementations.Logging;
 
@@ -8,5 +9,10 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
 {
     public EmployeeRepository(string dbConnection, ILoggerManager<EmployeeRepository> loggerManager) : base(dbConnection, loggerManager)
     {
+    }
+
+    public Task<Employee> GetEmployeeByCodeAsync(string code)
+    {
+        throw new NotImplementedException();
     }
 }

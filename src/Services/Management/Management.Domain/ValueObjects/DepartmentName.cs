@@ -11,13 +11,29 @@ public class DepartmentName : ValueObject
         Value = value;
     }
 
-    public static DepartmentName Create(string value) => new DepartmentName(value);
+    public static DepartmentName Create(string value)
+    {
+        return new(value);
+    }
+
     public override string ToString()
     {
         return Value;
     }
+
     protected override IEnumerable<object?> GetEqualityComponents()
     {
         yield return this.Value;
     }
+
+    public virtual bool Equals(DepartmentName? obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+        {
+            return false;
+        }
+
+        DepartmentName other = (DepartmentName)obj;
+        return Value == other.Value;
+    } 
 }

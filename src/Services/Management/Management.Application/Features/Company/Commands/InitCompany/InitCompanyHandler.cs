@@ -13,12 +13,14 @@ public class InitCompanyHandler : ICommandHandler<InitCompanyCommand, Unit>
 {
     private readonly ICurrentUser _currentUser;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ITransaction _transaction;
     private readonly ICompanyRepository _companyRepository;
 
-    public InitCompanyHandler(ICurrentUser currentUser, IUnitOfWork unitOfWork)
+    public InitCompanyHandler(ICurrentUser currentUser, IUnitOfWork unitOfWork, ITransaction transaction)
     {
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
         _companyRepository = unitOfWork.CompanyRepository;
     }
 
@@ -41,10 +43,10 @@ public class InitCompanyHandler : ICommandHandler<InitCompanyCommand, Unit>
             }
         }
 
-        var ownerCode = CodeGenerators.PersonCompanyCodeGenerate(companyCode, Positions.OwnerPosition);
+        var ownerCode = CodeGenerators.PersonCompanyCodeGenerate(companyCode);
         var newCompany = Domain.Entities.Company.Init(_currentUser.UserId, companyCode, ownerCode);
 
-        await _companyRepository.InitCompanyAsync(newCompany);
+        await _companyRepository.InitCompanyAsync(newCompany, _transaction.GetTransactionWhenExist());
         await _unitOfWork.CompleteAsync(newCompany);
 
         return Unit.Value;

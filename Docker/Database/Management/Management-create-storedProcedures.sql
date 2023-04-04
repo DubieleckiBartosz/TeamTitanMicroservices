@@ -25,3 +25,13 @@ END
 GO
 
 
+CREATE OR ALTER PROCEDURE company_nameExists_S 
+	@companyName VARCHAR (250)
+AS
+BEGIN 
+	SELECT 1 FROM Companies 
+	WHERE CompanyName = @companyName
+END 
+GO
+
+
