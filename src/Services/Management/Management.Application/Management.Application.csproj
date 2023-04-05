@@ -13,9 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Converters\" />
-    <Folder Include="Models\DataAccessObjects\Company\" />
-    <Folder Include="Models\DataAccessObjects\Department\" />
-    <Folder Include="Models\DataAccessObjects\Employee\" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,10 @@
 ﻿using Management.Application.ValueTypes;
 using Newtonsoft.Json;
 
-namespace Management.Application.Parameters.EmployeeParameters;
+namespace Management.Application.Parameters.DayOffRequestParameters;
 
-public class DayOffRequestParameters
-{ 
+public class NewDayOffRequestParameters
+{
     public DateTime From { get; init; }
     public DateTime To { get; init; }
     public DayOffRequestReasonType ReasonType { get; init; }
@@ -13,13 +13,13 @@ public class DayOffRequestParameters
     /// <summary>
     /// For tests
     /// </summary>
-    public DayOffRequestParameters()
+    public NewDayOffRequestParameters()
     {
     }
 
     [JsonConstructor]
-    public DayOffRequestParameters(DateTime from, DateTime to, DayOffRequestReasonType reasonType, string? description)
-    { 
+    public NewDayOffRequestParameters(DateTime from, DateTime to, DayOffRequestReasonType reasonType, string? description)
+    {
         From = from;
         To = to;
         ReasonType = reasonType;

@@ -1,6 +1,5 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Contracts.Repositories;
-using Management.Domain.Entities;
 using Management.Domain.Types;
 using Management.Domain.ValueObjects;
 using MediatR;
@@ -8,7 +7,7 @@ using Shared.Domain.Base;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
 
-namespace Management.Application.Features.Commands.Employee.AddDayOffRequest;
+namespace Management.Application.Features.Commands.DayOffRequest.AddDayOffRequest;
 
 public class DayOffRequestHandler : ICommandHandler<DayOffRequestCommand, Unit>
 {
@@ -25,17 +24,18 @@ public class DayOffRequestHandler : ICommandHandler<DayOffRequestCommand, Unit>
         var code = _currentUser.VerificationCode!;
         var employee = await _employeeRepository.GetEmployeeByCodeAsync(code);
         if (employee == null)
-        {  
+        {
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),
                 Titles.MethodFailedTitle("GetEmployeeByCodeAsync"));
         }
 
         var range = RangeDaysOff.CreateRangeDaysOff(request.From, request.To);
-        var reason = Enumeration.GetById<ReasonType>((int) request.ReasonType);
+        var reason = Enumeration.GetById<ReasonType>((int)request.ReasonType);
         var description = request.Description != null
             ? DayOffRequestDescription.CreateDescription(request.Description)
             : null;
-        var newDayOffRequest = DayOffRequest.Create(code, range, reason, description);
+
+        var newDayOffRequest = Domain.Entities.DayOffRequest.Create(code, range, reason, description);
 
         employee.AddDayOffRequest(newDayOffRequest);
 
