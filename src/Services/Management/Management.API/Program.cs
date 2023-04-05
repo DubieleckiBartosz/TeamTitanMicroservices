@@ -17,12 +17,20 @@ builder.Configuration.AddJsonFile(Path.Combine(commonFolder, "SharedSettings.jso
 
 // Add services to the container.
 
-builder.GetDependencyInjectionInfrastructure().GetDependencyInjectionApplication().GetOptions();
+builder.GetDependencyInjectionInfrastructure().GetDependencyInjectionApplication().GetOptions(); 
 
-builder.StoreConfiguration(null, typeof(AssemblyManagementApplicationReference),
-        typeof(AssemblySharedImplementationsReference))
-    .RegisterBackgroundProcess().GetAutoMapper(typeof(AssemblyManagementApplicationReference).Assembly)
-    .RegisterTransactions(_ => _["ConnectionStrings:DefaultManagementConnection"]);
+builder.RegisterSharedImplementations(typeof(AssemblyManagementApplicationReference).Assembly,
+    _ => _["ConnectionStrings:DefaultManagementConnection"], types: new[]
+    {
+        typeof(AssemblyManagementApplicationReference),
+        typeof(AssemblySharedImplementationsReference)
+    });
+
+
+//builder.StoreConfiguration(null, typeof(AssemblyManagementApplicationReference),
+//        typeof(AssemblySharedImplementationsReference))
+//    .RegisterBackgroundProcess().GetAutoMapper(typeof(AssemblyManagementApplicationReference).Assembly)
+//    .RegisterTransactions(_ => _["ConnectionStrings:DefaultManagementConnection"]);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -30,9 +30,16 @@ using Shared.Implementations.ProcessDispatcher;
 namespace Shared.Implementations;
 
 public static class SharedConfigurations
-{ 
-    public static IServiceCollection GetMediatR(this IServiceCollection services, params Type[] types)
+{
+    public static WebApplicationBuilder RegisterSharedImplementations(this WebApplicationBuilder builder,
+        Assembly? mapperAssembly = null, Func<IConfiguration, string>? connectionFunc = null,
+        Func<IServiceProvider, List<IProjection>>? projectionFunc = null, string? backgroundDbConnection = null,
+        bool withBackgroundDb = false,
+        params Type[] types)
     {
+        //MEDIATOR
+        var services = builder.Services;
+        var config = builder.Configuration;
         services.AddTransient<IDomainDecorator, MediatRDecorator>();
         var assemblies = types.Select(type => type.GetTypeInfo().Assembly);
 
@@ -40,46 +47,25 @@ public static class SharedConfigurations
         {
             services.AddMediatR(assembly);
         }
-         
-        return services;
-    }
 
-    public static WebApplicationBuilder GetAutoMapper(this WebApplicationBuilder builder, Assembly assembly)
-    {
-        builder.Services.AddAutoMapper(assembly);
+        //MAPPER
+        if (mapperAssembly != null)
+        {
+            services.AddAutoMapper(mapperAssembly);
+        }
 
-        return builder;
-    }
+        //TRANSACTIONS
+        if (connectionFunc != null)
+        {
+            services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+            services.AddScoped<ITransaction, TransactionSupervisor>(_ =>
+                new TransactionSupervisor(_.GetService<ILoggerManager<TransactionSupervisor>>()!, connectionFunc.Invoke(config)));
+        }
 
-    public static IServiceCollection GetAccessoriesDependencyInjection(this IServiceCollection services)
-    {        
-        //USER
-        services.AddHttpContextAccessor();
-        services.AddTransient<ICurrentUser, CurrentUser>();
-        
-        //EMAIL
-        services.AddScoped<IEmailRepository, EmailRepository>();
+        //DEPENDENCY INJECTION 
 
-        //LOGGER
-        services.AddSingleton(typeof(ILoggerManager<>), typeof(LoggerManager<>));
-
-        return services;
-    }
-
-    public static WebApplicationBuilder RegisterTransactions(this WebApplicationBuilder builder, Func<IConfiguration, string> connectionFunc)
-    {
-        builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
-        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
-        builder.Services.AddScoped<ITransaction, TransactionSupervisor>(_ =>
-            new TransactionSupervisor(_.GetService<ILoggerManager<TransactionSupervisor>>()!, connectionFunc.Invoke(builder.Configuration)));
-
-        return builder;
-    }
-
-
-    public static IServiceCollection GetFullDependencyInjection(this IServiceCollection services,
-        Func<IServiceProvider, List<IProjection>>? projectionFunc)
-    {
+        //Accessories
         services.GetAccessoriesDependencyInjection();
 
         //EVENT
@@ -95,57 +81,59 @@ public static class SharedConfigurations
 
         services.AddScoped<IOutboxListener, OutboxListener>();
         services.AddScoped<IOutboxStore, OutboxStore>();
+        services.AddSingleton<IRabbitBase, RabbitBase>();
         services.AddScoped<IRabbitEventListener, RabbitEventListener>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
          
-        //MONGO
-        services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
-
         //PIPELINES
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviour<,>));
-       
-        return services;
-    } 
 
-    public static WebApplicationBuilder StoreConfiguration(this WebApplicationBuilder builder, Func<IServiceProvider, List<IProjection>>? projectionFunc = null, params Type[] types)
-    {
-        builder.Services.ConfigurationMongoDatabase(builder.Configuration);
-        builder.Services.GetFullDependencyInjection(projectionFunc);
-        builder.Services.GetMediatR(types);
-        builder.RegisterRabbitMq();
 
-        builder.Services.Configure<StoreOptions>(builder.Configuration.GetSection("StoreOptions"));
-        builder.Services.Configure<MongoOutboxOptions>(builder.Configuration.GetSection(nameof(MongoOutboxOptions)));
+        //OPTIONS
+        services.Configure<StoreOptions>(config.GetSection(nameof(StoreOptions)));
+        services.Configure<MongoOutboxOptions>(config.GetSection(nameof(MongoOutboxOptions)));
+        services.Configure<RabbitOptions>(config.GetSection(nameof(RabbitOptions)));
 
-        return builder;
-    }
+        //HOSTED service
+        services.AddHostedService<OutboxProcessor>();
 
-    public static void RegisterRabbitMq(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddSingleton<IRabbitBase, RabbitBase>(); 
-        builder.Services.Configure<RabbitOptions>(builder.Configuration.GetSection("RabbitOptions"));
-    }
+        //MONGO 
+        services.AddScoped(typeof(IMongoRepository<>), typeof(MongoRepository<>));
 
-    public static WebApplicationBuilder RegisterBackgroundProcess(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddHostedService<OutboxProcessor>();
-
-        return builder;
-    }
-
-    public static IServiceCollection ConfigurationMongoDatabase(this IServiceCollection services, IConfiguration configuration)
-    {
         var options = new StoreOptions();
-        configuration.GetSection(nameof(StoreOptions)).Bind(options);
+        config.GetSection(nameof(StoreOptions)).Bind(options);
 
         var connectionString = options.ConnectionString;
         var database = options.DatabaseName;
-        
+
         services.AddSingleton<MongoContext>(_ => new MongoContext(connectionString, database));
 
+
+        //HANGFIRE
+        if (withBackgroundDb)
+        {
+            builder.GetBackgroundConnectionSettings(backgroundDbConnection ??
+                                                    builder.Configuration["ConnectionStrings:HangfireConnection"]);
+        } 
+
+        return builder;
+    } 
+
+    public static IServiceCollection GetAccessoriesDependencyInjection(this IServiceCollection services)
+    {        
+        //USER
+        services.AddHttpContextAccessor();
+        services.AddTransient<ICurrentUser, CurrentUser>();
+        
+        //EMAIL
+        services.AddScoped<IEmailRepository, EmailRepository>();
+
+        //LOGGER
+        services.AddSingleton(typeof(ILoggerManager<>), typeof(LoggerManager<>));
+
         return services;
-    }
-     
+    } 
+
     public static WebApplication UseSubscribeAllEvents(this WebApplication app, Assembly assembly)
     {
         var types = assembly.GetTypes();
@@ -179,14 +167,6 @@ public static class SharedConfigurations
         requiredService?.Subscribe(assembly, type, queueName, routingKey);
 
         return app;
-    }
-
-
-    public static WebApplicationBuilder GetHangfire(this WebApplicationBuilder builder, string? connection = null)
-    {
-        builder.GetBackgroundConnectionSettings(connection ??
-                                                builder.Configuration["ConnectionStrings:HangfireConnection"]);
-        return builder;
     }
 
 
