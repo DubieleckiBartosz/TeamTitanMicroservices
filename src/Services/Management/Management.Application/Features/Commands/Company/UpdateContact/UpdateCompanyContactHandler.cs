@@ -10,10 +10,10 @@ public class UpdateCompanyContactHandler : ICommandHandler<UpdateCompanyContactC
     private readonly ICurrentUser _currentUser;
     private readonly ICompanyRepository _companyRepository;
 
-    public UpdateCompanyContactHandler(ICurrentUser currentUser, ICompanyRepository companyRepository)
+    public UpdateCompanyContactHandler(ICurrentUser currentUser, IUnitOfWork unitOfWork)
     {
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _companyRepository = companyRepository ?? throw new ArgumentNullException(nameof(companyRepository));
+        _companyRepository = unitOfWork.CompanyRepository ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
     public async Task<Unit> Handle(UpdateCompanyContactCommand request, CancellationToken cancellationToken)
     {
