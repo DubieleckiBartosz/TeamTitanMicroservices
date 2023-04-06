@@ -73,8 +73,7 @@ BEGIN
 	CREATE TABLE EmployeeContracts(
 	Id INT IDENTITY(1, 1) PRIMARY KEY,  
 	EmployeeId INT NOT NULL FOREIGN KEY REFERENCES Employees(Id),
-	Position VARCHAR(100) NOT NULL,
-	ContractNumber VARCHAR(MAX) NOT NULL,
+	Position VARCHAR(100) NOT NULL, 
 	ContractType INT NOT NULL,
 	SettlementType INT NOT NULL, --If we have ContractType, is it necessary?
 	Salary DECIMAL DEFAULT 0.00, 

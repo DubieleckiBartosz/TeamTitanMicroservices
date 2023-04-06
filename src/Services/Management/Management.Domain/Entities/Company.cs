@@ -11,7 +11,7 @@ public class Company : Entity, IAggregateRoot
 {
     private readonly HashSet<Department> _departments = new();
     public int OwnerId { get; }
-    public CommunicationData CommunicationData { get; private set; }
+    public CommunicationData? CommunicationData { get; private set; }
     public string CompanyCode { get; }
     public string OwnerCode { get; }
     public bool IsConfirmed { get; private set; }
@@ -89,7 +89,7 @@ public class Company : Entity, IAggregateRoot
     {
         var departmentName = DepartmentName.Create(name);
         var currentDepartment = this.FindDepartmentByName(departmentName);
-        if (currentDepartment == null)
+        if (currentDepartment != null)
         {
             throw new BusinessException("Duplicate name", "The department name should be unique");
         }
@@ -102,15 +102,15 @@ public class Company : Entity, IAggregateRoot
         string? phoneNumber, string? email, string? city, string? street,
         string? numberStreet, string? postalCode)
     {
-        phoneNumber ??= this.CommunicationData.Contact.PhoneNumber;
-        email ??= this.CommunicationData.Contact.PhoneNumber;
-        city ??= this.CommunicationData.Contact.PhoneNumber;
-        street ??= this.CommunicationData.Contact.PhoneNumber;
-        numberStreet ??= this.CommunicationData.Contact.PhoneNumber;
-        postalCode ??= this.CommunicationData.Contact.PhoneNumber;
+        phoneNumber ??= this.CommunicationData!.Contact.PhoneNumber;
+        email ??= this.CommunicationData!.Contact.PhoneNumber;
+        city ??= this.CommunicationData!.Contact.PhoneNumber;
+        street ??= this.CommunicationData!.Contact.PhoneNumber;
+        numberStreet ??= this.CommunicationData!.Contact.PhoneNumber;
+        postalCode ??= this.CommunicationData!.Contact.PhoneNumber;
 
         var newAddress = Address.Create(city, street, numberStreet, postalCode);
-        CommunicationData.UpdateAddress(newAddress);
+        CommunicationData!.UpdateAddress(newAddress);
 
         var newContact = Contact.Create(phoneNumber, email);
         CommunicationData.UpdateContact(newContact);

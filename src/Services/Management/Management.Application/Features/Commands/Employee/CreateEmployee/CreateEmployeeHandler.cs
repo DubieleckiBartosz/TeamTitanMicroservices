@@ -40,6 +40,7 @@ public class CreateEmployeeHandler : ICommandHandler<CreateEmployeeCommand, stri
 
         department.AddNewEmployee(code, name, surname, birthday, personIdentifier, address, contact);
 
+        await _departmentRepository.AddNewEmployeeAsync(department);
         await _unitOfWork.CompleteAsync(department);
 
         return code;
