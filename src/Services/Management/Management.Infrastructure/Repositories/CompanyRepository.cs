@@ -1,6 +1,10 @@
 ﻿using System.Data;
+using System.Linq;
+using Dapper;
 using Management.Application.Contracts.Repositories;
+using Management.Application.Models.DataAccessObjects;
 using Management.Domain.Entities;
+using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Dapper;
 using Shared.Implementations.Logging;
 
@@ -12,44 +16,130 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
     {
     }
 
-    public Task<bool> CompanyCodeExistsAsync(string companyCode)
+    public async Task<bool> CompanyCodeExistsAsync(string companyCode)
     {
-        throw new NotImplementedException();
+        var param = new DynamicParameters();
+
+        param.Add("@companyCode", companyCode);
+
+        var result = await QueryAsync<bool>("company_codeExists_S", param, CommandType.StoredProcedure);
+
+        return result.FirstOrDefault();
     }
 
-    public Task<bool> CompanyNameExistsAsync(string companyName)
+    public async Task<bool> CompanyNameExistsAsync(string companyName)
     {
-        throw new NotImplementedException();
+        var param = new DynamicParameters();
+
+        param.Add("@companyName", companyName);
+
+        var result = await QueryAsync<bool>("company_nameExists_S", param, CommandType.StoredProcedure);
+
+        return result.FirstOrDefault();
     }
 
-    public Task InitCompanyAsync(Company company, IDbTransaction? transaction)
+    public async Task InitCompanyAsync(Company company, IDbTransaction? transaction)
     {
-        throw new NotImplementedException();
+        var param = new DynamicParameters();
+ 
+        param.Add("@ownerId", company.OwnerId);
+        param.Add("@companyCode", company.CompanyCode);
+        param.Add("@ownerCode", company.OwnerCode);
+        param.Add("@isConfirmed", company.IsConfirmed);
+
+        var result = await ExecuteAsync("company_initCompany_I", param, CommandType.StoredProcedure, transaction);
+        if (result <= 0)
+        {
+            throw new DatabaseException("The call to procedure 'company_initCompany_I' failed", "Database Error");
+        }    }
+
+
+    public async Task CompleteDataAsync(Company company)
+    {
+        var param = new DynamicParameters();
+        
+        param.Add("@companyName", company.CompanyName.ToString());
+        param.Add("@isConfirmed", company.IsConfirmed);
+        param.Add("@from", company.OpeningHours!.From);
+        param.Add("@to", company.OpeningHours!.To);
+        param.Add("@city", company.CommunicationData!.Address.City);
+        param.Add("@street", company.CommunicationData.Address.Street);
+        param.Add("@numberStreet", company.CommunicationData.Address.NumberStreet);
+        param.Add("@postalCode", company.CommunicationData.Address.PostalCode);
+        param.Add("@phoneNumber", company.CommunicationData.Contact.PhoneNumber);
+        param.Add("@email", company.CommunicationData.Contact.Email);
+
+        var result = await ExecuteAsync("company_completeData_U", param, CommandType.StoredProcedure);
+        if (result <= 0)
+        {
+            throw new DatabaseException("The call to procedure 'company_completeData_U' failed", "Database Error"); 
+        }
     }
 
-
-    public Task CompleteDataAsync(Company company)
+    public async Task AddNewDepartmentAsync(Company company)
     {
-        throw new NotImplementedException();
+        var newDepartment = company.Departments.Last();
+
+        var param = new DynamicParameters();
+
+        param.Add("@departmentName", newDepartment.DepartmentName.ToString());
+
+        var result = await ExecuteAsync("department_newDepartment_I", param, CommandType.StoredProcedure);
+        if (result <= 0)
+        {
+            throw new DatabaseException("The call to procedure 'department_newDepartment_I' failed", "Database Error");
+        }
     }
 
-    public Task AddNewDepartmentAsync(Company company)
+    public async Task<Company?> GetCompanyByOwnerCodeAsync(string ownerCode)
     {
-        throw new NotImplementedException();
+        var param = new DynamicParameters();
+
+        param.Add("@ownerCode", ownerCode);
+
+        var result = (await QueryAsync<CompanyDao>("company_getByOwnerCode_S", param, CommandType.StoredProcedure)).FirstOrDefault();
+
+        return result?.Map();
     }
 
-    public Task<Company?> GetCompanyByOwnerCodeAsync(string ownerCode)
+    public async Task<Company?> GetCompanyByCodeAsync(string companyCode)
     {
-        throw new NotImplementedException();
+        var param = new DynamicParameters();
+
+        param.Add("@companyCode", companyCode);
+
+        var result = (await QueryAsync<CompanyDao>("company_getByCode_S", param, CommandType.StoredProcedure)).FirstOrDefault();
+
+        return result?.Map();
     }
 
-    public Task<Company?> GetCompanyByCodeAsync(string companyCode)
+    public async Task<Company?> GetCompanyWithDepartmentsByCodeAsync(string companyCode)
     {
-        throw new NotImplementedException();
-    }
+        var param = new DynamicParameters();
 
-    public Task<Company?> GetCompanyWithDepartmentsByCodeAsync(string companyCode)
-    {
-        throw new NotImplementedException();
+        param.Add("@companyCode", companyCode);
+
+        var dict = new Dictionary<int, CompanyDao>();
+
+        var result =
+            (await QueryAsync<CompanyDao, DepartmentDao?, CompanyDao>("company_getWithDepartmentsByCode_S",
+                (c, d) =>
+                {
+                    if (!dict.TryGetValue(c.Id, out var value))
+                    {
+                        value = c;
+                        dict.Add(c.Id, value);
+                    }
+
+                    if (d != null)
+                    {
+                        value.Departments.Add(d);
+                    }
+
+                    return value;
+                }, splitOn: "Id,Id", param
+             , CommandType.StoredProcedure)).FirstOrDefault();
+
+        return result?.Map();
     }
 }

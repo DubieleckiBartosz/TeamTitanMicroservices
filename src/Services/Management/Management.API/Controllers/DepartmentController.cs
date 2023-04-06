@@ -14,6 +14,11 @@ public class DepartmentController : BaseController
     {
     }
 
+    /// <summary>
+    /// Creating new department
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Owner")]
     [HttpPost("[action]")]
     public async Task<IActionResult> CreateDepartment([FromBody] CreateDepartmentParameters parameters)

@@ -16,35 +16,48 @@ public class CompanyController : BaseController
     {
     }
 
+    /// <summary>
+    /// Complete company details
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Owner")]
     [HttpPut("[action]")]
     public async Task<IActionResult> CompleteCompanyData([FromBody] CompleteDataParameters parameters)
     {
         var command = CompleteDataCommand.Create(parameters);
-        var result = await CommandBus.Send(command);
+        await CommandBus.Send(command);
 
-        return Ok(result);
+        return NoContent();
     }
 
+    /// <summary>
+    /// Changing address or contact  
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Owner")]
     [HttpPut("[action]")]
     public async Task<IActionResult> UpdateCommunicationData(
         [FromBody] UpdateCompanyContactParameters parameters)
     {
         var command = UpdateCompanyContactCommand.Create(parameters);
-        var result = await CommandBus.Send(command);
+        await CommandBus.Send(command);
 
-        return Ok(result);
+        return NoContent();
     }
 
-
+    /// <summary>
+    /// Init company
+    /// </summary>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,User")]
     [HttpPost("[action]")]
     public async Task<IActionResult> InitCompany()
     {
         var command = new InitCompanyCommand();
-        var result = await CommandBus.Send(command);
+        await CommandBus.Send(command);
 
-        return Ok(result);
-    } 
+        return NoContent();
+    }
 }

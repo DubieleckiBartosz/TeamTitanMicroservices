@@ -21,6 +21,11 @@ public class EmployeeController : BaseController
     {
     }
 
+    /// <summary>
+    /// Changing contact data
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager,Employee")]
     [HttpPut("[action]")]
     public async Task<IActionResult> UpdateContactData([FromBody] UpdateContactDataParameters parameters)
@@ -30,6 +35,11 @@ public class EmployeeController : BaseController
         return NoContent();
     }
 
+    /// <summary>
+    /// Changing address
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager,Employee")]
     [HttpPut("[action]")]
     public async Task<IActionResult> UpdateAddressData([FromBody] UpdateAddressDataParameters parameters)
@@ -39,6 +49,11 @@ public class EmployeeController : BaseController
         return NoContent();
     }
 
+    /// <summary>
+    /// Canceling a request for a day off
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Employee")]
     [HttpPut("[action]")]
     public async Task<IActionResult> CancelDayOffRequest([FromBody] CancelDayOffRequestParameters parameters)
@@ -48,6 +63,11 @@ public class EmployeeController : BaseController
         return NoContent();
     }
 
+    /// <summary>
+    /// Consideration of the request for a day off
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
     [HttpPut("[action]")]
     public async Task<IActionResult> ConsiderDayOffRequest([FromBody] ConsiderDayOffRequestParameters parameters)
@@ -55,8 +75,13 @@ public class EmployeeController : BaseController
         var command = ConsiderDayOffRequestCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
-    } 
+    }
 
+    /// <summary>
+    /// Creating new employee
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns>string</returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
     [HttpPost("[action]")]
     public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeParameters parameters)
@@ -66,6 +91,11 @@ public class EmployeeController : BaseController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Creating a new request for a day off
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager,Employee")]
     [HttpPost("[action]")]
     public async Task<IActionResult> NewDayOffRequest([FromBody] NewDayOffRequestParameters parameters)
@@ -75,6 +105,11 @@ public class EmployeeController : BaseController
         return NoContent();
     }
 
+    /// <summary>
+    /// Creating a new contract for an employee
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
     [HttpPost("[action]")]
     public async Task<IActionResult> NewEmployeeContract([FromBody] NewEmployeeContractParameters parameters)

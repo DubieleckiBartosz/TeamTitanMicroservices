@@ -6,8 +6,7 @@ namespace Management.Domain.Entities;
 
 public class EmployeeContract : Entity
 {
-    public string Position { get; }
-    public string ContractNumber { get; }
+    public string Position { get; } 
     public ContractType ContractType { get; }
     public SettlementType SettlementType { get; }
     public decimal Salary { get; }
@@ -26,8 +25,7 @@ public class EmployeeContract : Entity
         int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     { 
-        Position = position;
-        ContractNumber = Guid.NewGuid().ToString();
+        Position = position; 
         ContractType = contractType;
         SettlementType = settlementType;
         Salary = salary;
