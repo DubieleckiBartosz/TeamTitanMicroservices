@@ -1,4 +1,9 @@
-﻿namespace Management.Application.Models.DataAccessObjects;
+﻿using Management.Domain.Entities;
+using Management.Domain.Types;
+using Management.Domain.ValueObjects;
+using Shared.Domain.Base;
+
+namespace Management.Application.Models.DataAccessObjects;
 
 public class ContractDao
 {
@@ -17,4 +22,17 @@ public class ContractDao
     public bool PaidIntoAccount { get; init; }
     public int PaymentMonthDay { get; init; }
     public string CreatedBy { get; init; } = default!;
+
+    public EmployeeContract Map()
+    {
+        var settlementType = Enumeration.GetById<SettlementType>(SettlementType);
+        var contractType = Enumeration.GetById<ContractType>(ContractType);
+        var timeRange = TimeRange.Create(StartContract, EndContract);
+
+        var contract = EmployeeContract.Create(Position, contractType, settlementType, salary: Salary, timeRange,
+            NumberHoursPerDay, FreeDaysPerYear, BankAccountNumber, PaidIntoAccount, CreatedBy, HourlyRate, OvertimeRate,
+            PaymentMonthDay);
+
+        return contract;
+    }
 }

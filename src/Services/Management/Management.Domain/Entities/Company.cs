@@ -50,7 +50,7 @@ public class Company : Entity, IAggregateRoot
     /// <param name="companyStatus"></param>
     /// <param name="departments"></param>
     private Company(int id, int ownerId, string ownerCode, CommunicationData communicationData, string companyCode,
-        CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments)
+        CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments)  
         : this(ownerId, companyCode, ownerCode)
     {
         Id = id; 
@@ -97,17 +97,7 @@ public class Company : Entity, IAggregateRoot
         var newDepartment = Department.CreateDepartment(departmentName); 
         this._departments.Add(newDepartment);
     }
-
-    public void RemoveDepartment(int departmentId)
-    {
-        var department = this.FindDepartmentById(departmentId);
-        if (department == null)
-        {
-
-        }
-
-    }
-
+     
     public void UpdateCommunicationData(
         string? phoneNumber, string? email, string? city, string? street,
         string? numberStreet, string? postalCode)
@@ -129,10 +119,5 @@ public class Company : Entity, IAggregateRoot
     private Department? FindDepartmentByName(DepartmentName departmentName)
     {
         return _departments.FirstOrDefault(_ => _.DepartmentName.Equals(departmentName));
-    }
-
-    private Department? FindDepartmentById(int departmentId)
-    {
-        return _departments.FirstOrDefault(_ => _.Id == departmentId);
-    }
+    } 
 }
