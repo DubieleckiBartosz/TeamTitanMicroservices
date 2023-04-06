@@ -1,4 +1,10 @@
-﻿namespace Management.Application.Models.DataAccessObjects;
+﻿using Management.Domain.Entities;
+using Management.Domain.Statuses;
+using Management.Domain.Types;
+using Management.Domain.ValueObjects;
+using Shared.Domain.Base;
+
+namespace Management.Application.Models.DataAccessObjects;
 
 public class DayOffRequestDao
 {
@@ -11,4 +17,16 @@ public class DayOffRequestDao
     public int CurrentStatus { get; init; }
     public int ReasonType { get; init; }
     public string? Description { get; init; }
+
+    public DayOffRequest Map()
+    {
+        var daysOff = RangeDaysOff.CreateRangeDaysOff(FromDate, ToDate);
+        var currentStatus = Enumeration.GetById<DayOffRequestCurrentStatus>(CurrentStatus);
+        var reason = Enumeration.GetById<ReasonType>(ReasonType);
+        var description = Description != null ? DayOffRequestDescription.CreateDescription(Description) : null;
+        var dayOffRequest = DayOffRequest.Load(Id, CreatedBy, ConsideredBy, Canceled, daysOff, currentStatus, reason,
+            description);
+
+        return dayOffRequest;
+    }
 }

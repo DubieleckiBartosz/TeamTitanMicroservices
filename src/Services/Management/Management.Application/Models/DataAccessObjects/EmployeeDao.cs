@@ -1,4 +1,7 @@
-﻿namespace Management.Application.Models.DataAccessObjects;
+﻿using Management.Domain.Entities;
+using Management.Domain.ValueObjects;
+
+namespace Management.Application.Models.DataAccessObjects;
 
 public class EmployeeDao
 {
@@ -19,4 +22,16 @@ public class EmployeeDao
     public string Email { get; init; } = default!;
     public List<ContractDao> Contracts { get; set; } = new();
     public List<DayOffRequestDao> DayOffRequests { get; set; } = new();
+
+    public Employee Map()
+    {
+        var address = Address.Create(City, Street, NumberStreet, PostalCode);
+        var contact = Contact.Create(PhoneNumber, Email);
+        var communicationData = CommunicationData.Create(address, contact);
+        var contracts = Contracts.Select(_ => _.Map()).ToList();
+        var dayOffRequests = DayOffRequests.Select(_ => _.Map()).ToList();
+
+        return Employee.Load(Id, DepartmentId, AccountId, EmployeeCode, Name, Surname, Birthday, PersonIdentifier,
+            communicationData, contracts, dayOffRequests);
+    }
 }
