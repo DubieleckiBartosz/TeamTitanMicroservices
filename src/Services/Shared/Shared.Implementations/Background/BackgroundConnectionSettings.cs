@@ -24,14 +24,14 @@ public static class BackgroundConnectionSettings
                     DisableGlobalLocks = true
                 });
 
-            _.UseMediatR();
+            _.UseSerializer();
         });
 
         builder.Services.AddHangfireServer();
 
         return builder;
     }
-    private static void UseMediatR(this IGlobalConfiguration configuration)
+    private static void UseSerializer(this IGlobalConfiguration configuration)
     {
         var jsonSettings = new JsonSerializerSettings
         {
