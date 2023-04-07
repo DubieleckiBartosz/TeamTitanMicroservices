@@ -22,7 +22,7 @@ public class DayOffRequestHandler : ICommandHandler<DayOffRequestCommand, Unit>
     public async Task<Unit> Handle(DayOffRequestCommand request, CancellationToken cancellationToken)
     {
         var code = _currentUser.VerificationCode!;
-        var employee = await _employeeRepository.GetEmployeeByCodeAsync(code);
+        var employee = await _employeeRepository.GetEmployeeWithDetailsByCodeAsync(code);
         if (employee == null)
         {
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),

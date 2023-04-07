@@ -25,7 +25,7 @@ public class NewEmployeeContractHandler : ICommandHandler<NewEmployeeContractCom
 
     public async Task<Unit> Handle(NewEmployeeContractCommand request, CancellationToken cancellationToken)
     { 
-        var employee = await _employeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+        var employee = await _employeeRepository.GetEmployeeWithDetailsByIdAsync(request.EmployeeId);
         if (employee == null)
         {
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),

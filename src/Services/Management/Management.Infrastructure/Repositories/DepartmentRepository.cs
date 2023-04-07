@@ -45,7 +45,7 @@ public class DepartmentRepository : BaseRepository<DepartmentRepository>, IDepar
         param.Add("@phoneNumber", employee.CommunicationData.Contact.PhoneNumber);       
         param.Add("@email", employee.CommunicationData.Contact.Email);
 
-        var result = await ExecuteAsync("department_newEmployee_I", param, CommandType.StoredProcedure);
+        var result = await ExecuteAsync("employee_newEmployee_I", param, CommandType.StoredProcedure);
         if (result <= 0)
         {
             throw new DatabaseException("The call to procedure 'department_newEmployee_I' failed", "Database Error");
