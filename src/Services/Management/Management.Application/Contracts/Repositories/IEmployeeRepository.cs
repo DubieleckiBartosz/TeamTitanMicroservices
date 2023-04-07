@@ -1,11 +1,12 @@
-﻿using Management.Domain.Entities;
+﻿using Management.Application.Models.DataAccessObjects;
+using Management.Domain.Entities;
 
 namespace Management.Application.Contracts.Repositories;
 
 public interface IEmployeeRepository
 {
-    Task<Employee?> GetEmployeeWithDetailsByIdAsync(int id);
-    Task<Employee?> GetEmployeeWithDetailsByCodeAsync(string code);
+    Task<EmployeeDao?> GetEmployeeWithDetailsByIdAsync(int id);
+    Task<EmployeeDao?> GetEmployeeWithDetailsByCodeAsync(string code);
     Task AddAccountToEmployeeAsync(Employee employee);
     Task AddDayOffRequestToEmployeeAsync(Employee employee);
     Task AddContractToEmployeeAsync(Employee employee);

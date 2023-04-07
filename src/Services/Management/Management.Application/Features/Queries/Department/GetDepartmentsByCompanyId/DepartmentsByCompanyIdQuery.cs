@@ -1,5 +1,11 @@
-﻿namespace Management.Application.Features.Queries.Department.GetDepartmentsByCompanyId;
+﻿using Management.Application.Models.Views;
 
-public class DepartmentsByCompanyIdQuery
+namespace Management.Application.Features.Queries.Department.GetDepartmentsByCompanyId;
+
+public record DepartmentsByCompanyIdQuery(int CompanyId) : IQuery<List<DepartmentViewModel>>
 {
+    public static DepartmentsByCompanyIdQuery Create(int companyId)
+    {
+        return new DepartmentsByCompanyIdQuery(companyId);
+    }
 }

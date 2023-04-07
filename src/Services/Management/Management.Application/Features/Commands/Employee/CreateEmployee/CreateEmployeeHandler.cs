@@ -22,7 +22,7 @@ public class CreateEmployeeHandler : ICommandHandler<CreateEmployeeCommand, stri
 
     public async Task<string> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
     {
-        var department = await _departmentRepository.GetDepartmentByIdAsync(request.DepartmentId);
+        var department = (await _departmentRepository.GetDepartmentByIdAsync(request.DepartmentId))?.Map();
 
         if (department == null)
         {

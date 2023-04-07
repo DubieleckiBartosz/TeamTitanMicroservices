@@ -26,7 +26,7 @@ public class CompleteDataHandler : ICommandHandler<CompleteDataCommand, Unit>
             throw new BadRequestException("Company name already exists.", "The company name must be unique");
         }
 
-        var company = await _companyRepository.GetCompanyByOwnerCodeAsync(_currentUser.VerificationCode!);
+        var company = (await _companyRepository.GetCompanyByOwnerCodeAsync(_currentUser.VerificationCode!))?.Map();
         if (company == null)
         {
             throw new NotFoundException("Company not found by verification code", "Company not found");

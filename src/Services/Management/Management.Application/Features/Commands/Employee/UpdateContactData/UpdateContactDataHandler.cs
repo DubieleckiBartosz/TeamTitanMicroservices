@@ -16,7 +16,7 @@ public class UpdateContactDataHandler : ICommandHandler<UpdateContactDataCommand
 
     public async Task<Unit> Handle(UpdateContactDataCommand request, CancellationToken cancellationToken)
     {
-        var employee = await _employeeRepository.GetEmployeeWithDetailsByIdAsync(request.EmployeeId);
+        var employee = (await _employeeRepository.GetEmployeeWithDetailsByIdAsync(request.EmployeeId))?.Map();
         if (employee == null)
         {
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),

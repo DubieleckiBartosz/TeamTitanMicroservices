@@ -113,7 +113,7 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
         }
     }
 
-    public async Task<Company?> GetCompanyByOwnerCodeAsync(string ownerCode)
+    public async Task<CompanyDao?> GetCompanyByOwnerCodeAsync(string ownerCode)
     {
         var param = new DynamicParameters();
 
@@ -121,10 +121,10 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
 
         var result = (await QueryAsync<CompanyDao>("company_getByOwnerCode_S", param, CommandType.StoredProcedure)).FirstOrDefault();
 
-        return result?.Map();
+        return result;
     }
 
-    public async Task<Company?> GetCompanyByCodeAsync(string companyCode)
+    public async Task<CompanyDao?> GetCompanyByCodeAsync(string companyCode)
     {
         var param = new DynamicParameters();
 
@@ -132,10 +132,10 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
 
         var result = (await QueryAsync<CompanyDao>("company_getByCode_S", param, CommandType.StoredProcedure)).FirstOrDefault();
 
-        return result?.Map();
+        return result;
     }
 
-    public async Task<Company?> GetCompanyWithDepartmentsByCodeAsync(string companyCode)
+    public async Task<CompanyDao?> GetCompanyWithDepartmentsByCodeAsync(string companyCode)
     {
         var param = new DynamicParameters();
 
@@ -162,6 +162,6 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
                 }, splitOn: "Id,Id", param
              , CommandType.StoredProcedure)).FirstOrDefault();
 
-        return result?.Map();
+        return result;
     }
 }

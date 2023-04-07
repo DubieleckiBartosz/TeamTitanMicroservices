@@ -19,7 +19,7 @@ public class ConsiderDayOffRequestHandler : ICommandHandler<ConsiderDayOffReques
     }
     public async Task<Unit> Handle(ConsiderDayOffRequestCommand request, CancellationToken cancellationToken)
     {
-        var dayOffRequest = await _dayOffRequestRepository.GetDayOffRequestByIdAsync(request.DayOffRequestId);
+        var dayOffRequest = (await _dayOffRequestRepository.GetDayOffRequestByIdAsync(request.DayOffRequestId))?.Map();
         if (dayOffRequest == null)
         {
             throw new NotFoundException(Messages.DataNotFoundMessage("DayOffRequest"),

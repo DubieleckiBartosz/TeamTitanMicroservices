@@ -15,7 +15,7 @@ public class DepartmentRepository : BaseRepository<DepartmentRepository>, IDepar
     {
     }
 
-    public async Task<Department?> GetDepartmentByIdAsync(int id)
+    public async Task<DepartmentDao?> GetDepartmentByIdAsync(int id)
     {
         var param = new DynamicParameters();
 
@@ -23,7 +23,18 @@ public class DepartmentRepository : BaseRepository<DepartmentRepository>, IDepar
 
         var result = (await QueryAsync<DepartmentDao>("department_getById_S", param, CommandType.StoredProcedure)).FirstOrDefault();
 
-        return result?.Map();
+        return result;
+    }
+
+    public async Task<List<DepartmentDao>?> GetDepartmentsByCompanyIdAsync(int companyId)
+    {
+        var param = new DynamicParameters(); 
+
+        param.Add("@companyId", companyId);
+
+        var result = await QueryAsync<DepartmentDao>("department_getDepartmentsByCompanyId_S", param,
+            CommandType.StoredProcedure);
+        return result?.ToList();
     }
 
     public async Task AddNewEmployeeAsync(Department department)

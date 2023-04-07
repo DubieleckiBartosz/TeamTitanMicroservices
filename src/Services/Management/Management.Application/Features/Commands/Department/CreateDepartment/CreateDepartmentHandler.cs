@@ -18,7 +18,7 @@ public class CreateDepartmentHandler : ICommandHandler<CreateDepartmentCommand, 
     public async Task<Unit> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
     {
         var companyCode = _currentUser.OrganizationCode!;
-        var company = await _companyRepository.GetCompanyWithDepartmentsByCodeAsync(companyCode);
+        var company = (await _companyRepository.GetCompanyWithDepartmentsByCodeAsync(companyCode))?.Map();
         if (company == null)
         {
             throw new NotFoundException($"No company found with code  {companyCode}", "Data not found");

@@ -235,6 +235,17 @@ BEGIN
 END 
 GO
  
+CREATE OR ALTER PROCEDURE department_getDepartmentsByCompanyId_S 
+	@companyId INT
+AS
+BEGIN 
+	SELECT [Id],
+		   [DepartmentName] 
+	  FROM [TeamTitanManagement].[dbo].[Departments]
+	  WHERE CompanyId = @companyId
+END 
+GO
+
 --DayOffRequest scripts
 
 CREATE OR ALTER PROCEDURE dayOff_newDayOffRequest_I
