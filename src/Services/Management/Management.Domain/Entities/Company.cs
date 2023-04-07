@@ -33,6 +33,7 @@ public class Company : Entity, IAggregateRoot
         OwnerCode = ownerCode;
         OwnerId = ownerId;
         CompanyCode = companyCode;
+        CompanyStatus = CompanyStatus.Init;
 
         Events.Add(new CompanyDeclared(CompanyCode, OwnerCode));
     }

@@ -10,6 +10,7 @@ public interface ICompanyRepository
     Task InitCompanyAsync(Company company, IDbTransaction? transaction);
     Task CompleteDataAsync(Company company);
     Task AddNewDepartmentAsync(Company company);
+    Task UpdateCommunicationDataAsync(Company company);
     Task<Company?> GetCompanyByOwnerCodeAsync(string ownerCode);
     Task<Company?> GetCompanyByCodeAsync(string companyCode); 
     Task<Company?> GetCompanyWithDepartmentsByCodeAsync(string companyCode); 

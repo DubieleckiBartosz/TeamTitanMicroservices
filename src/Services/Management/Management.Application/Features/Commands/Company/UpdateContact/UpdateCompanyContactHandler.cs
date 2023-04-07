@@ -31,6 +31,8 @@ public class UpdateCompanyContactHandler : ICommandHandler<UpdateCompanyContactC
 
         company.UpdateCommunicationData(phoneNumber, email, city, street, numberStreet, postalCode);
 
+        await _companyRepository.UpdateCommunicationDataAsync(company);
+
         return Unit.Value;
     }
 }

@@ -15,25 +15,67 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
     {
     }
 
-    public async Task<Employee?> GetEmployeeByIdAsync(int id)
+    public async Task<Employee?> GetEmployeeWithDetailsByIdAsync(int id)
     {
+        var dict = new Dictionary<int, EmployeeDao>();
         var param = new DynamicParameters();
 
         param.Add("@employeeId", id);
 
-        var result = (await QueryAsync<EmployeeDao>("employee_getEmployeeById_S", param, CommandType.StoredProcedure)).FirstOrDefault();
+        var result = (await QueryAsync<EmployeeDao, ContractDao?, DayOffRequestDao?, EmployeeDao>("employee_getEmployeeById_S",
+            (e, ec, dor) =>
+            {
+                if (!dict.TryGetValue(e.Id, out var value))
+                {
+                    value = e;
+                    dict.Add(e.Id, value);
+                }
+
+                if (ec != null)
+                {
+                    value.Contracts.Add(ec);
+                }
+
+                if (dor != null)
+                {
+                    value.DayOffRequests.Add(dor);
+                }
+
+                return value;
+            }, splitOn:"Id,Id,Id",param, CommandType.StoredProcedure)).FirstOrDefault();
 
         return result?.Map();
     }
 
-    public async Task<Employee?> GetEmployeeByCodeAsync(string code)
+    public async Task<Employee?> GetEmployeeWithDetailsByCodeAsync(string code)
     {
+        var dict = new Dictionary<int, EmployeeDao>();
+
         var param = new DynamicParameters();
 
         param.Add("@code", code);
 
-        var result = (await QueryAsync<EmployeeDao>("employee_getEmployeeByCode_S", param, CommandType.StoredProcedure)).FirstOrDefault();
+        var result = (await QueryAsync<EmployeeDao, ContractDao?, DayOffRequestDao?, EmployeeDao>("employee_getEmployeeByCode_S",
+            (e, ec, dor) =>
+            {
+                if (!dict.TryGetValue(e.Id, out var value))
+                {
+                    value = e;
+                    dict.Add(e.Id, value);
+                }
 
+                if (ec != null)
+                {
+                    value.Contracts.Add(ec);
+                }
+
+                if (dor != null)
+                {
+                    value.DayOffRequests.Add(dor);
+                }
+
+                return value;
+            }, splitOn: "Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
         return result?.Map();
     }
 
@@ -65,10 +107,10 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         param.Add("@description", dayOff.Description?.ToString());
         param.Add("@canceled", dayOff.Canceled);
 
-        var result = await ExecuteAsync("employee_addDayOffRequestToEmployee_U", param, CommandType.StoredProcedure);
+        var result = await ExecuteAsync("dayOff_newDayOffRequest_I", param, CommandType.StoredProcedure);
         if (result <= 0)
         {
-            throw new DatabaseException("The call to procedure 'employee_addDayOffRequestToEmployee_U' failed", "Database Error");
+            throw new DatabaseException("The call to procedure 'dayOff_newDayOffRequest_I' failed", "Database Error");
         }
     }
 
@@ -90,12 +132,13 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         param.Add("@paidIntoAccount", contract.PaidIntoAccount);
         param.Add("@hourlyRate", contract.HourlyRate);
         param.Add("@overtimeRate", contract.OvertimeRate);
+        param.Add("@createdBy", contract.CreatedBy);
         param.Add("@paymentMonthDay", contract.PaymentMonthDay); 
 
-        var result = await ExecuteAsync("employee_addContractToEmployee_U", param, CommandType.StoredProcedure);
+        var result = await ExecuteAsync("contract_newContract_I", param, CommandType.StoredProcedure);
         if (result <= 0)
         {
-            throw new DatabaseException("The call to procedure 'employee_addContractToEmployee_U' failed", "Database Error");
+            throw new DatabaseException("The call to procedure 'contract_newContract_I' failed", "Database Error");
         }
     }
 
@@ -103,7 +146,9 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
     {
         var param = new DynamicParameters();
 
-        param.Add("@employeeId", employee.Id);
+        param.Add("@employeeId", employee.Id); 
+        param.Add("@phoneNumber", employee.CommunicationData.Contact.PhoneNumber);
+        param.Add("@email", employee.CommunicationData.Contact.Email);
 
         var result = await ExecuteAsync("employee_contactData_U", param, CommandType.StoredProcedure);
         if (result <= 0)
@@ -117,6 +162,10 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         var param = new DynamicParameters();
 
         param.Add("@employeeId", employee.Id);
+        param.Add("@city", employee.CommunicationData.Address.City);
+        param.Add("@street", employee.CommunicationData.Address.Street);
+        param.Add("@numberStreet", employee.CommunicationData.Address.NumberStreet);
+        param.Add("@postalCode", employee.CommunicationData.Address.PostalCode);
 
         var result = await ExecuteAsync("employee_address_U", param, CommandType.StoredProcedure);
         if (result <= 0)

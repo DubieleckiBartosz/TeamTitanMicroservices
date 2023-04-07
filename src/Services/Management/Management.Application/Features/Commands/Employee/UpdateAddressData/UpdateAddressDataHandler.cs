@@ -16,7 +16,7 @@ public class UpdateAddressDataHandler : ICommandHandler<UpdateAddressDataCommand
 
     public async Task<Unit> Handle(UpdateAddressDataCommand request, CancellationToken cancellationToken)
     {
-        var employee = await _employeeRepository.GetEmployeeByIdAsync(request.EmployeeId);
+        var employee = await _employeeRepository.GetEmployeeWithDetailsByIdAsync(request.EmployeeId);
         if (employee == null)
         {
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),
