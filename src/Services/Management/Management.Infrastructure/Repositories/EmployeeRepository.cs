@@ -15,7 +15,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
     {
     }
 
-    public async Task<Employee?> GetEmployeeWithDetailsByIdAsync(int id)
+    public async Task<EmployeeDao?> GetEmployeeWithDetailsByIdAsync(int id)
     {
         var dict = new Dictionary<int, EmployeeDao>();
         var param = new DynamicParameters();
@@ -44,10 +44,10 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
                 return value;
             }, splitOn:"Id,Id,Id",param, CommandType.StoredProcedure)).FirstOrDefault();
 
-        return result?.Map();
+        return result;
     }
 
-    public async Task<Employee?> GetEmployeeWithDetailsByCodeAsync(string code)
+    public async Task<EmployeeDao?> GetEmployeeWithDetailsByCodeAsync(string code)
     {
         var dict = new Dictionary<int, EmployeeDao>();
 
@@ -76,7 +76,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
 
                 return value;
             }, splitOn: "Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
-        return result?.Map();
+        return result;
     }
 
     public async Task AddAccountToEmployeeAsync(Employee employee)

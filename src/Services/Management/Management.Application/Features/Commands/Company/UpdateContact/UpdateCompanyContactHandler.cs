@@ -17,7 +17,7 @@ public class UpdateCompanyContactHandler : ICommandHandler<UpdateCompanyContactC
     }
     public async Task<Unit> Handle(UpdateCompanyContactCommand request, CancellationToken cancellationToken)
     {
-        var company = await _companyRepository.GetCompanyByCodeAsync(_currentUser.OrganizationCode!);
+        var company = (await _companyRepository.GetCompanyByCodeAsync(_currentUser.OrganizationCode!))?.Map();
         if (company == null)
         {
             throw new NotFoundException("Company not found by organization code", "Company not found");

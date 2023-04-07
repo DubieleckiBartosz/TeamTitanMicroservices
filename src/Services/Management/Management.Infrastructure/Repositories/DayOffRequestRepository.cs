@@ -15,7 +15,7 @@ public class DayOffRequestRepository : BaseRepository<DayOffRequestRepository>, 
     {
     }
 
-    public async Task<DayOffRequest?> GetDayOffRequestByIdAsync(int dayOffRequestId)
+    public async Task<DayOffRequestDao?> GetDayOffRequestByIdAsync(int dayOffRequestId)
     {
         var param = new DynamicParameters();
 
@@ -23,7 +23,7 @@ public class DayOffRequestRepository : BaseRepository<DayOffRequestRepository>, 
 
         var result = (await QueryAsync<DayOffRequestDao>("dayOff_getById_S", param, CommandType.StoredProcedure)).FirstOrDefault();
 
-        return result?.Map();
+        return result;
     }
 
     public async Task CancelDayOffRequestAsync(DayOffRequest dayOffRequest)

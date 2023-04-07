@@ -1,6 +1,7 @@
 ﻿using Management.Application.Features.Commands.Company.CompleteData;
 using Management.Application.Features.Commands.Company.InitCompany;
 using Management.Application.Features.Commands.Company.UpdateContact;
+using Management.Application.Features.Queries.Company.GetCompanyByCode;
 using Management.Application.Parameters.CompanyParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,19 @@ public class CompanyController : BaseController
     public CompanyController(ICommandBus commandBus, IQueryBus queryBus) : base(commandBus, queryBus)
     {
     }
+
+
+    /// <summary>
+    /// Get company by organization code 
+    /// </summary>
+    /// <returns>CompanyViewModel</returns>
+    [Authorize(Roles = "Admin,Owner,Manager")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetCompanyByCode()
+    {
+        var result = await QueryBus.Send(new GetCompanyByCodeQuery()); 
+        return Ok(result);
+    } 
 
     /// <summary>
     /// Complete company details
