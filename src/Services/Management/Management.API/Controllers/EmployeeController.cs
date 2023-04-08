@@ -5,6 +5,7 @@ using Management.Application.Features.Commands.Employee.AddContract;
 using Management.Application.Features.Commands.Employee.CreateEmployee;
 using Management.Application.Features.Commands.Employee.UpdateAddressData;
 using Management.Application.Features.Commands.Employee.UpdateContactData;
+using Management.Application.Features.Commands.Employee.UpdateEmployeeLeader;
 using Management.Application.Parameters.DayOffRequestParameters;
 using Management.Application.Parameters.EmployeeParameters;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +32,20 @@ public class EmployeeController : BaseController
     public async Task<IActionResult> UpdateContactData([FromBody] UpdateContactDataParameters parameters)
     {
         var command = UpdateContactDataCommand.Create(parameters);
+        await CommandBus.Send(command);
+        return NoContent();
+    }
+    
+    /// <summary>
+    /// Changing leader
+    /// </summary>
+    /// <param name="parameters"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "Admin,Owner,Manager")]
+    [HttpPut("[action]")]
+    public async Task<IActionResult> UpdateLeader([FromBody] UpdateEmployeeLeaderParameters parameters)
+    {
+        var command = UpdateEmployeeLeaderCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
     }

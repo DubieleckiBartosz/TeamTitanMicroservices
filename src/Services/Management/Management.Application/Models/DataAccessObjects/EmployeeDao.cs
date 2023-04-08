@@ -14,20 +14,19 @@ public class EmployeeDao
     public string Surname { get; init; } = default!;
     public DateTime Birthday { get; init; }
     public string? PersonIdentifier { get; init; }
-    public string City { get; init; } = default!;
-    public string Street { get; init; } = default!;
-    public string NumberStreet { get; init; } = default!;
-    public string PostalCode { get; init; } = default!;
-    public string CompanyCode { get; init; } = default!;
-    public string PhoneNumber { get; init; } = default!;
-    public string Email { get; init; } = default!;
+    public CommunicationDao? Communication { get; set; }   
     public List<ContractDao> Contracts { get; set; } = new();
     public List<DayOffRequestDao> DayOffRequests { get; set; } = new();
 
     public Employee Map()
     {
-        var address = Address.Create(City, Street, NumberStreet, PostalCode);
-        var contact = Contact.Create(PhoneNumber, Email);
+        if (Communication == null)
+        {
+            return Employee.Load(Id, Leader, EmployeeCode, Name, Surname, PersonIdentifier, AccountId);
+        }   
+        
+        var address = Address.Create(Communication.City, Communication.Street, Communication.NumberStreet, Communication.PostalCode);
+        var contact = Contact.Create(Communication.PhoneNumber, Communication.Email);
         var communicationData = CommunicationData.Create(address, contact);
         var contracts = Contracts.Select(_ => _.Map()).ToList();
         var dayOffRequests = DayOffRequests.Select(_ => _.Map()).ToList();
@@ -35,5 +34,6 @@ public class EmployeeDao
         return Employee.Load(Id, Leader, DepartmentId, AccountId, EmployeeCode, Name, Surname, Birthday,
             PersonIdentifier,
             communicationData, contracts, dayOffRequests);
-    }
+
+    } 
 }

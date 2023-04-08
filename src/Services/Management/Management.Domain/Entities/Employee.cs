@@ -15,9 +15,8 @@ public class Employee : Entity
     public string EmployeeCode { get; }
     public string Name { get; }
     public string Surname { get; }
-    public DateTime Birthday { get; }
-
-    public string Leader { get; }
+    public DateTime Birthday { get; } 
+    public string Leader { get; private set; }
     //PESEL
     public string? PersonIdentifier { get; } 
     public CommunicationData CommunicationData { get; }
@@ -43,10 +42,12 @@ public class Employee : Entity
     /// <param name="surname"></param>
     /// <param name="personIdentifier"></param>
     /// <param name="accountId"></param>
+    /// <param name="id"></param>
     /// <param name="leader"></param>
-    private Employee(string leader, string employeeCode, string name, string surname, string? personIdentifier,
+    private Employee(int id, string leader, string employeeCode, string name, string surname, string? personIdentifier,
         Guid? accountId)
     {
+        Id = id;
         Leader = leader; 
         EmployeeCode = employeeCode;
         AccountId = accountId;
@@ -94,7 +95,8 @@ public class Employee : Entity
     /// <param name="communicationData"></param>
     /// <param name="contracts"></param>
     /// <param name="dayOffRequests"></param>
-    private Employee(int id, string leader, int departmentId, Guid? accountId, string employeeCode, string name, string surname, DateTime birthday,
+    private Employee(int id, string leader, int departmentId, Guid? accountId, string employeeCode, string name,
+        string surname, DateTime birthday,
         string? personIdentifier, CommunicationData communicationData, List<EmployeeContract> contracts,
         List<DayOffRequest> dayOffRequests) : this(departmentId, leader, employeeCode, name, surname, birthday,
         personIdentifier, communicationData)
@@ -102,16 +104,19 @@ public class Employee : Entity
         Id = id;
         AccountId = accountId;
         contracts?.ForEach(_ => _employeeContracts.Add(_));
-        dayOffRequests?.ForEach(_ => _dayOffRequests.Add(_)); 
+        dayOffRequests?.ForEach(_ => _dayOffRequests.Add(_));
     }
 
-    public static Employee Create(int departmentId, string leader, string employeeCode, string name, string surname, DateTime birthday,
+    public static Employee Create(int departmentId, string leader, string employeeCode, string name, string surname,
+        DateTime birthday,
         string? personIdentifier, CommunicationData communicationData)
     {
-        return new Employee(departmentId, leader, employeeCode, name, surname, birthday, personIdentifier, communicationData);
+        return new Employee(departmentId, leader, employeeCode, name, surname, birthday, personIdentifier,
+            communicationData);
     }
 
-    public static Employee Load(int id, string leader, int departmentId, Guid? accountId, string employeeCode, string name, string surname, DateTime birthday,
+    public static Employee Load(int id, string leader, int departmentId, Guid? accountId, string employeeCode,
+        string name, string surname, DateTime birthday,
         string? personIdentifier, CommunicationData communicationData, List<EmployeeContract> contracts,
         List<DayOffRequest> dayOffRequests)
     {
@@ -125,10 +130,10 @@ public class Employee : Entity
         return new Employee(id, contracts);
     }
 
-    public static Employee Load(string leader, string employeeCode, string name, string surname,
+    public static Employee Load(int id, string leader, string employeeCode, string name, string surname,
         string? personIdentifier, Guid? accountId)
     {
-        return new Employee(leader, employeeCode, name, surname, personIdentifier, accountId);
+        return new Employee(id, leader, employeeCode, name, surname, personIdentifier, accountId);
     }
 
     public void AssignAccount(Guid accountId)
@@ -176,6 +181,11 @@ public class Employee : Entity
             email ?? CommunicationData.Contact.Email);
 
         CommunicationData.UpdateContact(newContact);
+    }
+
+    public void UpdateLeader(string newLeader)
+    {
+        Leader = newLeader;
     }
 
     private bool DoesRangeDaysOffOverlap(RangeDaysOff newRange)

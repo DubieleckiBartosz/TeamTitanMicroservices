@@ -45,6 +45,7 @@ public class DepartmentRepository : BaseRepository<DepartmentRepository>, IDepar
 
         param.Add("@departmentId", department.Id);
         param.Add("@employeeCode", employee.EmployeeCode);
+        param.Add("@leader", employee.Leader);
         param.Add("@name", employee.Name);
         param.Add("@surname", employee.Surname);
         param.Add("@birthday", employee.Birthday);

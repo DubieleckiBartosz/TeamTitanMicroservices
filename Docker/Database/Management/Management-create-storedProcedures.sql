@@ -539,6 +539,32 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE employee_newLeader_U
+	@employeeId INT,
+	@newLeader VARCHAR(50)
+AS
+BEGIN
+	UPDATE Employees SET Leader = @newLeader
+	WHERE Id = @employeeId
+END
+GO
+
+CREATE OR ALTER PROCEDURE employee_getNecessaryDataById_S
+	@employeeId INT
+AS
+BEGIN
+	SELECT [Id],
+		   [AccountId] ,
+		   [EmployeeCode],
+		   [Name],
+		   [Surname],
+		   [PersonIdentifier],
+		   [Leader]
+	  FROM [TeamTitanManagement].[dbo].[Employees]
+	  WHERE Id = @employeeId
+END
+GO
+
 --Contract scripts
 
 CREATE OR ALTER PROCEDURE contract_newContract_I
