@@ -21,7 +21,7 @@ public class DepartmentController : BaseController
     /// <returns>list of DepartmentViewModel</returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
     [HttpGet("[action]/{companyId}")]
-    public async Task<IActionResult> GetDepartmentsCompanyId([FromRoute] int companyId)
+    public async Task<IActionResult> GetDepartmentsByCompanyId([FromRoute] int companyId)
     {
         var query = DepartmentsByCompanyIdQuery.Create(companyId);
         var response = await QueryBus.Send(query);
