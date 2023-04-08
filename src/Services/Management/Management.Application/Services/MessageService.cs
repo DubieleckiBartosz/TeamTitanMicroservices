@@ -14,6 +14,7 @@ public class MessageService : IMessageService
 {
     private const string ServiceName = "TeamTitan Service";
     private const string InitCompanyMessageSubject = "Confirmation company account"; 
+    private const string LeaveRequestMessageSubject = "Leave request"; 
 
     private readonly IEmailRepository _emailRepository;
     private readonly LinkOptions _linkOptions;
@@ -42,5 +43,11 @@ public class MessageService : IMessageService
         var template = CompanyTemplates.InitCompanyMessageTemplate(verificationUri);
 
         await _emailRepository.SendAsync(recipient, template, InitCompanyMessageSubject, ServiceName, _emailOptions);
+    }
+
+    public async Task SendNewDayOffRequestMessage(string recipient, NewDayOffRequestMessageDto message)
+    {
+        var template = CompanyTemplates.NewDayOffRequestMessageTemplate(message.EmployeeFullName, message.EmployeeCode);
+        await _emailRepository.SendAsync(recipient, template, LeaveRequestMessageSubject, ServiceName, _emailOptions); 
     }
 }

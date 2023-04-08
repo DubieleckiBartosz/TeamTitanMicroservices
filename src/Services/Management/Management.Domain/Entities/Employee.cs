@@ -9,7 +9,7 @@ public class Employee : Entity
 {
     private readonly HashSet<EmployeeContract> _employeeContracts = new();
     private readonly HashSet<DayOffRequest> _dayOffRequests = new();
-
+    private string FullName => Name + " " + Surname;
     public Guid? AccountId { get; private set; }
     public int DepartmentId { get; }
     public string EmployeeCode { get; }
@@ -166,6 +166,7 @@ public class Employee : Entity
         }
 
         _dayOffRequests.Add(dayOffRequest);
+        Events.Add(new DayOffRequestCreated(Leader, FullName, CommunicationData.Contact.Email));
     }
 
     public void UpdateAddress(string city, string street, string numberStreet, string postalCode)

@@ -1,4 +1,6 @@
-﻿namespace Management.Application.Templates;
+﻿using System.Drawing;
+
+namespace Management.Application.Templates;
 
 public class CompanyTemplates
 {
@@ -48,4 +50,51 @@ public class CompanyTemplates
               </div>  
             </body>
     </html>";
+
+    public static string NewDayOffRequestMessageTemplate(string employeeName, string employeeCode) => $@"
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>New Leave Application</title>
+            <style>
+                body {{
+                    font - family: Arial, sans-serif;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    color: #333;
+                    background-color: #f7f7f7;
+                }}
+                .container {{
+                    max - width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                }}
+                h1, h2, h3, h4, h5, h6 {{
+                    font - family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    font-weight: bold;
+                    color: #444;
+                }}
+                p {{
+                    margin - bottom: 1em;
+                }}
+                strong {{
+                    color: #007bff;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <h1>New Leave Request</h1>
+                <p>Dear Manager,</p>
+                <p>Employee <strong>{employeeName}</strong> with the code <strong>{employeeCode}</strong> has submitted a new leave application.</p>
+                <p>Please review the application and respond accordingly.</p>
+                <p>Thank you.</p>
+            </div>
+        </body>
+        </html>
+    ";
 }
