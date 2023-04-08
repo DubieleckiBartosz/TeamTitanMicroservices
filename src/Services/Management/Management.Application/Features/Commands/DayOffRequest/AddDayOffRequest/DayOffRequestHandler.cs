@@ -11,13 +11,15 @@ namespace Management.Application.Features.Commands.DayOffRequest.AddDayOffReques
 
 public class DayOffRequestHandler : ICommandHandler<DayOffRequestCommand, Unit>
 {
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IEmployeeRepository _employeeRepository;
 
     public DayOffRequestHandler(IUnitOfWork unitOfWork, ICurrentUser currentUser)
     {
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _employeeRepository = unitOfWork?.EmployeeRepository ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _employeeRepository = unitOfWork.EmployeeRepository;
     }
     public async Task<Unit> Handle(DayOffRequestCommand request, CancellationToken cancellationToken)
     {
@@ -40,7 +42,8 @@ public class DayOffRequestHandler : ICommandHandler<DayOffRequestCommand, Unit>
         employee.AddDayOffRequest(newDayOffRequest);
 
         await _employeeRepository.AddDayOffRequestToEmployeeAsync(employee);
-
+        await _unitOfWork.CompleteAsync(employee);
+        
         return Unit.Value;
     }
 }

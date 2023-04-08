@@ -15,6 +15,18 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
     {
     }
 
+    public async Task<EmployeeDao?> GetEmployeeNecessaryDataByIdAsync(int id)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@employeeId", id);
+
+        var result =
+            await this.QueryAsync<EmployeeDao>("employee_getNecessaryDataById_S", param, CommandType.StoredProcedure);
+
+        return result?.FirstOrDefault();
+    }
+
     public async Task<EmployeeDao?> GetEmployeeWithDetailsByIdAsync(int id)
     {
         var dict = new Dictionary<int, EmployeeDao>();
@@ -22,12 +34,14 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
 
         param.Add("@employeeId", id);
 
-        var result = (await QueryAsync<EmployeeDao, ContractDao?, DayOffRequestDao?, EmployeeDao>("employee_getEmployeeById_S",
-            (e, ec, dor) =>
+        var result = (await QueryAsync<EmployeeDao, CommunicationDao?, ContractDao?, DayOffRequestDao?, EmployeeDao>(
+            "employee_getEmployeeById_S",
+            (e, cd, ec, dor) =>
             {
                 if (!dict.TryGetValue(e.Id, out var value))
                 {
                     value = e;
+                    value.Communication = cd;
                     dict.Add(e.Id, value);
                 }
 
@@ -42,7 +56,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
                 }
 
                 return value;
-            }, splitOn:"Id,Id,Id",param, CommandType.StoredProcedure)).FirstOrDefault();
+            }, "Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
 
         return result;
     }
@@ -55,12 +69,14 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
 
         param.Add("@code", code);
 
-        var result = (await QueryAsync<EmployeeDao, ContractDao?, DayOffRequestDao?, EmployeeDao>("employee_getEmployeeByCode_S",
-            (e, ec, dor) =>
+        var result = (await QueryAsync<EmployeeDao, CommunicationDao, ContractDao?, DayOffRequestDao?, EmployeeDao>(
+            "employee_getEmployeeByCode_S",
+            (e, cd, ec, dor) =>
             {
                 if (!dict.TryGetValue(e.Id, out var value))
                 {
                     value = e;
+                    value.Communication = cd;
                     dict.Add(e.Id, value);
                 }
 
@@ -171,6 +187,20 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         if (result <= 0)
         {
             throw new DatabaseException("The call to procedure 'employee_address_U' failed", "Database Error");
+        }
+    }
+
+    public async Task UpdateLeaderAsync(Employee employee)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@employeeId", employee.Id);
+        param.Add("@newLeader", employee.Leader); 
+
+        var result = await ExecuteAsync("employee_newLeader_U", param, CommandType.StoredProcedure);
+        if (result <= 0)
+        {
+            throw new DatabaseException("The call to procedure 'employee_newLeader_U' failed", "Database Error");
         }
     }
 }

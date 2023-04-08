@@ -5,6 +5,7 @@ namespace Management.Application.Contracts.Repositories;
 
 public interface IEmployeeRepository
 {
+    Task<EmployeeDao?> GetEmployeeNecessaryDataByIdAsync(int id); 
     Task<EmployeeDao?> GetEmployeeWithDetailsByIdAsync(int id);
     Task<EmployeeDao?> GetEmployeeWithDetailsByCodeAsync(string code);
     Task AddAccountToEmployeeAsync(Employee employee);
@@ -12,4 +13,5 @@ public interface IEmployeeRepository
     Task AddContractToEmployeeAsync(Employee employee);
     Task UpdateContactDataAsync(Employee employee);
     Task UpdateAddressAsync(Employee employee);
+    Task UpdateLeaderAsync(Employee employee);
 }

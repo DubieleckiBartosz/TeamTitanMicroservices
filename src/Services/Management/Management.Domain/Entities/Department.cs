@@ -32,12 +32,13 @@ public class Department : Entity
         return new(id, departmentName, employees);
     }
 
-    public void AddNewEmployee(string code, string name, string surname, DateTime birthday,
+    public void AddNewEmployee(string leader, string code, string name, string surname, DateTime birthday,
         string? personIdentifier, Address address, Contact contact)
     {
         var communicationData = CommunicationData.Create(address, contact);
-        var newEmployee = Employee.Create(Id, code, name, surname, birthday, personIdentifier, communicationData);
-         
+        var newEmployee =
+            Employee.Create(Id, leader, code, name, surname, birthday, personIdentifier, communicationData);
+
         _employees.Add(newEmployee);
         Events.Add(new EmployeeCreated(code));
     }

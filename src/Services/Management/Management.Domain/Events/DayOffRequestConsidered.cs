@@ -2,6 +2,4 @@
 
 namespace Management.Domain.Events;
 
-public class DayOffRequestConsidered : IDomainNotification
-{
-}
+public record DayOffRequestConsidered(string EmployeeContact, bool PositiveDecision) : IDomainNotification;
