@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Calculator.Application.Contracts;
+using Calculator.Application.Contracts.Repositories;
 using Moq;
 using Moq.AutoMock;
 using Shared.Domain.Base;

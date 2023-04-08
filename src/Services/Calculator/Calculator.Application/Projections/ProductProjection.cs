@@ -1,5 +1,5 @@
-﻿using Calculator.Application.Contracts;
-using Calculator.Application.ReadModels.ProductReaders; 
+﻿using Calculator.Application.Contracts.Repositories;
+using Calculator.Application.ReadModels.ProductReaders;
 using Calculator.Domain.Product.Events;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Projection;

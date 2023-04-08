@@ -1,5 +1,5 @@
 ﻿using Calculator.Application.Constants;
-using Calculator.Application.Contracts;
+using Calculator.Application.Contracts.Repositories;
 using Calculator.Application.Features.Product.ViewModels;
 using Calculator.Application.ReadModels.ProductReaders;
 using Shared.Implementations.Abstractions;

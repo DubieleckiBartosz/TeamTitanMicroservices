@@ -1,7 +1,7 @@
 ﻿using Calculator.Application.ReadModels.ProductReaders;
 using Shared.Implementations.Search;
 
-namespace Calculator.Application.Contracts;
+namespace Calculator.Application.Contracts.Repositories;
 
 public interface IProductRepository
 {

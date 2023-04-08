@@ -28,7 +28,7 @@ public class ChangeFinancialDataCommandHandler : ICommandHandler<ChangeFinancial
         var overtime = request.OvertimeRate;
         var hourlyRate = request.HourlyRate;
 
-        account.AccountUpdateFinancialData(overtime, hourlyRate);
+        account!.AccountUpdateFinancialData(overtime, hourlyRate);
 
         await _repository.UpdateAsync(account);
 

@@ -27,6 +27,7 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
         account!.AccountSettlement();
         if (!account.IsActive)
         {
+            //This is the last payment because the account has been deactivated
             var jobName = Keys.SettlementBackgroundJobName(account.Id.ToString());
             _jobService.DeleteBackgroundJobByUniqueJobName(jobName, $"Job removed: {jobName}");
 
@@ -34,6 +35,7 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
         }
         else
         {
+            //Otherwise it is normal payout
             await _repository.UpdateWithSnapshotAsync<AccountSnapshot>(account);
         }
 

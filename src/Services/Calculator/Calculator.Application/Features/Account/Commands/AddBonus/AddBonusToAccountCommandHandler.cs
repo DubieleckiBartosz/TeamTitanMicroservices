@@ -25,7 +25,7 @@ public class AddBonusToAccountCommandHandler : ICommandHandler<AddBonusToAccount
 
         var creator = _currentUser.VerificationCode!; 
 
-        account.AddBonus(creator, request.Amount);
+        account!.AddBonus(creator, request.Amount);
 
         await _repository.UpdateAsync(account);
 

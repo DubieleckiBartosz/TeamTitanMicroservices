@@ -1,4 +1,4 @@
-﻿using Calculator.Application.Contracts;
+﻿using Calculator.Application.Contracts.Repositories;
 using Calculator.Application.ReadModels.AccountReaders;
 using Calculator.Domain.Account.Events;
 using Shared.Implementations.Core.Exceptions;

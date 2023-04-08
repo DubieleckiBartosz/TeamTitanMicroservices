@@ -37,6 +37,12 @@ public class JobService : IJobService
         return _backgroundJobClient.Schedule(() => _mediator.Send(command, default), delay);
     }
 
+    public bool JobExists(string name)
+    {
+        var jobsProcessing = GetScheduledJob(name)?.SingleOrDefault();
+        return jobsProcessing != null;
+    }
+
     /// <summary>
     /// Delete by name
     /// </summary> 

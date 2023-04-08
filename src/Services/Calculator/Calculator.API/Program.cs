@@ -1,6 +1,6 @@
 using Calculator.API.Configurations;
 using Calculator.Application;
-using Calculator.Application.Contracts;
+using Calculator.Application.Contracts.Repositories;
 using Calculator.Application.Projections;
 using Calculator.Infrastructure.Configurations;
 using Serilog;

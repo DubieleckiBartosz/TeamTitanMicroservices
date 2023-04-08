@@ -24,7 +24,7 @@ public class ChangeOvertimeRateCommandHandler : ICommandHandler<ChangeOvertimeRa
 
         account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
-        account.UpdateOvertimeRate(request.NewOvertimeRate);
+        account!.UpdateOvertimeRate(request.NewOvertimeRate);
 
         await _repository.UpdateAsync(account);
 

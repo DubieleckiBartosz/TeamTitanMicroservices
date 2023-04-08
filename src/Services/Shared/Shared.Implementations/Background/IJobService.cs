@@ -5,6 +5,7 @@ namespace Shared.Implementations.Background;
 
 public interface IJobService
 {
+    bool JobExists(string name);
     void FireAndForgetJobMediator(ICommand<Unit> command);
     void RecurringJobMediator(string name, ICommand<Unit> command, string cron);
     void DeleteBackgroundJobByUniqueJobName(string name, string successMessage);

@@ -24,7 +24,7 @@ public class ChangeCountingTypeCommandHandler : ICommandHandler<ChangeCountingTy
 
         account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
-        account.UpdateCountingType(request.NewCountingType);
+        account!.UpdateCountingType(request.NewCountingType);
 
         await _repository.UpdateAsync(account);
 

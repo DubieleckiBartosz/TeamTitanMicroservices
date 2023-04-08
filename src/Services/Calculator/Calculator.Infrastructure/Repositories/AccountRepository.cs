@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using Calculator.Application.Contracts;
+using Calculator.Application.Contracts.Repositories;
 using Calculator.Application.ReadModels.AccountReaders;
 using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
