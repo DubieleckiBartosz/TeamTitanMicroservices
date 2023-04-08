@@ -17,19 +17,7 @@ public class CompanyController : BaseController
     {
     }
 
-
-    /// <summary>
-    /// Get company by organization code 
-    /// </summary>
-    /// <returns>CompanyViewModel</returns>
-    [Authorize(Roles = "Admin,Owner,Manager")]
-    [HttpGet("[action]")]
-    public async Task<IActionResult> GetCompanyByCode()
-    {
-        var result = await QueryBus.Send(new GetCompanyByCodeQuery()); 
-        return Ok(result);
-    } 
-
+     
     /// <summary>
     /// Complete company details
     /// </summary>
@@ -65,7 +53,7 @@ public class CompanyController : BaseController
     /// Init company
     /// </summary>
     /// <returns></returns>
-    [Authorize(Roles = "Admin,User")]
+    [Authorize(Roles = "User")]
     [HttpPost("[action]")]
     public async Task<IActionResult> InitCompany()
     {
@@ -73,5 +61,17 @@ public class CompanyController : BaseController
         await CommandBus.Send(command);
 
         return NoContent();
+    }
+
+    /// <summary>
+    /// Get company by organization code 
+    /// </summary>
+    /// <returns>CompanyViewModel</returns>
+    [Authorize(Roles = "Admin,Owner,Manager")]
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetCompanyByCode()
+    {
+        var result = await QueryBus.Send(new GetCompanyByCodeQuery());
+        return Ok(result);
     }
 }

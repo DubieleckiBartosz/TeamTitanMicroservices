@@ -2,6 +2,7 @@
 using Management.Domain.Types;
 using Management.Domain.ValueObjects;
 using Shared.Domain.Base;
+using Shared.Domain.DomainExceptions;
 
 namespace Management.Domain.Entities;
 
@@ -68,13 +69,25 @@ public class DayOffRequest : Entity
     }
 
     public void UpdateStatus(string considerBy, DayOffRequestCurrentStatus newStatus)
-    { 
+    {
+        if (Canceled)
+        {
+            throw new BusinessException(
+                "Day off request canceled", "The request for a day off cannot be canceled if it is to be processed");
+        }
+
         ConsideredBy = considerBy;
         CurrentStatus = newStatus;
     }
 
     public void Cancel()
-    { 
+    {
+        if (CurrentStatus != DayOffRequestCurrentStatus.Initial)
+        {
+            throw new BusinessException(
+                "Incorrect status", "The request for a day off has already been processed");
+        }
+
         Canceled = true;
     }
 }
