@@ -5,6 +5,7 @@ public class EmployeeViewModel
     public int Id { get; init; }
     public Guid? AccountId { get; init; }
     public int DepartmentId { get; init; }
+    public string Leader { get; init; } = default!;
     public string EmployeeCode { get; init; } = default!;
     public string Name { get; init; } = default!;
     public string Surname { get; init; } = default!;

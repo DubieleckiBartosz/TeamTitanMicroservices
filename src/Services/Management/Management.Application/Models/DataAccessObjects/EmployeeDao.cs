@@ -8,6 +8,7 @@ public class EmployeeDao
     public int Id { get; init; }
     public Guid? AccountId { get; init; }
     public int DepartmentId { get; init; }
+    public string Leader { get; init; } = default!;
     public string EmployeeCode { get; init; } = default!;
     public string Name { get; init; } = default!;
     public string Surname { get; init; } = default!;
@@ -31,7 +32,8 @@ public class EmployeeDao
         var contracts = Contracts.Select(_ => _.Map()).ToList();
         var dayOffRequests = DayOffRequests.Select(_ => _.Map()).ToList();
 
-        return Employee.Load(Id, DepartmentId, AccountId, EmployeeCode, Name, Surname, Birthday, PersonIdentifier,
+        return Employee.Load(Id, Leader, DepartmentId, AccountId, EmployeeCode, Name, Surname, Birthday,
+            PersonIdentifier,
             communicationData, contracts, dayOffRequests);
     }
 }

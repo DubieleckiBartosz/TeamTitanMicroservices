@@ -5,6 +5,7 @@ namespace Management.Application.Parameters.EmployeeParameters;
 public class CreateEmployeeParameters
 {
     public int DepartmentId { get; init; }
+    public string? LeaderContact { get; init; }
     public string EmployeeCode { get; init; }
     public string Name { get; init; }
     public string Surname { get; init; }
@@ -25,11 +26,12 @@ public class CreateEmployeeParameters
     }
 
     [JsonConstructor]
-    public CreateEmployeeParameters(int departmentId, string employeeCode, string name, string surname,
+    public CreateEmployeeParameters(int departmentId, string? leaderContact, string employeeCode, string name, string surname,
         DateTime birthday, string? personIdentifier, string city, string street, string numberStreet, string postalCode,
         string phoneNumber, string email)
     {
         this.DepartmentId = departmentId;
+        this.LeaderContact = leaderContact;
         this.EmployeeCode = employeeCode;
         this.Name = name;
         this.Surname = surname;

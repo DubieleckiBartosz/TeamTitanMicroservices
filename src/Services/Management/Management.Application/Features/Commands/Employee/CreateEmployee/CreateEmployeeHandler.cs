@@ -37,8 +37,9 @@ public class CreateEmployeeHandler : ICommandHandler<CreateEmployeeCommand, stri
         var personIdentifier = request.PersonIdentifier;
         var address = Address.Create(request.City, request.Street, request.NumberStreet, request.PostalCode);
         var contact = Contact.Create(request.PhoneNumber, request.Email);
+        var leader = request.LeaderContact ?? _currentUser.Email;
 
-        department.AddNewEmployee(code, name, surname, birthday, personIdentifier, address, contact);
+        department.AddNewEmployee(leader, code, name, surname, birthday, personIdentifier, address, contact);
 
         await _departmentRepository.AddNewEmployeeAsync(department);
         await _unitOfWork.CompleteAsync(department);

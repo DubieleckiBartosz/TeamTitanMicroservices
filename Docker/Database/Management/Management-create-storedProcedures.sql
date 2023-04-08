@@ -336,7 +336,8 @@ CREATE OR ALTER PROCEDURE employee_newEmployee_I
 	@numberStreet VARCHAR(10),
 	@postalCode VARChAR(10),
 	@phoneNumber VARCHAR(20),
-	@email VARCHAR(50)
+	@email VARCHAR(50),
+	@leader VARCHAR(50)
 AS
 BEGIN
 	BEGIN TRY  
@@ -348,14 +349,16 @@ BEGIN
 						[Name],
 						[Surname],
 						[Birthday],
-						[PersonIdentifier]) 
+						[PersonIdentifier],
+						[Leader]) 
 				 VALUES
 					   (@departmentId,
 						@employeeCode, 
 						@name, 
 						@surname, 
 						@birthday,
-						@personIdentifier)
+						@personIdentifier,
+						@leader)
 		
 		    DECLARE @employeeId INT = SCOPE_IDENTITY();
 
@@ -401,6 +404,7 @@ BEGIN
 	SELECT e.[Id],
 		   e.[AccountId],
 		   e.[DepartmentId],
+		   e.[Leader],
 		   e.[EmployeeCode],
 		   e.[Name],
 		   e.[Surname],
@@ -452,6 +456,7 @@ BEGIN
 		   e.[AccountId],
 		   e.[DepartmentId],
 		   e.[EmployeeCode],
+		   e.[Leader],
 		   e.[Name],
 		   e.[Surname],
 		   e.[Birthday],
