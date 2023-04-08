@@ -3,7 +3,7 @@ using Calculator.Domain.Statuses;
 using Calculator.Domain.Types;
 using Shared.Implementations.Search;
 
-namespace Calculator.Application.Contracts;
+namespace Calculator.Application.Contracts.Repositories;
 
 public interface IAccountRepository
 {
@@ -15,7 +15,7 @@ public interface IAccountRepository
     Task<AccountReader?> GetAccountByIdWithWorkDaysAsync(Guid accountId);
     Task<AccountReader?> GetAccountByIdWithProductsAsync(Guid accountId);
     Task<AccountReader?> GetAccountByIdWithBonusesAsync(Guid accountId);
-    Task<AccountReader?> GetAccountDetailsByIdAsync(Guid accountId); 
+    Task<AccountReader?> GetAccountDetailsByIdAsync(Guid accountId);
     Task<AccountReader?> GetAccountWithProductsAndBonusesByIdAsync(Guid accountId, DateTime? startDate = null,
         DateTime? toDate = null);
     Task AddAsync(AccountReader accountReader);
@@ -31,5 +31,5 @@ public interface IAccountRepository
     Task UpdateWorkDayHoursAsync(AccountReader accountReader);
     Task UpdateHourlyRateAsync(AccountReader accountReader);
     Task UpdateOvertimeRateAsync(AccountReader accountReader);
-    Task UpdateStatusToActiveAsync(AccountReader accountReader);   
+    Task UpdateStatusToActiveAsync(AccountReader accountReader);
 }

@@ -24,7 +24,7 @@ public class ChangeHourlyRateCommandHandler : ICommandHandler<ChangeHourlyRateCo
 
         account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
-        account.UpdateHourlyRate(request.NewHourlyRate);
+        account!.UpdateHourlyRate(request.NewHourlyRate);
 
         await _repository.UpdateAsync(account);
 

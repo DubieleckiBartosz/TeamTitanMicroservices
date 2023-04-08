@@ -30,7 +30,7 @@ public class AddWorkDayHandler : ICommandHandler<AddWorkDayCommand, Unit>
         var isDayOff = request.IsDayOff;
         var createdBy = _currentUser.VerificationCode!;
 
-        account.AddNewWorkDay(date, hoursWorked, overtime, isDayOff, createdBy);
+        account!.AddNewWorkDay(date, hoursWorked, overtime, isDayOff, createdBy);
 
         await _repository.UpdateAsync(account);
 

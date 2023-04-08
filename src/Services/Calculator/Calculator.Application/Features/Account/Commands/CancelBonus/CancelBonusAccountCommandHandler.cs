@@ -24,7 +24,7 @@ public class CancelBonusAccountCommandHandler : ICommandHandler<CancelBonusAccou
 
         bonus.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
-        bonus.CancelBonus(request.BonusCode);
+        bonus!.CancelBonus(request.BonusCode);
         await _repository.UpdateAsync(bonus);
 
         return Unit.Value;

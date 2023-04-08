@@ -24,7 +24,7 @@ public class ChangeDayHoursCommandHandler : ICommandHandler<ChangeDayHoursComman
 
         account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
-        account.UpdateWorkDayHours(request.NewWorkDayHours);
+        account!.UpdateWorkDayHours(request.NewWorkDayHours);
 
         await _repository.UpdateAsync(account);
 

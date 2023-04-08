@@ -29,7 +29,7 @@ public class AddPieceProductCommandHandler : ICommandHandler<AddPieceProductComm
         var currentPrice = request.CurrentPrice;
         var date = request.Date;
 
-        account.AddNewPieceProductItem(pieceworkProductId, quantity, currentPrice, date ?? DateTime.UtcNow);
+        account!.AddNewPieceProductItem(pieceworkProductId, quantity, currentPrice, date ?? DateTime.UtcNow);
 
         await _repository.UpdateAsync(account);
 

@@ -1,4 +1,4 @@
-﻿using Calculator.Application.Contracts;
+﻿using Calculator.Application.Contracts.Repositories;
 using Calculator.Application.Generators;
 using Calculator.Domain.Product;
 using MediatR;

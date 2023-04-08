@@ -1,4 +1,4 @@
-﻿using Calculator.Application.Contracts;
+﻿using Calculator.Application.Contracts.Repositories;
 using Calculator.Application.Features.Product.ViewModels;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.Core.Exceptions;

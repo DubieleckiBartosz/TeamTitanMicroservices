@@ -34,23 +34,18 @@ public class UpdateAccountDataCommandHandler : ICommandHandler<UpdateAccountData
         var settlementDayMonth = request.SettlementDayMonth;
         var expirationDate = request.ExpirationDate;
 
-        account.UpdateAccount(countingType, workDayHours, settlementDayMonth, expirationDate);
+        var currentSettlementDay = account!.Details.SettlementDayMonth;
+        account!.UpdateAccount(countingType, workDayHours, settlementDayMonth, expirationDate);
 
         await _repository.UpdateAsync(account);
 
-        var currentDate = DateTime.UtcNow;
-        var targetDate = new DateTime(currentDate.Year, currentDate.Month, settlementDayMonth);
-        if (targetDate < currentDate)
+        if (currentSettlementDay == null || currentSettlementDay != request.SettlementDayMonth)
         {
-            targetDate = targetDate.AddMonths(1);
+            var cronExpression = $"0 0 {settlementDayMonth} * *";
+
+            _jobService.RecurringJobMediator(Keys.SettlementBackgroundJobName(account.Id.ToString()), new AccountSettlementCommand(account.Id),
+                cronExpression); 
         }
-
-        var timeDifference = targetDate - currentDate;
-        var cronExpression =
-            $"0 {timeDifference.Minutes} {timeDifference.Hours} {settlementDayMonth} {targetDate.Month} ? {targetDate.Year}";
-
-        _jobService.RecurringJobMediator(Keys.SettlementBackgroundJobName(account.Id.ToString()), new AccountSettlementCommand(account.Id),
-            cronExpression);
 
         return Unit.Value;
     }
