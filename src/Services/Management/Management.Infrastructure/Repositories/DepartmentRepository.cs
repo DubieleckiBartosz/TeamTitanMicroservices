@@ -44,6 +44,7 @@ public class DepartmentRepository : BaseRepository<DepartmentRepository>, IDepar
         var param = new DynamicParameters();
 
         param.Add("@departmentId", department.Id);
+        param.Add("@version", department.Version);
         param.Add("@employeeCode", employee.EmployeeCode);
         param.Add("@leader", employee.Leader);
         param.Add("@name", employee.Name);

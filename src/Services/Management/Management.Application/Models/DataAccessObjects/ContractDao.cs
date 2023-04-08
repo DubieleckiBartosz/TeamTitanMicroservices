@@ -7,6 +7,8 @@ namespace Management.Application.Models.DataAccessObjects;
 
 public class ContractDao
 {
+    public int Id { get; init; }
+    public int Version { get; init; }
     public string Position { get; init; } = default!;
     public string ContractNumber { get; init; } = default!;
     public int ContractType { get; init; }
@@ -29,7 +31,7 @@ public class ContractDao
         var contractType = Enumeration.GetById<ContractType>(ContractType);
         var timeRange = TimeRange.Create(StartContract, EndContract);
 
-        var contract = EmployeeContract.Create(Position, contractType, settlementType, salary: Salary, timeRange,
+        var contract = EmployeeContract.Load(Id, Version, Position, contractType, settlementType, Salary, timeRange,
             NumberHoursPerDay, FreeDaysPerYear, BankAccountNumber, PaidIntoAccount, CreatedBy, HourlyRate, OvertimeRate,
             PaymentMonthDay);
 

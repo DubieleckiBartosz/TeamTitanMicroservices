@@ -27,10 +27,12 @@ public class Employee : Entity
     /// Load with only contracts
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="version"></param>
     /// <param name="contracts"></param>
-    private Employee(int id, List<EmployeeContract> contracts)
+    private Employee(int id, int version, List<EmployeeContract> contracts)
     {
         Id = id;
+        Version = version;
         contracts.ForEach(_ => _employeeContracts.Add(_));
     }
 
@@ -43,11 +45,20 @@ public class Employee : Entity
     /// <param name="personIdentifier"></param>
     /// <param name="accountId"></param>
     /// <param name="id"></param>
+    /// <param name="version"></param>
     /// <param name="leader"></param>
-    private Employee(int id, string leader, string employeeCode, string name, string surname, string? personIdentifier,
+    private Employee(
+        int id, 
+        int version, 
+        string leader, 
+        string employeeCode,
+        string name, 
+        string surname,
+        string? personIdentifier,
         Guid? accountId)
     {
         Id = id;
+        Version = version;
         Leader = leader; 
         EmployeeCode = employeeCode;
         AccountId = accountId;
@@ -125,21 +136,22 @@ public class Employee : Entity
             dayOffRequests);
     }
     
-    public static Employee Load(int id, List<EmployeeContract> contracts)
+    public static Employee Load(int id, int version, List<EmployeeContract> contracts)
     {
-        return new Employee(id, contracts);
+        return new Employee(id, version, contracts);
     }
 
-    public static Employee Load(int id, string leader, string employeeCode, string name, string surname,
+    public static Employee Load(int id, int version, string leader, string employeeCode, string name, string surname,
         string? personIdentifier, Guid? accountId)
     {
-        return new Employee(id, leader, employeeCode, name, surname, personIdentifier, accountId);
+        return new Employee(id, version, leader, employeeCode, name, surname, personIdentifier, accountId);
     }
 
     public void AssignAccount(Guid accountId)
     {
         AccountId = accountId;
-    } 
+        IncrementVersion();
+    }
 
     public void AddContract(EmployeeContract contract)
     {
@@ -173,6 +185,7 @@ public class Employee : Entity
     {
         var newAddress = Address.Create(city, street, numberStreet, postalCode);
         this.CommunicationData.UpdateAddress(newAddress);
+        IncrementVersion();
     }
 
     public void UpdateContact(string? phoneNumber, string? email)
@@ -182,11 +195,13 @@ public class Employee : Entity
             email ?? CommunicationData.Contact.Email);
 
         CommunicationData.UpdateContact(newContact);
+        IncrementVersion();
     }
 
     public void UpdateLeader(string newLeader)
     {
         Leader = newLeader;
+        IncrementVersion();
     }
 
     private bool DoesRangeDaysOffOverlap(RangeDaysOff newRange)

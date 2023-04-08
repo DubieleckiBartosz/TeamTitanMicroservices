@@ -56,6 +56,7 @@ BEGIN
 		   c.[OpenTo],
 		   c.[OwnerCode],
 		   c.[OwnerId], 
+		   c.[Version],
 		   cd.[Id],
            cd.[EmployeeId],
            cd.[CompanyId],
@@ -64,7 +65,8 @@ BEGIN
            cd.[NumberStreet],
            cd.[PostalCode],
            cd.[PhoneNumber],
-           cd.[Email]
+           cd.[Email],
+		   cd.[Version]
 	  FROM [TeamTitanManagement].[dbo].[Companies] AS c
 	  LEFT JOIN ContactDetails AS cd ON cd.CompanyId = c.Id
 	  WHERE OwnerCode = @ownerCode
@@ -84,6 +86,7 @@ BEGIN
 		   c.[OpenTo],
 		   c.[OwnerCode],
 		   c.[OwnerId],
+		   c.[Version],
 		   cd.[Id], 
            cd.[CompanyId],
            cd.[City],
@@ -91,7 +94,8 @@ BEGIN
            cd.[NumberStreet],
            cd.[PostalCode],
            cd.[PhoneNumber],
-           cd.[Email]
+           cd.[Email],
+		   cd.[Version]
 	  FROM [TeamTitanManagement].[dbo].[Companies] AS c
 	  INNER JOIN ContactDetails AS cd ON cd.CompanyId = c.Id
 	  WHERE CompanyCode = @companyCode
@@ -111,6 +115,7 @@ BEGIN
 		   c.[OpenTo],
 		   c.[OwnerCode],
 		   c.[OwnerId],
+		   c.[Version],
 		   cd.[Id], 
            cd.[CompanyId],
            cd.[City],
@@ -119,8 +124,10 @@ BEGIN
            cd.[PostalCode],
            cd.[PhoneNumber],
            cd.[Email],
+		   cd.[Version],
 		   d.[Id],
-		   d.[DepartmentName]
+		   d.[DepartmentName],
+		   d.[Version]
 	  FROM [TeamTitanManagement].[dbo].[Companies] AS c
 	  INNER JOIN ContactDetails AS cd ON cd.CompanyId = c.Id
 	  LEFT JOIN Departments AS d ON d.CompanyId = c.Id
@@ -139,7 +146,8 @@ CREATE OR ALTER PROCEDURE company_completeData_U
 	@numberStreet VARCHAR(10),
 	@postalCode VARChAR(10),
 	@phoneNumber VARCHAR(20),
-	@email VARCHAR(50)
+	@email VARCHAR(50),
+	@version INT
 AS
 BEGIN
 	BEGIN TRY  
@@ -148,7 +156,8 @@ BEGIN
 			CompanyName = @companyName,
 			IsConfirmed = @isConfirmed,
 			OpenFrom = @from,
-			OpenTo = @to
+			OpenTo = @to,
+			[Version] = @version
 		WHERE Id = @companyId
 	
 		INSERT INTO [dbo].[ContactDetails]
@@ -193,7 +202,8 @@ CREATE OR ALTER PROCEDURE company_updateCommunicationData_U
 	@numberStreet VARCHAR(10),
 	@postalCode VARChAR(10),
 	@phoneNumber VARCHAR(20),
-	@email VARCHAR(50)
+	@email VARCHAR(50),
+	@version INT
 AS
 BEGIN
 	 UPDATE [dbo].[ContactDetails]
@@ -202,7 +212,8 @@ BEGIN
 		   [NumberStreet] = @numberStreet,
 		   [PostalCode] = @postalCode,
 		   [PhoneNumber] = @phoneNumber,
-		   [Email] = @email
+		   [Email] = @email,
+		   [Version] = @version
 	 WHERE CompanyId = @companyId
 END
 GO
@@ -211,15 +222,37 @@ GO
 
 CREATE OR ALTER PROCEDURE department_newDepartment_I
 	@companyId INT,
-	@departmentName VARCHAR(100)
+	@departmentName VARCHAR(100),
+	@version INT
 AS
 BEGIN 
-	INSERT INTO [dbo].[Departments]
-			   ([CompanyId],
-			    [DepartmentName])
-		 VALUES
-			   (@companyId,
-				@departmentName)
+	BEGIN TRY  
+		BEGIN TRANSACTION;
+			
+			UPDATE Companies SET [Version] = @version
+			WHERE Id = @companyId
+
+			INSERT INTO [dbo].[Departments]
+					   ([CompanyId],
+						[DepartmentName])
+				 VALUES
+					   (@companyId,
+						@departmentName)
+
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH
 END
 GO  
 
@@ -229,7 +262,8 @@ AS
 BEGIN 
 	SELECT [Id],
 		   [CompanyId],
-		   [DepartmentName]
+		   [DepartmentName],
+		   [Version]
 	  FROM [TeamTitanManagement].[dbo].[Departments]
 	  WHERE Id = @departmentId
 END 
@@ -240,7 +274,8 @@ CREATE OR ALTER PROCEDURE department_getDepartmentsByCompanyId_S
 AS
 BEGIN 
 	SELECT [Id],
-		   [DepartmentName] 
+		   [DepartmentName],
+		   [Version]
 	  FROM [TeamTitanManagement].[dbo].[Departments]
 	  WHERE CompanyId = @companyId
 END 
@@ -256,27 +291,48 @@ CREATE OR ALTER PROCEDURE dayOff_newDayOffRequest_I
 	@toDate DATETIME,
 	@reasonType INT,
 	@description VARCHAR(MAX),
-	@canceled BIT
+	@canceled BIT,
+	@version INT
 AS
 BEGIN 
-	INSERT INTO [dbo].[DayOffRequests]
-			   ([EmployeeId],
-			    [CreatedBy],
-			    [FromDate],
-			    [ToDate],
-			    [CurrentStatus],
-			    [ReasonType],
-			    [Description], 
-			    [Canceled])
-		 VALUES
-			   (@employeeId,
-			    @createdBy,
-				@fromDate,
-				@toDate,
-				@currentStatus,
-				@reasonType,
-				@description,
-				@canceled)
+	BEGIN TRY  
+		BEGIN TRANSACTION;
+
+		UPDATE Employees SET [Version] = @version
+		WHERE Id = @employeeId
+
+		INSERT INTO [dbo].[DayOffRequests]
+				   ([EmployeeId],
+					[CreatedBy],
+					[FromDate],
+					[ToDate],
+					[CurrentStatus],
+					[ReasonType],
+					[Description], 
+					[Canceled])
+			 VALUES
+				   (@employeeId,
+					@createdBy,
+					@fromDate,
+					@toDate,
+					@currentStatus,
+					@reasonType,
+					@description,
+					@canceled)
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END
+		
+	END CATCH
 END 
 GO
 
@@ -293,7 +349,8 @@ BEGIN
 		   [ReasonType],
 		   [Description],
 		   [ConsideredBy],
-		   [Canceled] 
+		   [Canceled],
+		   [Version]
 	  FROM [TeamTitanManagement].[dbo].[DayOffRequests]
 	  WHERE Id = @dayOffRequestId
 END 
@@ -301,10 +358,13 @@ GO
 
 CREATE OR ALTER PROCEDURE dayOff_cancel_U
 	@dayOffRequestId INT,
-	@isCanceled BIT
+	@isCanceled BIT,
+	@version INT
 AS
 BEGIN
-	UPDATE DayOffRequests SET Canceled = @isCanceled
+	UPDATE DayOffRequests SET 
+			Canceled = @isCanceled,
+			[Version] = @version
 	WHERE Id = @dayOffRequestId
 END
 GO
@@ -312,12 +372,14 @@ GO
 CREATE OR ALTER PROCEDURE dayOff_considerRequest_U
 	@dayOffRequestId INT,
 	@status INT,
-	@consideredBy VARCHAR(50)
+	@consideredBy VARCHAR(50),
+	@version INT
 AS
 BEGIN
 	UPDATE DayOffRequests SET 
 		CurrentStatus = @status,
-		ConsideredBy = @consideredBy
+		ConsideredBy = @consideredBy,
+		[Version] = @version
 	WHERE Id = @dayOffRequestId
 END
 GO
@@ -342,6 +404,9 @@ AS
 BEGIN
 	BEGIN TRY  
 		BEGIN TRANSACTION; 
+			
+			UPDATE Departments SET [Version] = @version
+			WHERE Id = @departmentId
 
 			INSERT INTO [dbo].[Employees]
 					   ([DepartmentId],
@@ -409,13 +474,15 @@ BEGIN
 		   e.[Name],
 		   e.[Surname],
 		   e.[Birthday],
-		   e.[PersonIdentifier],   
+		   e.[PersonIdentifier],
+		   e.[Version],
            cd.[City],
            cd.[Street],
            cd.[NumberStreet],
            cd.[PostalCode],
            cd.[PhoneNumber],
            cd.[Email],
+		   cd.[Version],
 		   ec.[Id],
 		   ec.[EmployeeId],
 		   ec.[Position],
@@ -430,6 +497,7 @@ BEGIN
 		   ec.[CreatedBy],
 		   ec.[PaidIntoAccount],
 		   ec.[PaymentMonthDay],
+		   ec.[Version],
 		   dor.[Id],
 		   dor.[EmployeeId],
 		   dor.[CreatedBy],
@@ -439,7 +507,8 @@ BEGIN
 		   dor.[ReasonType],
 		   dor.[Description],
 		   dor.[ConsideredBy],
-		   dor.[Canceled]
+		   dor.[Canceled],
+		   dor.[Version]
 	  FROM [TeamTitanManagement].[dbo].[Employees] AS e
 	  INNER JOIN ContactDetails AS cd ON cd.EmployeeId = e.Id
 	  LEFT JOIN EmployeeContracts AS ec ON ec.EmployeeId = e.Id 
@@ -461,12 +530,14 @@ BEGIN
 		   e.[Surname],
 		   e.[Birthday],
 		   e.[PersonIdentifier], 
+		   e.[Version],
 		   cd.[City],
            cd.[Street],
            cd.[NumberStreet],
            cd.[PostalCode],
            cd.[PhoneNumber],
            cd.[Email],
+		   cd.[Version],
 		   ec.[Id],
 		   ec.[EmployeeId],
 		   ec.[Position],
@@ -481,6 +552,7 @@ BEGIN
 		   ec.[CreatedBy],
 		   ec.[PaidIntoAccount],
 		   ec.[PaymentMonthDay],
+		   ec.[Version],
 		   dor.[Id],
 		   dor.[EmployeeId],
 		   dor.[CreatedBy],
@@ -490,7 +562,8 @@ BEGIN
 		   dor.[ReasonType],
 		   dor.[Description],
 		   dor.[ConsideredBy],
-		   dor.[Canceled]
+		   dor.[Canceled],
+		   dor.[Version]
 	  FROM [TeamTitanManagement].[dbo].[Employees] AS e
 	  INNER JOIN ContactDetails AS cd ON cd.EmployeeId = e.Id
 	  LEFT JOIN EmployeeContracts AS ec ON ec.EmployeeId = e.Id 
@@ -501,10 +574,13 @@ GO
 
 CREATE OR ALTER PROCEDURE employee_addAccountToEmployee_U
 	@employeeId INT,
-	@accountId UNIQUEIDENTIFIER
+	@accountId UNIQUEIDENTIFIER,
+	@version INT
 AS
 BEGIN
-	UPDATE Employees SET AccountId = @accountId
+	UPDATE Employees SET
+		AccountId = @accountId,
+		[Version] = @version
 	WHERE Id = @employeeId
 END
 GO
@@ -512,12 +588,14 @@ GO
 CREATE OR ALTER PROCEDURE employee_contactData_U
 	@employeeId INT,
 	@phoneNumber VARCHAR(20),
-	@email VARCHAR(50)
+	@email VARCHAR(50),
+	@version INT
 AS
 BEGIN
 	UPDATE ContactDetails SET 
 		PhoneNumber = @phoneNumber,
-		Email = @email
+		Email = @email,
+		[Version] = @version
 	WHERE EmployeeId = @employeeId
 END
 GO
@@ -527,24 +605,29 @@ CREATE OR ALTER PROCEDURE employee_address_U
 	@city VARCHAR(50),
 	@street VARCHAR(50),
 	@numberStreet VARCHAR(10),
-	@postalCode VARChAR(10)
+	@postalCode VARChAR(10),
+	@version INT
 AS
 BEGIN
 	UPDATE ContactDetails SET 
 		City = @city,
 		Street = @street,
 		NumberStreet = @numberStreet,
-		PostalCode = @postalCode
+		PostalCode = @postalCode,
+		[Version] = @version
 	WHERE EmployeeId = @employeeId
 END
 GO
 
 CREATE OR ALTER PROCEDURE employee_newLeader_U
 	@employeeId INT,
-	@newLeader VARCHAR(50)
+	@newLeader VARCHAR(50),
+	@version INT
 AS
 BEGIN
-	UPDATE Employees SET Leader = @newLeader
+	UPDATE Employees SET
+		Leader = @newLeader,
+		[Version] = @version
 	WHERE Id = @employeeId
 END
 GO
@@ -559,7 +642,8 @@ BEGIN
 		   [Name],
 		   [Surname],
 		   [PersonIdentifier],
-		   [Leader]
+		   [Leader],
+		   [Version]
 	  FROM [TeamTitanManagement].[dbo].[Employees]
 	  WHERE Id = @employeeId
 END
@@ -569,6 +653,7 @@ GO
 
 CREATE OR ALTER PROCEDURE contract_newContract_I
 	@employeeId INT,
+	@version INT,
 	@position VARCHAR(100),
 	@contractType INT,
 	@settlementType INT,
@@ -585,34 +670,54 @@ CREATE OR ALTER PROCEDURE contract_newContract_I
 	@createdBy VARCHAR(50)
 AS
 BEGIN
-	INSERT INTO [dbo].[EmployeeContracts]
-			   ([EmployeeId]
-			   ,[Position]
-			   ,[ContractType]
-			   ,[SettlementType]
-			   ,[Salary]
-			   ,[StartContract]
-			   ,[EndContract]
-			   ,[NumberHoursPerDay]
-			   ,[FreeDaysPerYear]
-			   ,[BankAccountNumber]
-			   ,[CreatedBy]
-			   ,[PaidIntoAccount]
-			   ,[PaymentMonthDay])
-		 VALUES
-				(@employeeId, 
-				 @position, 
-				 @contractType, 
-				 @settlementType, 
-				 @salary, 
-				 @startContract, 
-				 @endContract, 
-				 @numberHoursPerDay,
-				 @freeDaysPerYear, 
-				 @bankAccountNumber, 
-				 @createdBy, 
-				 @paidIntoAccount, 
-				 @paymentMonthDay)
+	BEGIN TRY  
+		BEGIN TRANSACTION; 
+
+			UPDATE Employees SET [Version] = @version
+			WHERE Id = @employeeId
+
+			INSERT INTO [dbo].[EmployeeContracts]
+					   ([EmployeeId]
+					   ,[Position]
+					   ,[ContractType]
+					   ,[SettlementType]
+					   ,[Salary]
+					   ,[StartContract]
+					   ,[EndContract]
+					   ,[NumberHoursPerDay]
+					   ,[FreeDaysPerYear]
+					   ,[BankAccountNumber]
+					   ,[CreatedBy]
+					   ,[PaidIntoAccount]
+					   ,[PaymentMonthDay])
+				 VALUES
+						(@employeeId, 
+						 @position, 
+						 @contractType, 
+						 @settlementType, 
+						 @salary, 
+						 @startContract, 
+						 @endContract, 
+						 @numberHoursPerDay,
+						 @freeDaysPerYear, 
+						 @bankAccountNumber, 
+						 @createdBy, 
+						 @paidIntoAccount, 
+						 @paymentMonthDay)
+
+		COMMIT TRANSACTION;
+	END TRY  
+	BEGIN CATCH
+	    IF (XACT_STATE()) = -1
+        BEGIN
+			ROLLBACK TRANSACTION
+		END
+  
+		IF (XACT_STATE()) = 1
+        BEGIN
+			COMMIT TRANSACTION
+		END 
+	END CATCH
 END
 GO
  
