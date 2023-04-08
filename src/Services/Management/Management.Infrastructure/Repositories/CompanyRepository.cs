@@ -70,6 +70,7 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
         param.Add("@postalCode", company.CommunicationData.Address.PostalCode);
         param.Add("@phoneNumber", company.CommunicationData.Contact.PhoneNumber);
         param.Add("@email", company.CommunicationData.Contact.Email);
+        param.Add("@version", company.Version);
 
         var result = await ExecuteAsync("company_completeData_U", param, CommandType.StoredProcedure);
         if (result <= 0)
@@ -85,6 +86,7 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
         var param = new DynamicParameters();
 
         param.Add("@companyId", company.Id);
+        param.Add("@version", company.Version);
         param.Add("@departmentName", newDepartment.DepartmentName.ToString());
 
         var result = await ExecuteAsync("department_newDepartment_I", param, CommandType.StoredProcedure);
@@ -105,6 +107,7 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
         param.Add("@postalCode", company.CommunicationData.Address.PostalCode);
         param.Add("@phoneNumber", company.CommunicationData.Contact.PhoneNumber);
         param.Add("@email", company.CommunicationData.Contact.Email);
+        param.Add("@version", company.CommunicationData.Version);
 
         var result = await ExecuteAsync("company_updateCommunicationData_U", param, CommandType.StoredProcedure);
         if (result <= 0)

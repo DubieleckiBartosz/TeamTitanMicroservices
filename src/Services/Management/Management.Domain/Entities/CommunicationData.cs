@@ -14,18 +14,29 @@ public class CommunicationData : Entity
         Contact = contact;
     }
 
+    public CommunicationData(Address address, Contact contact, int version) : this(address, contact)
+    { 
+        Version = version;
+    }
+
     public static CommunicationData Create(Address address, Contact contact)
     {
         return new CommunicationData(address, contact);
+    } 
+    public static CommunicationData Load(Address address, Contact contact, int version)
+    {
+        return new CommunicationData(address, contact, version);
     }
 
     public void UpdateContact(Contact contact)
     {
         this.Contact = contact;
+        IncrementVersion();
     }
 
     public void UpdateAddress(Address address)
     {
         this.Address = address;
+        IncrementVersion();
     }
 }

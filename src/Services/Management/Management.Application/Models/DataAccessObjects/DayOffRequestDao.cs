@@ -9,6 +9,7 @@ namespace Management.Application.Models.DataAccessObjects;
 public class DayOffRequestDao
 {
     public int Id { get; init; }
+    public int Version { get; init; }
     public string CreatedBy { get; init; } = default!;
     public string? ConsideredBy { get; init; }
     public bool Canceled { get; init; }
@@ -24,8 +25,8 @@ public class DayOffRequestDao
         var currentStatus = Enumeration.GetById<DayOffRequestCurrentStatus>(CurrentStatus);
         var reason = Enumeration.GetById<ReasonType>(ReasonType);
         var description = Description != null ? DayOffRequestDescription.CreateDescription(Description) : null;
-        var dayOffRequest = DayOffRequest.Load(Id, CreatedBy, ConsideredBy, Canceled, daysOff, currentStatus, reason,
-            description);
+        var dayOffRequest = DayOffRequest.Load(Id, Version, CreatedBy, ConsideredBy, Canceled, daysOff, currentStatus,
+            reason, description);
 
         return dayOffRequest;
     }

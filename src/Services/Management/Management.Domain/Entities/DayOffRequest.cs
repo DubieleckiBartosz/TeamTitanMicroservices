@@ -38,6 +38,7 @@ public class DayOffRequest : Entity
     /// Load data
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="version"></param>
     /// <param name="createdBy"></param>
     /// <param name="consideredBy"></param>
     /// <param name="canceled"></param>
@@ -45,11 +46,12 @@ public class DayOffRequest : Entity
     /// <param name="currentStatus"></param>
     /// <param name="reasonType"></param>
     /// <param name="description"></param>
-    private DayOffRequest(int id, string createdBy, string? consideredBy, bool canceled, RangeDaysOff daysOff,
+    private DayOffRequest(int id, int version, string createdBy, string? consideredBy, bool canceled, RangeDaysOff daysOff,
         DayOffRequestCurrentStatus currentStatus, ReasonType reasonType, DayOffRequestDescription? description) : this(
         createdBy, daysOff, reasonType, description)
     {
         Id = id;
+        Version = version;
         ConsideredBy = consideredBy;
         Canceled = canceled;
         CurrentStatus = currentStatus;
@@ -61,10 +63,10 @@ public class DayOffRequest : Entity
         return new DayOffRequest(createdBy, daysOff, reasonType, description);
     }
 
-    public static DayOffRequest Load(int id, string createdBy, string? consideredBy, bool canceled, RangeDaysOff daysOff,
+    public static DayOffRequest Load(int id, int version, string createdBy, string? consideredBy, bool canceled, RangeDaysOff daysOff,
         DayOffRequestCurrentStatus currentStatus, ReasonType reasonType, DayOffRequestDescription? description)
     {
-        return new DayOffRequest(id, createdBy, consideredBy, canceled, daysOff,
+        return new DayOffRequest(id, version, createdBy, consideredBy, canceled, daysOff,
             currentStatus, reasonType, description);
     }
 
@@ -78,6 +80,7 @@ public class DayOffRequest : Entity
 
         ConsideredBy = considerBy;
         CurrentStatus = newStatus;
+        IncrementVersion();
     }
 
     public void Cancel()
@@ -89,5 +92,6 @@ public class DayOffRequest : Entity
         }
 
         Canceled = true;
+        IncrementVersion();
     }
 }

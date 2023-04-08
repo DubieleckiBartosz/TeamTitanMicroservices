@@ -32,6 +32,7 @@ public class DayOffRequestRepository : BaseRepository<DayOffRequestRepository>, 
 
         param.Add("@dayOffRequestId", dayOffRequest.Id);
         param.Add("@isCanceled", dayOffRequest.Canceled);
+        param.Add("@version", dayOffRequest.Version);
 
         var result = await ExecuteAsync("dayOff_cancel_U", param, CommandType.StoredProcedure);
         if (result <= 0)
@@ -47,6 +48,7 @@ public class DayOffRequestRepository : BaseRepository<DayOffRequestRepository>, 
         param.Add("@dayOffRequestId", dayOffRequest.Id);
         param.Add("@status", dayOffRequest.CurrentStatus.Id);
         param.Add("@consideredBy", dayOffRequest.ConsideredBy);
+        param.Add("@version", dayOffRequest.Version);
 
         var result = await ExecuteAsync("dayOff_considerRequest_U", param, CommandType.StoredProcedure);
         if (result <= 0)

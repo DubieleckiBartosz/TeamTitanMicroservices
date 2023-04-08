@@ -6,6 +6,7 @@ namespace Management.Application.Models.DataAccessObjects;
 public class EmployeeDao
 {
     public int Id { get; init; }
+    public int Version { get; init; }
     public Guid? AccountId { get; init; }
     public int DepartmentId { get; init; }
     public string Leader { get; init; } = default!;
@@ -22,12 +23,12 @@ public class EmployeeDao
     {
         if (Communication == null)
         {
-            return Employee.Load(Id, Leader, EmployeeCode, Name, Surname, PersonIdentifier, AccountId);
+            return Employee.Load(Id, Version, Leader, EmployeeCode, Name, Surname, PersonIdentifier, AccountId);
         }   
         
         var address = Address.Create(Communication.City, Communication.Street, Communication.NumberStreet, Communication.PostalCode);
         var contact = Contact.Create(Communication.PhoneNumber, Communication.Email);
-        var communicationData = CommunicationData.Create(address, contact);
+        var communicationData = CommunicationData.Load(address, contact, Communication.Version);
         var contracts = Contracts.Select(_ => _.Map()).ToList();
         var dayOffRequests = DayOffRequests.Select(_ => _.Map()).ToList();
 

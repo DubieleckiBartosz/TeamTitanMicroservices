@@ -15,7 +15,7 @@ public class Company : Entity, IAggregateRoot
     public string CompanyCode { get; }
     public string OwnerCode { get; }
     public bool IsConfirmed { get; private set; }
-    public CompanyName CompanyName { get; private set; }
+    public CompanyName? CompanyName { get; private set; }
     public OpeningHours? OpeningHours { get; private set; }
     public CompanyStatus CompanyStatus { get; private set; }
     public List<Department> Departments => _departments.ToList();
@@ -39,9 +39,30 @@ public class Company : Entity, IAggregateRoot
     }
 
     /// <summary>
-    /// Load data
+    /// Load necessary data
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="version"></param>
+    /// <param name="ownerId"></param>
+    /// <param name="companyCode"></param>
+    /// <param name="ownerCode"></param>
+    /// <param name="companyStatus"></param>
+    /// <param name="isConfirmed"></param>
+    private Company(int id, int version, int ownerId, string companyCode, string ownerCode, CompanyStatus companyStatus,
+        bool isConfirmed) : this(ownerId, companyCode, ownerCode)
+    {
+        Id = id;
+        Version = version;
+        CompanyStatus = companyStatus;
+        IsConfirmed = isConfirmed;
+    }
+
+
+    /// <summary>
+    /// Load all data
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="version"></param>
     /// <param name="ownerId"></param>
     /// <param name="ownerCode"></param>
     /// <param name="communicationData"></param>
@@ -50,31 +71,39 @@ public class Company : Entity, IAggregateRoot
     /// <param name="openingHours"></param>
     /// <param name="companyStatus"></param>
     /// <param name="departments"></param>
-    private Company(int id, int ownerId, string ownerCode, CommunicationData communicationData, string companyCode,
-        CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments)  
+    /// <param name="isConfirmed"></param>
+    private Company(int id, int version, int ownerId, string ownerCode, CommunicationData communicationData, string companyCode,
+        CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments, bool isConfirmed)  
         : this(ownerId, companyCode, ownerCode)
     {
-        Id = id; 
+        Id = id;
+        Version = version;
         CommunicationData = communicationData;
         CompanyName = companyName;
         OpeningHours = openingHours;
         CompanyStatus = companyStatus;
+        IsConfirmed = isConfirmed;
 
         departments.ForEach(_ => _departments.Add(_));
-    }
-
+    } 
     public static Company Init(int ownerId, string uniqueCode, string ownerCode)
     {
         return new Company(ownerId, uniqueCode, ownerCode);
     }
 
-    public static Company Load(int id, int ownerId, string ownerCode, CommunicationData communicationData,
+    public static Company Load(int id, int version, int ownerId, string ownerCode, CommunicationData communicationData,
         string companyCode,
-        CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments)
+        CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments, bool isConfirmed)
     {
-        return new Company(id, ownerId, ownerCode, communicationData, companyCode,
-            companyName, openingHours, companyStatus, departments);
+        return new Company(id, version, ownerId, ownerCode, communicationData, companyCode,
+            companyName, openingHours, companyStatus, departments, isConfirmed);
     }
+
+    public static Company Load(int id, int version, int ownerId, string companyCode, string ownerCode, CompanyStatus companyStatus, bool isConfirmed)
+    {
+        return new Company(id, version, ownerId, ownerCode, companyCode, companyStatus, isConfirmed);
+    }
+
 
     public void UpdateData(CompanyName companyName, OpeningHours? openingHours, CommunicationData communicationData)
     {
@@ -83,7 +112,8 @@ public class Company : Entity, IAggregateRoot
         CompanyName = companyName;
 
         IsConfirmed = true;
-        CompanyStatus = CompanyStatus.Active; 
+        CompanyStatus = CompanyStatus.Active;
+        IncrementVersion();
     }
 
     public void AddNewDepartment(string name)
@@ -97,8 +127,9 @@ public class Company : Entity, IAggregateRoot
 
         var newDepartment = Department.CreateDepartment(departmentName); 
         this._departments.Add(newDepartment);
+        IncrementVersion();
     }
-     
+
     public void UpdateCommunicationData(
         string? phoneNumber, string? email, string? city, string? street,
         string? numberStreet, string? postalCode)
@@ -115,6 +146,7 @@ public class Company : Entity, IAggregateRoot
 
         var newContact = Contact.Create(phoneNumber, email);
         CommunicationData.UpdateContact(newContact);
+        IncrementVersion();
     }
 
     private Department? FindDepartmentByName(DepartmentName departmentName)

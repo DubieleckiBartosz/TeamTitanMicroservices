@@ -16,7 +16,7 @@ public class Department : Entity
         DepartmentName = departmentName;
     }
 
-    private Department(int id, DepartmentName departmentName, List<Employee> employees) : this(departmentName)
+    private Department(int id, int version, DepartmentName departmentName, List<Employee> employees) : this(departmentName)
     {
         Id = id;
         employees.ForEach(_ => _employees.Add(_));
@@ -27,9 +27,9 @@ public class Department : Entity
     {
         return new(departmentName);
     }
-    public static Department LoadDepartment(int id, DepartmentName departmentName, List<Employee> employees)
+    public static Department LoadDepartment(int id, int version, DepartmentName departmentName, List<Employee> employees)
     {
-        return new(id, departmentName, employees);
+        return new(id, version, departmentName, employees);
     }
 
     public void AddNewEmployee(string leader, string code, string name, string surname, DateTime birthday,
@@ -53,6 +53,7 @@ public class Department : Entity
         }
 
         Employees.Remove(employee);
+        IncrementVersion(); 
     }
 
     private Employee? FindEmployee(int employeeId)

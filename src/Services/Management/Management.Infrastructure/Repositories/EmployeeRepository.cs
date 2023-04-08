@@ -101,7 +101,8 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
 
         param.Add("@employeeId", employee.Id);
         param.Add("@accountId", employee.AccountId);
-         
+        param.Add("@version", employee.Version);
+
         var result = await ExecuteAsync("employee_addAccountToEmployee_U", param, CommandType.StoredProcedure);
         if (result <= 0)
         {
@@ -115,6 +116,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         var param = new DynamicParameters(); 
 
         param.Add("@employeeId", employee.Id);
+        param.Add("@version", employee.Version);
         param.Add("@createdBy", dayOff.CreatedBy);
         param.Add("@currentStatus", dayOff.CurrentStatus.Id);
         param.Add("@fromDate", dayOff.DaysOff.FromDate);
@@ -136,6 +138,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         var param = new DynamicParameters(); 
 
         param.Add("@employeeId", employee.Id);
+        param.Add("@version", employee.Version);
         param.Add("@position", contract.Position);
         param.Add("@contractType", contract.ContractType.Id);
         param.Add("@settlementType", contract.SettlementType.Id);
@@ -165,6 +168,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         param.Add("@employeeId", employee.Id); 
         param.Add("@phoneNumber", employee.CommunicationData.Contact.PhoneNumber);
         param.Add("@email", employee.CommunicationData.Contact.Email);
+        param.Add("@version", employee.Version);
 
         var result = await ExecuteAsync("employee_contactData_U", param, CommandType.StoredProcedure);
         if (result <= 0)
@@ -182,6 +186,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         param.Add("@street", employee.CommunicationData.Address.Street);
         param.Add("@numberStreet", employee.CommunicationData.Address.NumberStreet);
         param.Add("@postalCode", employee.CommunicationData.Address.PostalCode);
+        param.Add("@version", employee.Version);
 
         var result = await ExecuteAsync("employee_address_U", param, CommandType.StoredProcedure);
         if (result <= 0)
@@ -196,6 +201,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
 
         param.Add("@employeeId", employee.Id);
         param.Add("@newLeader", employee.Leader); 
+        param.Add("@version", employee.Version); 
 
         var result = await ExecuteAsync("employee_newLeader_U", param, CommandType.StoredProcedure);
         if (result <= 0)
