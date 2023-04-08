@@ -22,7 +22,7 @@ public class NewContractNotificationHandler : INotificationHandler<DomainNotific
             throw new ArgumentException(nameof(domainEvent) + "cannot be null.");
         }
 
-        var processEvent = new ContractProcess(domainEvent.CountingType, domainEvent.WorkDayHours,
+        var processEvent = new NewContractProcess(domainEvent.CountingType, domainEvent.WorkDayHours,
             domainEvent.SettlementDayMonth, domainEvent.AccountId, domainEvent.ExpirationDate);
 
         await _eventBus.CommitAsync(processEvent);
