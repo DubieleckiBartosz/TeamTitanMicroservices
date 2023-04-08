@@ -150,21 +150,7 @@ public class AccountController : BaseController
         var command = ChangeFinancialDataCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
-    }
-
-    /// <summary>
-    /// Complete data
-    /// </summary>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
-    [Authorize(Roles = "Admin,Owner,Manager")]
-    [HttpPut("[action]")]
-    public async Task<IActionResult> UpdateData([FromBody] UpdateDataParameters parameters)
-    {
-        var command = UpdateAccountDataCommand.Create(parameters);
-        await CommandBus.Send(command);
-        return NoContent();
-    }
+    } 
 
     /// <summary>
     /// Deactivate account
