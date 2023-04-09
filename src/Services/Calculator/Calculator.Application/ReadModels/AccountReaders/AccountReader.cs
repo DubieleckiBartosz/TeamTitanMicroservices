@@ -252,6 +252,14 @@ public class AccountReader : IRead
         return this;
     }
 
+
+    public AccountReader UpdateSettlementDayMonth(SettlementDayMonthUpdated @event)
+    {
+        SettlementDayMonth = @event.SettlementDayMonth;
+
+        return this;
+    }
+
     public ProductItemReader? GetLastProductItem()
     {
         return this.ProductItems.LastOrDefault();

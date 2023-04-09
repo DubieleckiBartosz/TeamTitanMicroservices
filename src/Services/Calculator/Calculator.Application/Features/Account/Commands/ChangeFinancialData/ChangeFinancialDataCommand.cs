@@ -1,13 +1,12 @@
-﻿using Calculator.Application.Parameters.AccountParameters;
-using MediatR;
+﻿using MediatR;
 using Shared.Implementations.Abstractions;
 
 namespace Calculator.Application.Features.Account.Commands.ChangeFinancialData;
 
 public record ChangeFinancialDataCommand(decimal? OvertimeRate, decimal? HourlyRate, Guid AccountId) : ICommand<Unit>
 {
-    public static ChangeFinancialDataCommand Create(ChangeFinancialDataParameters parameters)
+    public static ChangeFinancialDataCommand Create(decimal? overtimeRate, decimal? hourlyRate, Guid accountId)
     {
-        return new ChangeFinancialDataCommand(parameters.OvertimeRate, parameters.HourlyRate, parameters.AccountId);
+        return new ChangeFinancialDataCommand(overtimeRate, hourlyRate, accountId);
     }
 }

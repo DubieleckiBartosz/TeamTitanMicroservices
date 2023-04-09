@@ -117,6 +117,16 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE account_settlementDayMonth_U
+	@accountId UNIQUEIDENTIFIER, 
+	@newSettlementDayMonth INT
+AS
+BEGIN 
+	UPDATE Accounts SET SettlementDayMonth = @newSettlementDayMonth 
+	WHERE Id = @accountId
+END
+GO
+
 CREATE OR ALTER PROCEDURE day_createWorkDay_I
 	@accountId UNIQUEIDENTIFIER, 
 	@date DATETIME,

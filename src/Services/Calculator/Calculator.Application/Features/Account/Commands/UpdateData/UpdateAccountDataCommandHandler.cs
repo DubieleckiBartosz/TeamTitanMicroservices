@@ -5,7 +5,6 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.EventStore.Repositories;
 using Shared.Implementations.Validators;
 using Shared.Implementations.Background;
-using Shared.Implementations.Services;
 using Calculator.Domain.Account.Snapshots;
 
 namespace Calculator.Application.Features.Account.Commands.UpdateData;
@@ -13,21 +12,19 @@ namespace Calculator.Application.Features.Account.Commands.UpdateData;
 public class UpdateAccountDataCommandHandler : ICommandHandler<UpdateAccountDataCommand, Unit>
 {
     private readonly IRepository<Domain.Account.Account> _repository;
-    private readonly IJobService _jobService;
-    private readonly ICurrentUser _currentUser;
+    private readonly IJobService _jobService; 
 
-    public UpdateAccountDataCommandHandler(IRepository<Domain.Account.Account> repository, IJobService jobService, ICurrentUser currentUser)
+    public UpdateAccountDataCommandHandler(IRepository<Domain.Account.Account> repository, IJobService jobService)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService));
-        _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+        _jobService = jobService ?? throw new ArgumentNullException(nameof(jobService)); 
     }
 
     public async Task<Unit> Handle(UpdateAccountDataCommand request, CancellationToken cancellationToken)
     {
         var account = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
 
-        account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
+        account.CheckAndThrowWhenNullOrNotMatch("Account");
 
         var countingType = request.CountingType;
         var workDayHours = request.WorkDayHours;
@@ -45,7 +42,7 @@ public class UpdateAccountDataCommandHandler : ICommandHandler<UpdateAccountData
 
             _jobService.RecurringJobMediator(Keys.SettlementBackgroundJobName(account.Id.ToString()), new AccountSettlementCommand(account.Id),
                 cronExpression); 
-        }
+        } 
 
         return Unit.Value;
     }

@@ -302,7 +302,6 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
 
         await ExecuteAsync("account_newOvertimeRate_U", parameters, CommandType.StoredProcedure);
     }
-
      
     public async Task UpdateStatusToActiveAsync(AccountReader accountReader)
     {
@@ -314,6 +313,16 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@isActive", accountReader.IsActive);
 
         await ExecuteAsync("account_statusActive_U", parameters, CommandType.StoredProcedure);
+    }
+
+    public async Task UpdateSettlementDayMonthAsync(AccountReader accountReader)
+    {
+        var parameters = new DynamicParameters();
+
+        parameters.Add("@accountId", accountReader.Id);
+        parameters.Add("@newSettlementDayMonth", accountReader.SettlementDayMonth); 
+
+        await ExecuteAsync("account_settlementDayMonth_U", parameters, CommandType.StoredProcedure);
     }
 
     public async Task AddNewWorkDayAsync(AccountReader accountReader)

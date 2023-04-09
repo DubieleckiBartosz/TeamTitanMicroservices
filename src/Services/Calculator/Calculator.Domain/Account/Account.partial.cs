@@ -17,6 +17,10 @@ public partial class Account
         Details.AssignData(@event.CountingType, @event.Status, false,
             @event.WorkDayHours, @event.SettlementDayMonth, @event.ExpirationDate);
     }
+    private void AccountSettlementDayMonthUpdated(SettlementDayMonthUpdated @event)
+    {
+        Details.UpdateSettlementDayMonth(@event.SettlementDayMonth);
+    }
 
     public void AccountFinancialDataUpdated(FinancialDataUpdated @event)
     {

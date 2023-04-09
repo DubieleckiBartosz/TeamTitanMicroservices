@@ -7,7 +7,6 @@ using Calculator.Application.Features.Account.Commands.ChangeCountingType;
 using Calculator.Application.Features.Account.Commands.ChangeDayHours;
 using Calculator.Application.Features.Account.Commands.ChangeFinancialData;
 using Calculator.Application.Features.Account.Commands.DeactivateAccount;
-using Calculator.Application.Features.Account.Commands.UpdateData;
 using Calculator.Application.Features.Account.Queries.GetAccountsBySearch;
 using Calculator.Application.Parameters.AccountParameters;
 using Microsoft.AspNetCore.Authorization;
@@ -108,21 +107,7 @@ public class AccountController : BaseController
         var command = CancelBonusAccountCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
-    }
-
-    /// <summary>
-    /// New counting type
-    /// </summary>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
-    [Authorize(Roles = "Admin,Owner,Manager")]
-    [HttpPut("[action]")]
-    public async Task<IActionResult> ChangeCountingType([FromBody] ChangeCountingTypeParameters parameters)
-    {
-        var command = ChangeCountingTypeCommand.Create(parameters);
-        await CommandBus.Send(command);
-        return NoContent();
-    }
+    } 
 
     /// <summary>
     /// Change day hours
@@ -137,21 +122,7 @@ public class AccountController : BaseController
         await CommandBus.Send(command);
         return NoContent();
     }
-
-    /// <summary>
-    /// Change financial data
-    /// </summary>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
-    [Authorize(Roles = "Admin,Owner,Manager")]
-    [HttpPut("[action]")]
-    public async Task<IActionResult> ChangeFinancialData([FromBody] ChangeFinancialDataParameters parameters)
-    {
-        var command = ChangeFinancialDataCommand.Create(parameters);
-        await CommandBus.Send(command);
-        return NoContent();
-    } 
-
+     
     /// <summary>
     /// Deactivate account
     /// </summary>

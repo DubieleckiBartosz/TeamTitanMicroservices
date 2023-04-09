@@ -193,6 +193,15 @@ public partial class Account : Aggregate
         Apply(@event);
         this.Enqueue(@event);
     }
+    
+    public void UpdateSettlementDay(int newSettlementDay)
+    {
+        this.ThrowWhenNotActive();
+
+        var @event = SettlementDayMonthUpdated.Create(newSettlementDay, this.Id);
+        Apply(@event);
+        this.Enqueue(@event);
+    }
 
     public void AccountUpdateFinancialData(decimal? overtimeRate, decimal? hourlyRate)
     {
@@ -325,6 +334,9 @@ public partial class Account : Aggregate
                 break;
             case BonusCanceled e:
                 this.AccountBonusCanceled(e);
+                break;
+            case SettlementDayMonthUpdated e:
+                this.AccountSettlementDayMonthUpdated(e);
                 break;
             default:
                 break;

@@ -32,4 +32,5 @@ public interface IAccountRepository
     Task UpdateHourlyRateAsync(AccountReader accountReader);
     Task UpdateOvertimeRateAsync(AccountReader accountReader);
     Task UpdateStatusToActiveAsync(AccountReader accountReader);
+    Task UpdateSettlementDayMonthAsync(AccountReader accountReader);
 }
