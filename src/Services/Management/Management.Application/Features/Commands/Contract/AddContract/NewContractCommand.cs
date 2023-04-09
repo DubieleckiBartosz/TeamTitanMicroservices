@@ -2,15 +2,15 @@
 using Management.Application.ValueTypes;
 using MediatR;
 
-namespace Management.Application.Features.Commands.Employee.AddContract;
+namespace Management.Application.Features.Commands.Contract.AddContract;
 
-public record NewEmployeeContractCommand(string Position, int EmployeeId,
+public record NewContractCommand(string Position, int EmployeeId,
     ContractType ContractType, SettlementType SettlementType, decimal Salary, DateTime StartContract,
     DateTime? EndContract,
-    int NumberHoursPerDay, int FreeDaysPerYear, string? BankAccountNumber, bool PaidIntoAccount, 
+    int NumberHoursPerDay, int FreeDaysPerYear, string? BankAccountNumber, bool PaidIntoAccount,
     decimal? HourlyRate, decimal? OvertimeRate, int PaymentMonthDay) : ICommand<Unit>
 {
-    public static NewEmployeeContractCommand Create(NewEmployeeContractParameters parameters)
+    public static NewContractCommand Create(NewContractParameters parameters)
     {
         var position = parameters.Position;
         var employeeId = parameters.EmployeeId;
@@ -27,7 +27,7 @@ public record NewEmployeeContractCommand(string Position, int EmployeeId,
         var overtimeRate = parameters.OvertimeRate;
         var paymentMonthDay = parameters.PaymentMonthDay;
 
-        return new NewEmployeeContractCommand(position, employeeId, contractType, settlementType, salary, startContract,
+        return new NewContractCommand(position, employeeId, contractType, settlementType, salary, startContract,
             endContract, numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, hourlyRate,
             overtimeRate, paymentMonthDay);
     }
