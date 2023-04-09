@@ -2,24 +2,24 @@
 
 namespace Management.Application.Parameters.ContractParameters;
 
-public class UpdateFinancialDataParameters
-{
-    public int EmployeeId { get; init; }
+public class UpdateHourlyRatesParameters
+{ 
+    public int ContractId { get; init; }
     public decimal? HourlyRate { get; init; }
     public decimal? OvertimeRate { get; init; }
 
     /// <summary>
     /// For tests
     /// </summary>
-    public UpdateFinancialDataParameters()
+    public UpdateHourlyRatesParameters()
     {
     }
 
     [JsonConstructor]
-    public UpdateFinancialDataParameters(int employeeId, decimal? hourlyRate, decimal? overtimeRate)
-    {
-        EmployeeId = employeeId;
+    public UpdateHourlyRatesParameters(decimal? hourlyRate, decimal? overtimeRate, int contractId)
+    { 
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
+        ContractId = contractId;
     }
 }

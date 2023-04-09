@@ -15,8 +15,7 @@ public class ContractViewModel
     public DateTime? EndContract { get; init; }
     public int NumberHoursPerDay { get; init; }
     public int FreeDaysPerYear { get; init; }
-    public string? BankAccountNumber { get; init; }
-    public bool PaidIntoAccount { get; init; }
+    public string? BankAccountNumber { get; init; } 
     public int PaymentMonthDay { get; init; }
     public string CreatedBy { get; init; } = default!;
 }

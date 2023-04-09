@@ -19,6 +19,7 @@ public class UnitOfWork : IUnitOfWork
     private IDepartmentRepository? _departmentRepository;
     private IEmployeeRepository? _employeeRepository;
     private IDayOffRequestRepository? _dayOffRequestRepository;
+    private IContractRepository? _contractRepository;
 
     public UnitOfWork(string connectionString, IDomainEventDispatcher domainEventDispatcher, ITransaction transaction, IServiceProvider serviceProvider)
     {
@@ -86,6 +87,21 @@ public class UnitOfWork : IUnitOfWork
             }
 
             return this._dayOffRequestRepository;
+        }
+    }
+
+    public IContractRepository ContractRepository
+    {
+        get
+        {
+            if (this._contractRepository == null)
+            {
+                using var scope = _serviceProvider.CreateScope();
+                var logger = scope.ServiceProvider.GetRequiredService<ILoggerManager<ContractRepository>>();
+                this._contractRepository = new ContractRepository(this._connectionString, logger);
+            }
+
+            return this._contractRepository;
         }
     }
 

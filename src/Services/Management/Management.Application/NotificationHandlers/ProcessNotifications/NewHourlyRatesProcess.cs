@@ -2,4 +2,4 @@
 
 namespace Management.Application.NotificationHandlers.ProcessNotifications;
 
-public record NewFinancialDataProcess(Guid AccountId, decimal? HourlyRate, decimal? OvertimeRate) : IEvent;
+public record NewHourlyRatesProcess(Guid AccountId, decimal? HourlyRate, decimal? OvertimeRate) : IEvent;

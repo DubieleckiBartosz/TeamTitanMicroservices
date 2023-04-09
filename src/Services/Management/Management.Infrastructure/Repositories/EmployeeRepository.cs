@@ -27,6 +27,18 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         return result?.FirstOrDefault();
     }
 
+    public async Task<EmployeeDao?> GetEmployeeWithContractsByIdAsync(int id)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@employeeId", id);
+
+        var result =
+            await this.QueryAsync<EmployeeDao>("employee_getWithContractsById_S", param, CommandType.StoredProcedure);
+
+        return result?.FirstOrDefault();
+    }
+
     public async Task<EmployeeDao?> GetEmployeeWithDetailsByIdAsync(int id)
     {
         var dict = new Dictionary<int, EmployeeDao>();
@@ -147,8 +159,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         param.Add("@endContract", contract.TimeRange.EndContract);
         param.Add("@numberHoursPerDay", contract.NumberHoursPerDay);
         param.Add("@freeDaysPerYear", contract.FreeDaysPerYear);
-        param.Add("@bankAccountNumber", contract.BankAccountNumber);
-        param.Add("@paidIntoAccount", contract.PaidIntoAccount);
+        param.Add("@bankAccountNumber", contract.BankAccountNumber); 
         param.Add("@hourlyRate", contract.HourlyRate);
         param.Add("@overtimeRate", contract.OvertimeRate);
         param.Add("@createdBy", contract.CreatedBy);

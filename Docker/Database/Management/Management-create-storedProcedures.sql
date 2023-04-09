@@ -494,8 +494,7 @@ BEGIN
 		   ec.[NumberHoursPerDay],
 		   ec.[FreeDaysPerYear],
 		   ec.[BankAccountNumber],
-		   ec.[CreatedBy],
-		   ec.[PaidIntoAccount],
+		   ec.[CreatedBy], 
 		   ec.[PaymentMonthDay],
 		   ec.[Version],
 		   dor.[Id],
@@ -549,8 +548,7 @@ BEGIN
 		   ec.[NumberHoursPerDay],
 		   ec.[FreeDaysPerYear],
 		   ec.[BankAccountNumber],
-		   ec.[CreatedBy],
-		   ec.[PaidIntoAccount],
+		   ec.[CreatedBy], 
 		   ec.[PaymentMonthDay],
 		   ec.[Version],
 		   dor.[Id],
@@ -649,6 +647,48 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE employee_getWithContractsById_S
+	@employeeId INT
+AS
+BEGIN
+	SELECT e.[Id],
+		   e.[AccountId],
+		   e.[DepartmentId],
+		   e.[EmployeeCode],
+		   e.[Leader],
+		   e.[Name],
+		   e.[Surname],
+		   e.[Birthday],
+		   e.[PersonIdentifier], 
+		   e.[Version],
+		   cd.[City],
+           cd.[Street],
+           cd.[NumberStreet],
+           cd.[PostalCode],
+           cd.[PhoneNumber],
+           cd.[Email],
+		   cd.[Version],
+		   ec.[Id],
+		   ec.[EmployeeId],
+		   ec.[Position],
+		   ec.[ContractType],
+		   ec.[SettlementType],
+		   ec.[Salary],
+		   ec.[StartContract],
+		   ec.[EndContract],
+		   ec.[NumberHoursPerDay],
+		   ec.[FreeDaysPerYear],
+		   ec.[BankAccountNumber],
+		   ec.[CreatedBy], 
+		   ec.[PaymentMonthDay],
+		   ec.[Version]
+	  FROM [TeamTitanManagement].[dbo].[Employees] AS e
+	  INNER JOIN ContactDetails AS cd ON cd.EmployeeId = e.Id
+	  LEFT JOIN EmployeeContracts AS ec ON ec.EmployeeId = e.Id 
+	  WHERE e.Id = @employeeId
+END
+GO
+
 --Contract scripts
 
 CREATE OR ALTER PROCEDURE contract_newContract_I
@@ -662,8 +702,7 @@ CREATE OR ALTER PROCEDURE contract_newContract_I
 	@endContract DATETIME,
 	@numberHoursPerDay INT,
 	@freeDaysPerYear INT,
-	@bankAccountNumber VARCHAR(MAX),
-	@paidIntoAccount BIT,
+	@bankAccountNumber VARCHAR(MAX), 
 	@hourlyRate DECIMAL,
 	@overtimeRate DECIMAL,
 	@paymentMonthDay DECIMAL,
@@ -687,8 +726,7 @@ BEGIN
 					   ,[NumberHoursPerDay]
 					   ,[FreeDaysPerYear]
 					   ,[BankAccountNumber]
-					   ,[CreatedBy]
-					   ,[PaidIntoAccount]
+					   ,[CreatedBy] 
 					   ,[PaymentMonthDay])
 				 VALUES
 						(@employeeId, 
@@ -701,8 +739,7 @@ BEGIN
 						 @numberHoursPerDay,
 						 @freeDaysPerYear, 
 						 @bankAccountNumber, 
-						 @createdBy, 
-						 @paidIntoAccount, 
+						 @createdBy,  
 						 @paymentMonthDay)
 
 		COMMIT TRANSACTION;
@@ -721,3 +758,119 @@ BEGIN
 END
 GO
  
+
+CREATE OR ALTER PROCEDURE contract_getWithAccountById_S
+	@contractId INT
+AS
+BEGIN
+	SELECT ec.[Id],
+		   ec.[EmployeeId],
+		   ec.[Position],
+		   ec.[ContractType],
+		   ec.[SettlementType],
+		   ec.[Salary],
+		   ec.[StartContract],
+		   ec.[EndContract],
+		   ec.[NumberHoursPerDay],
+		   ec.[FreeDaysPerYear],
+		   ec.[BankAccountNumber],
+		   ec.[CreatedBy], 
+		   ec.[PaymentMonthDay],
+		   ec.[Version],
+		   e.[AccountId]
+	  FROM [TeamTitanManagement].[dbo].[EmployeeContracts] AS ec
+	  INNER JOIN Employees AS e ON e.Id = ec.EmployeeId 
+	  WHERE ec.Id = @contractId
+END
+GO
+
+CREATE OR ALTER PROCEDURE contract_getById_S
+	@contractId INT
+AS
+BEGIN
+	SELECT [Id],
+		   [EmployeeId],
+		   [Position],
+		   [ContractType],
+		   [SettlementType],
+		   [Salary],
+		   [StartContract],
+		   [EndContract],
+		   [NumberHoursPerDay],
+		   [FreeDaysPerYear],
+		   [BankAccountNumber],
+		   [CreatedBy], 
+		   [PaymentMonthDay],
+		   [Version] 
+	  FROM [TeamTitanManagement].[dbo].[EmployeeContracts]    
+	  INNER JOIN Employees AS e ON e.Id = ec.EmployeeId 
+	  WHERE Id = @contractId
+END
+GO
+
+CREATE OR ALTER PROCEDURE contract_bankAccountNumber_U 
+	@contractId INT,
+	@bankAccountNumber VARCHAR(100) NULL, 
+	@version INT
+AS
+BEGIN
+	UPDATE EmployeeContracts SET
+		BankAccountNumber = @bankAccountNumber,
+		[Version] = @version
+	WHERE Id = @contractId
+END
+GO
+
+CREATE OR ALTER PROCEDURE contract_salary_U 
+	@contractId INT,
+	@newSalary DECIMAL,
+	@version INT
+AS
+BEGIN
+	UPDATE EmployeeContracts SET
+		Salary = @newSalary,
+		[Version] = @version
+	WHERE Id = @contractId 
+END
+GO
+
+CREATE OR ALTER PROCEDURE contract_paymentMonthDay_U  
+	@contractId INT,
+	@newPaymentMonthDay INT,
+	@version INT
+AS
+BEGIN
+	UPDATE EmployeeContracts SET
+		PaymentMonthDay = @newPaymentMonthDay,
+		[Version] = @version
+	WHERE Id = @contractId
+END
+GO
+
+CREATE OR ALTER PROCEDURE contract_hourlyRates_U 
+	@contractId INT,
+	@newHourlyRate DECIMAL,
+	@newOvertimeRate DECIMAL,
+	@version INT
+AS
+BEGIN
+	UPDATE EmployeeContracts SET
+		HourlyRate = @newHourlyRate,
+		OvertimeRate = @newOvertimeRate,
+		[Version] = @version
+	WHERE Id = @contractId 
+END
+GO
+
+CREATE OR ALTER PROCEDURE contract_settlementType_U  
+	@contractId INT,
+	@newSettlementType INT,
+	@version INT
+AS
+BEGIN
+	UPDATE EmployeeContracts SET
+		SettlementType = @newSettlementType,
+		[Version] = @version
+	WHERE Id = @contractId 
+END
+GO

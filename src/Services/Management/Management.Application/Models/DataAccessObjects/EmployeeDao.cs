@@ -24,17 +24,17 @@ public class EmployeeDao
         if (Communication == null)
         {
             return Employee.Load(Id, Version, Leader, EmployeeCode, Name, Surname, PersonIdentifier, AccountId);
-        }   
-        
-        var address = Address.Create(Communication.City, Communication.Street, Communication.NumberStreet, Communication.PostalCode);
+        }
+
+        var address = Address.Create(Communication.City, Communication.Street, Communication.NumberStreet,
+            Communication.PostalCode);
         var contact = Contact.Create(Communication.PhoneNumber, Communication.Email);
         var communicationData = CommunicationData.Load(address, contact, Communication.Version);
         var contracts = Contracts.Select(_ => _.Map()).ToList();
         var dayOffRequests = DayOffRequests.Select(_ => _.Map()).ToList();
 
-        return Employee.Load(Id, Leader, DepartmentId, AccountId, EmployeeCode, Name, Surname, Birthday,
+        return Employee.Load(Id, Version, Leader, DepartmentId, AccountId, EmployeeCode, Name, Surname, Birthday,
             PersonIdentifier,
             communicationData, contracts, dayOffRequests);
-
-    } 
+    }
 }

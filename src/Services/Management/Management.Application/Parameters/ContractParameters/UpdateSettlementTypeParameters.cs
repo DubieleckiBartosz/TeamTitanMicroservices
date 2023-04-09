@@ -5,20 +5,20 @@ namespace Management.Application.Parameters.ContractParameters;
 
 public class UpdateSettlementTypeParameters
 {
-    public int EmployeeId { get; init; }
+    public int ContractId { get; init; } 
     public SettlementType NewSettlementType { get; init; }
 
     /// <summary>
     /// For tests
     /// </summary>
     public UpdateSettlementTypeParameters()
-    {
+    { 
     }
 
     [JsonConstructor]
-    public UpdateSettlementTypeParameters(int employeeId, SettlementType newSettlementType)
+    public UpdateSettlementTypeParameters(SettlementType newSettlementType, int contractId)
     {
-        EmployeeId = employeeId;
         NewSettlementType = newSettlementType;
+        ContractId = contractId;
     }
 }
