@@ -3,19 +3,20 @@ using Management.Application.Contracts.Repositories;
 using MediatR;
 using Shared.Implementations.Core.Exceptions;
 
-namespace Management.Application.Features.Commands.Contract.UpdatePaymentMonthDay;
+namespace Management.Application.Features.Commands.Contract.UpdateHourlyRates;
 
-public class UpdatePaymentMonthDayHandler : ICommandHandler<UpdatePaymentMonthDayCommand, Unit>
+public class UpdateHourlyRatesHandler : ICommandHandler<UpdateHourlyRatesCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IContractRepository _contractRepository;
 
-    public UpdatePaymentMonthDayHandler(IUnitOfWork unitOfWork)
+    public UpdateHourlyRatesHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _contractRepository = unitOfWork.ContractRepository;
     }
-    public async Task<Unit> Handle(UpdatePaymentMonthDayCommand request, CancellationToken cancellationToken)
+
+    public async Task<Unit> Handle(UpdateHourlyRatesCommand request, CancellationToken cancellationToken)
     {
         var result = await _contractRepository.GetContractWithAccountByIdAsync(request.ContractId);
         if (result == null)
@@ -26,10 +27,9 @@ public class UpdatePaymentMonthDayHandler : ICommandHandler<UpdatePaymentMonthDa
 
         var contract = result.Map();
 
-        contract.UpdatePaymentMonthDay(request.NewPaymentMonthDay, result.AccountId);
+        contract.UpdateHourlyRates(request.HourlyRate, request.OvertimeRate, result.AccountId);
 
-        await _contractRepository.UpdatePaymentMonthDayAsync(contract);
-
+        await _contractRepository.UpdateHourlyRatesAsync(contract);
         await _unitOfWork.CompleteAsync(contract);
 
         return Unit.Value;

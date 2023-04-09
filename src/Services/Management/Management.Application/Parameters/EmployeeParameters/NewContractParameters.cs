@@ -14,8 +14,7 @@ public class NewContractParameters
     public DateTime? EndContract { get; init; }
     public int NumberHoursPerDay { get; init; }
     public int FreeDaysPerYear { get; init; }
-    public string? BankAccountNumber { get; init; }
-    public bool PaidIntoAccount { get; init; }
+    public string? BankAccountNumber { get; init; } 
     public decimal? HourlyRate { get; init; }
     public decimal? OvertimeRate { get; init; }
     public int PaymentMonthDay { get; init; }
@@ -31,7 +30,7 @@ public class NewContractParameters
     [JsonConstructor]
     public NewContractParameters(string position, int employeeId, ContractType contractType,
         SettlementType settlementType, decimal salary, DateTime startContract, DateTime? endContract,
-        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount,
+        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, 
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     {
         Position = position;
@@ -43,8 +42,7 @@ public class NewContractParameters
         EndContract = endContract;
         NumberHoursPerDay = numberHoursPerDay;
         FreeDaysPerYear = freeDaysPerYear;
-        BankAccountNumber = bankAccountNumber;
-        PaidIntoAccount = paidIntoAccount;
+        BankAccountNumber = bankAccountNumber; 
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
         PaymentMonthDay = paymentMonthDay;

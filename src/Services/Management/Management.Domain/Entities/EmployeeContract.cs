@@ -1,4 +1,5 @@
-﻿using Management.Domain.Types;
+﻿using Management.Domain.Events;
+using Management.Domain.Types;
 using Management.Domain.ValueObjects;
 using Shared.Domain.Base;
 using Shared.Domain.DomainExceptions;
@@ -16,13 +17,12 @@ public class EmployeeContract : Entity
     public TimeRange TimeRange { get; }
     public int NumberHoursPerDay { get; private set; }
     public int FreeDaysPerYear { get; }
-    public string? BankAccountNumber { get; private set; } 
-    public bool PaidIntoAccount { get; private set; }
+    public string? BankAccountNumber { get; private set; }  
     public int PaymentMonthDay { get; private set; }
     public string CreatedBy { get; } 
     private EmployeeContract(string position,
         ContractType contractType, SettlementType settlementType, decimal salary, TimeRange timeRange,
-        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount, string createdBy,
+        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     { 
         Position = position; 
@@ -32,8 +32,7 @@ public class EmployeeContract : Entity
         TimeRange = timeRange;
         NumberHoursPerDay = numberHoursPerDay;
         FreeDaysPerYear = freeDaysPerYear;
-        BankAccountNumber = bankAccountNumber;
-        PaidIntoAccount = paidIntoAccount;
+        BankAccountNumber = bankAccountNumber; 
         CreatedBy = createdBy;
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate;
@@ -42,10 +41,10 @@ public class EmployeeContract : Entity
 
     public EmployeeContract(int id, int version, string position,
         ContractType contractType, SettlementType settlementType, decimal salary, TimeRange timeRange,
-        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount, string createdBy,
+        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay) : this(position,
         contractType, settlementType, salary, timeRange,
-        numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, createdBy,
+        numberHoursPerDay, freeDaysPerYear, bankAccountNumber, createdBy,
         hourlyRate, overtimeRate, paymentMonthDay)
     {
         Id = id;
@@ -54,64 +53,60 @@ public class EmployeeContract : Entity
 
     public static EmployeeContract Create(string position,
         ContractType contractType, SettlementType settlementType, decimal salary, TimeRange timeRange,
-        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount, string createdBy,
+        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     {
         return new EmployeeContract(position, contractType, settlementType, salary, timeRange,
-            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, createdBy, hourlyRate,
+            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, createdBy, hourlyRate,
             overtimeRate, paymentMonthDay);
     }
 
     public static EmployeeContract Load(int id, int version, string position,
         ContractType contractType, SettlementType settlementType, decimal salary, TimeRange timeRange,
-        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount, string createdBy,
+        int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     {
         return new EmployeeContract(id, version, position, contractType, settlementType, salary, timeRange,
-            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, createdBy, hourlyRate,
+            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, createdBy, hourlyRate,
             overtimeRate, paymentMonthDay);
     }
 
-    public void UpdateSalary(decimal salary)
+    public void UpdateSalary(decimal salary, Guid account)
     {
         CheckPossibilityOfChangeOrThrow();
         Salary = salary; 
-        IncrementVersion();
+        Events.Add(new SalaryChanged(account, salary));
     }
 
-    public void UpdateFinancialData(decimal? hourlyRate, decimal? overtimeRate)
+    public void UpdateHourlyRates(decimal? hourlyRate, decimal? overtimeRate, Guid account)
     {
         CheckPossibilityOfChangeOrThrow();
         CheckSettlementTypeOrThrow();
-        (HourlyRate, OvertimeRate) = (hourlyRate, overtimeRate);
-        IncrementVersion();
+        (HourlyRate, OvertimeRate) = (hourlyRate, overtimeRate ?? hourlyRate);
+        Events.Add(new HourlyRatesChanged(account, hourlyRate, overtimeRate));
     }
-     
-    public void UpdateSettlementType(int settlementType)
+
+    public void UpdateSettlementType(int settlementType, Guid account)
     {
         CheckPossibilityOfChangeOrThrow();
         var newSettlementType = Enumeration.GetById<SettlementType>(settlementType);
         SettlementType = newSettlementType;
-        IncrementVersion();
+        Events.Add(new SettlementTypeChanged(account, newSettlementType.Id)); 
     }
 
     public void AddOrUpdateBankAccountNumber(string bankAccount)
     {
         CheckPossibilityOfChangeOrThrow();
-        BankAccountNumber = bankAccount;
-        if (PaidIntoAccount == false)
-        {
-            PaidIntoAccount = true;
-        }
-
+        BankAccountNumber = bankAccount; 
         IncrementVersion();
     }
 
-    public void UpdatePaymentMonthDay(int paymentMonthDay)
+    public void UpdatePaymentMonthDay(int paymentMonthDay, Guid account)
     {
         CheckPossibilityOfChangeOrThrow();
         PaymentMonthDay = paymentMonthDay;
-        IncrementVersion();
+        Events.Add(new PaymentMonthDayChanged(account, paymentMonthDay));
+
     }
 
     private void CheckSettlementTypeOrThrow()

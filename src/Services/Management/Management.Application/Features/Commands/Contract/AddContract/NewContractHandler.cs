@@ -39,15 +39,14 @@ public class NewContractHandler : ICommandHandler<NewContractCommand, Unit>
         var timeRange = TimeRange.Create(request.StartContract, request.EndContract);
         var numberHoursPerDay = request.NumberHoursPerDay;
         var freeDaysPerYear = request.FreeDaysPerYear;
-        var bankAccountNumber = request.BankAccountNumber;
-        var paidIntoAccount = request.PaidIntoAccount;
+        var bankAccountNumber = request.BankAccountNumber; 
         var hourlyRate = request.HourlyRate;
         var overtimeRate = request.OvertimeRate;
         var paymentMonthDay = request.PaymentMonthDay;
         var userCode = _currentUser.VerificationCode!;
 
         var newContract = EmployeeContract.Create(position, contractType, settlementType, salary, timeRange,
-            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, paidIntoAccount, userCode,
+            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, userCode,
             hourlyRate,
             overtimeRate, paymentMonthDay);
 

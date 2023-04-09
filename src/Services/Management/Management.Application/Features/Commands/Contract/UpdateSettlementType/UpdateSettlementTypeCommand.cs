@@ -4,10 +4,10 @@ using MediatR;
 
 namespace Management.Application.Features.Commands.Contract.UpdateSettlementType;
 
-public record UpdateSettlementTypeCommand(int EmployeeId, SettlementType NewSettlementType) : ICommand<Unit>
+public record UpdateSettlementTypeCommand(int ContractId, SettlementType NewSettlementType) : ICommand<Unit>
 {
     public static UpdateSettlementTypeCommand Create(UpdateSettlementTypeParameters parameters)
     {
-        return new UpdateSettlementTypeCommand(parameters.EmployeeId, parameters.NewSettlementType);
+        return new UpdateSettlementTypeCommand(parameters.ContractId, parameters.NewSettlementType);
     }
 }

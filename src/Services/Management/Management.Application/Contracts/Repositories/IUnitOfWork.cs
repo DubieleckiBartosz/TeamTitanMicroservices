@@ -8,5 +8,6 @@ public interface IUnitOfWork
     IDepartmentRepository DepartmentRepository { get; }
     IEmployeeRepository EmployeeRepository { get; }
     IDayOffRequestRepository DayOffRequestRepository { get; }
+    IContractRepository ContractRepository { get; }
     Task CompleteAsync<T>(T entity) where T : Entity;
 }

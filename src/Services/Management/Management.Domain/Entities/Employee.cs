@@ -22,19 +22,7 @@ public class Employee : Entity
     public CommunicationData CommunicationData { get; }
     public List<EmployeeContract> Contracts => _employeeContracts.ToList();
     public List<DayOffRequest> DayOffRequests => _dayOffRequests.ToList();
-
-    /// <summary>
-    /// Load with only contracts
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="version"></param>
-    /// <param name="contracts"></param>
-    private Employee(int id, int version, List<EmployeeContract> contracts)
-    {
-        Id = id;
-        Version = version;
-        contracts.ForEach(_ => _employeeContracts.Add(_));
-    }
+ 
 
     /// <summary>
     /// Load base data
@@ -106,14 +94,15 @@ public class Employee : Entity
     /// <param name="communicationData"></param>
     /// <param name="contracts"></param>
     /// <param name="dayOffRequests"></param>
-    private Employee(int id, string leader, int departmentId, Guid? accountId, string employeeCode, string name,
+    private Employee(int id, int version, string leader, int departmentId, Guid? accountId, string employeeCode, string name,
         string surname, DateTime birthday,
-        string? personIdentifier, CommunicationData communicationData, List<EmployeeContract> contracts,
-        List<DayOffRequest> dayOffRequests) : this(departmentId, leader, employeeCode, name, surname, birthday,
+        string? personIdentifier, CommunicationData communicationData, List<EmployeeContract>? contracts = null,
+        List<DayOffRequest>? dayOffRequests = null) : this(departmentId, leader, employeeCode, name, surname, birthday,
         personIdentifier, communicationData)
     {
         Id = id;
         AccountId = accountId;
+        Version = version;
         contracts?.ForEach(_ => _employeeContracts.Add(_));
         dayOffRequests?.ForEach(_ => _dayOffRequests.Add(_));
     }
@@ -126,21 +115,17 @@ public class Employee : Entity
             communicationData);
     }
 
-    public static Employee Load(int id, string leader, int departmentId, Guid? accountId, string employeeCode,
+    public static Employee Load(int id, int version, string leader, int departmentId, Guid? accountId,
+        string employeeCode,
         string name, string surname, DateTime birthday,
-        string? personIdentifier, CommunicationData communicationData, List<EmployeeContract> contracts,
-        List<DayOffRequest> dayOffRequests)
+        string? personIdentifier, CommunicationData communicationData, List<EmployeeContract>? contracts = null,
+        List<DayOffRequest>? dayOffRequests = null)
     {
-        return new Employee(id, leader, departmentId, accountId, employeeCode, name, surname, birthday,
+        return new Employee(id, version, leader, departmentId, accountId, employeeCode, name, surname, birthday,
             personIdentifier, communicationData, contracts,
             dayOffRequests);
     }
-    
-    public static Employee Load(int id, int version, List<EmployeeContract> contracts)
-    {
-        return new Employee(id, version, contracts);
-    }
-
+     
     public static Employee Load(int id, int version, string leader, string employeeCode, string name, string surname,
         string? personIdentifier, Guid? accountId)
     {
@@ -203,6 +188,8 @@ public class Employee : Entity
         Leader = newLeader;
         IncrementVersion();
     }
+
+    public EmployeeContract? FindContract(int contractId) => Contracts.FirstOrDefault(_ => _.Id == contractId);
 
     private bool DoesRangeDaysOffOverlap(RangeDaysOff newRange)
     {

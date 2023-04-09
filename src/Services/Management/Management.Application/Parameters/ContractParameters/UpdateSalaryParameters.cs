@@ -4,20 +4,20 @@ namespace Management.Application.Parameters.ContractParameters;
 
 public class UpdateSalaryParameters
 {
-    public int EmployeeId { get; init; }
+    public int ContractId { get; init; } 
     public decimal NewSalary { get; init; }
 
     /// <summary>
     /// For tests
     /// </summary>
     public UpdateSalaryParameters()
-    {
+    { 
     }
 
     [JsonConstructor]
-    public UpdateSalaryParameters(int employeeId, decimal newSalary)
+    public UpdateSalaryParameters(decimal newSalary, int contractId)
     {
-        EmployeeId = employeeId;
         NewSalary = newSalary;
+        ContractId = contractId;
     }
 }
