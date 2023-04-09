@@ -8,23 +8,23 @@ using Shared.Domain.Base;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
 
-namespace Management.Application.Features.Commands.Employee.AddContract;
- 
-public class NewEmployeeContractHandler : ICommandHandler<NewEmployeeContractCommand, Unit>
+namespace Management.Application.Features.Commands.Contract.AddContract;
+
+public class NewContractHandler : ICommandHandler<NewContractCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICurrentUser _currentUser;
     private readonly IEmployeeRepository _employeeRepository;
 
-    public NewEmployeeContractHandler(IUnitOfWork unitOfWork, ICurrentUser currentUser)
+    public NewContractHandler(IUnitOfWork unitOfWork, ICurrentUser currentUser)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
         _employeeRepository = unitOfWork.EmployeeRepository;
     }
 
-    public async Task<Unit> Handle(NewEmployeeContractCommand request, CancellationToken cancellationToken)
-    { 
+    public async Task<Unit> Handle(NewContractCommand request, CancellationToken cancellationToken)
+    {
         var employee = (await _employeeRepository.GetEmployeeWithDetailsByIdAsync(request.EmployeeId))?.Map();
         if (employee == null)
         {
@@ -33,7 +33,7 @@ public class NewEmployeeContractHandler : ICommandHandler<NewEmployeeContractCom
         }
 
         var position = request.Position;
-        var contractType = Enumeration.GetById<ContractType>((int) request.ContractType);
+        var contractType = Enumeration.GetById<ContractType>((int)request.ContractType);
         var settlementType = Enumeration.GetById<SettlementType>((int)request.SettlementType);
         var salary = request.Salary;
         var timeRange = TimeRange.Create(request.StartContract, request.EndContract);

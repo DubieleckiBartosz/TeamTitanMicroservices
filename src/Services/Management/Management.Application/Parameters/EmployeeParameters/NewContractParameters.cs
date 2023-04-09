@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Management.Application.Parameters.EmployeeParameters;
 
-public class NewEmployeeContractParameters
+public class NewContractParameters
 {
     public string Position { get; init; } = default!;
     public int EmployeeId { get; init; } 
@@ -24,12 +24,12 @@ public class NewEmployeeContractParameters
     /// <summary>
     /// For tests
     /// </summary>
-    public NewEmployeeContractParameters()
+    public NewContractParameters()
     {
     }
 
     [JsonConstructor]
-    public NewEmployeeContractParameters(string position, int employeeId, ContractType contractType,
+    public NewContractParameters(string position, int employeeId, ContractType contractType,
         SettlementType settlementType, decimal salary, DateTime startContract, DateTime? endContract,
         int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, bool paidIntoAccount,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)

@@ -1,7 +1,7 @@
-﻿using Management.Application.Features.Commands.DayOffRequest.AddDayOffRequest;
+﻿using Management.Application.Features.Commands.Contract.AddContract;
+using Management.Application.Features.Commands.DayOffRequest.AddDayOffRequest;
 using Management.Application.Features.Commands.DayOffRequest.CancelDayOffRequest;
 using Management.Application.Features.Commands.DayOffRequest.ConsiderDayOffRequest;
-using Management.Application.Features.Commands.Employee.AddContract;
 using Management.Application.Features.Commands.Employee.CreateEmployee;
 using Management.Application.Features.Commands.Employee.UpdateAddressData;
 using Management.Application.Features.Commands.Employee.UpdateContactData;
@@ -127,9 +127,9 @@ public class EmployeeController : BaseController
     /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
     [HttpPost("[action]")]
-    public async Task<IActionResult> NewEmployeeContract([FromBody] NewEmployeeContractParameters parameters)
+    public async Task<IActionResult> NewEmployeeContract([FromBody] NewContractParameters parameters)
     {
-        var command = NewEmployeeContractCommand.Create(parameters);
+        var command = NewContractCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
     }
