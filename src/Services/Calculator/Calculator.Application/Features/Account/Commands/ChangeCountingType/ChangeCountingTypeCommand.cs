@@ -1,5 +1,4 @@
-﻿using Calculator.Application.Parameters.AccountParameters;
-using Calculator.Domain.Types;
+﻿using Calculator.Domain.Types;
 using MediatR;
 using Shared.Implementations.Abstractions;
 
@@ -7,8 +6,8 @@ namespace Calculator.Application.Features.Account.Commands.ChangeCountingType;
 
 public record ChangeCountingTypeCommand(CountingType NewCountingType, Guid AccountId) : ICommand<Unit>
 {
-    public static ChangeCountingTypeCommand Create(ChangeCountingTypeParameters parameters)
+    public static ChangeCountingTypeCommand Create(CountingType newCountingType, Guid accountId)
     {
-        return new ChangeCountingTypeCommand(parameters.NewCountingType, parameters.AccountId);
+        return new ChangeCountingTypeCommand(newCountingType, accountId);
     }
 }

@@ -152,10 +152,15 @@ public class AccountDetails
         SettlementDayMonth = settlementDayMonth;
     }
 
+    public void UpdateSettlementDayMonth(int newSettlementDayMonth)
+    {
+        SettlementDayMonth = newSettlementDayMonth;
+    }
+
     public void AssignFinancialData(decimal? hourlyRate, decimal? overtimeRate)
-    { 
-        HourlyRate = hourlyRate ?? HourlyRate;
-        OvertimeRate = overtimeRate ?? OvertimeRate; 
+    {
+        HourlyRate = hourlyRate;
+        OvertimeRate = overtimeRate ?? hourlyRate; 
     }
 
 
