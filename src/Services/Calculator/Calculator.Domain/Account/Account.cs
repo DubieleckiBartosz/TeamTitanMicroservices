@@ -43,7 +43,7 @@ public partial class Account : Aggregate
     /// </summary>
     /// <param name="accountId"></param>
     /// <param name="version"></param>
-    /// <param name="accountOwnerExternalId"></param>
+    /// <param name="accountOwner"></param>
     /// <param name="companyCode"></param>
     /// <param name="countingType"></param>
     /// <param name="accountStatus"></param>
@@ -57,14 +57,14 @@ public partial class Account : Aggregate
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
-    private Account(Guid accountId, int version, string accountOwnerExternalId, string companyCode, CountingType countingType,
+    private Account(Guid accountId, int version, string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int settlementDayMonth)
     {
         Id = accountId;
         Version = version;
         Details = AccountDetails.LoadAccountDetails(
-            accountOwnerExternalId, companyCode,
+            accountOwner, companyCode,
             countingType, accountStatus, activatedBy, 
             createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth); 
@@ -79,11 +79,11 @@ public partial class Account : Aggregate
     }
 
     public void UpdateAccount(CountingType countingType, int workDayHours, int settlementDayMonth,
-        DateTime? expirationDate)
+        DateTime? expirationDate, decimal? payoutAmount = null)
     {
         var @event =
             AccountDataUpdated.Create(countingType, AccountStatus.New, workDayHours, settlementDayMonth, Id,
-                expirationDate);
+                expirationDate, payoutAmount);
         Apply(@event);
         Enqueue(@event);
     }
@@ -175,24 +175,7 @@ public partial class Account : Aggregate
 
         Apply(@event);
         this.Enqueue(@event);
-    }
-    public void UpdateHourlyRate(decimal newHourlyRate)
-    {
-        this.ThrowWhenNotActive();
-
-        var @event = HourlyRateChanged.Create(newHourlyRate, this.Id);
-        Apply(@event);
-        this.Enqueue(@event);
-    }
-
-    public void UpdateOvertimeRate(decimal newOvertimeRate)
-    {
-        this.ThrowWhenNotActive();
-
-        var @event = OvertimeRateChanged.Create(newOvertimeRate, this.Id);
-        Apply(@event);
-        this.Enqueue(@event);
-    }
+    } 
     
     public void UpdateSettlementDay(int newSettlementDay)
     {
@@ -307,16 +290,10 @@ public partial class Account : Aggregate
                 break;
             case AccountDeactivated e:
                 this.AccountDeactivated(e);
-                break;
-            case HourlyRateChanged e:
-                this.HourlyRateUpdated(e);
-                break;
+                break; 
             case WorkDayAdded e:
                 this.NewWorkDayAdded(e);
-                break;
-            case OvertimeRateChanged e:
-                this.OvertimeRateUpdated(e);
-                break;
+                break; 
             case PieceProductAdded e:
                 this.NewPieceProductItemAdded(e);
                 break;

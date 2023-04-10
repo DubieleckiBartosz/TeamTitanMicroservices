@@ -18,7 +18,8 @@ public class AccountState
 
     private AccountState(string accountOwnerExternalId, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expiration, int settlementDayMonth, List<Settlement> settlements)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance,
+        DateTime? expiration, int settlementDayMonth, List<Settlement> settlements)
     {
         Details = AccountDetails.CreateAccountDetails(accountOwnerExternalId, companyCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,

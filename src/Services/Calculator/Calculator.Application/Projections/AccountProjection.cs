@@ -18,10 +18,8 @@ public class AccountProjection : ReadModelAction<AccountReader>
         this.Projects<AccountDataUpdated>(Handle);
         this.Projects<AccountDeactivated>(Handle);
         this.Projects<CountingTypeChanged>(Handle);
-        this.Projects<DayHoursChanged>(Handle);
-        this.Projects<HourlyRateChanged>(Handle);
-        this.Projects<NewAccountInitiated>(Handle);
-        this.Projects<OvertimeRateChanged>(Handle);
+        this.Projects<DayHoursChanged>(Handle); 
+        this.Projects<NewAccountInitiated>(Handle); 
         this.Projects<PieceProductAdded>(Handle);
         this.Projects<WorkDayAdded>(Handle);
         this.Projects<BonusAdded>(Handle);
@@ -142,21 +140,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         account!.WorkDayHoursUpdated(@event);
         await _accountRepository.UpdateWorkDayHoursAsync(account);
     }
-
-    private async Task Handle(HourlyRateChanged @event, CancellationToken cancellationToken = default)
-    {
-        if (@event == null)
-        {
-            throw new ArgumentNullException(nameof(@event));
-        }
-
-        var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
-        this.CheckAccount(account);
-
-        account!.HourlyRateUpdated(@event);
-        await _accountRepository.UpdateHourlyRateAsync(account);
-    }
-
+     
     private async Task Handle(NewAccountInitiated @event, CancellationToken cancellationToken = default)
     {
         if (@event == null)
@@ -167,21 +151,7 @@ public class AccountProjection : ReadModelAction<AccountReader>
         var newAccount = AccountReader.Create(@event);
         await _accountRepository.AddAsync(newAccount);
     }
-
-    private async Task Handle(OvertimeRateChanged @event, CancellationToken cancellationToken = default)
-    {
-        if (@event == null)
-        {
-            throw new ArgumentNullException(nameof(@event));
-        }
-
-        var account = await _accountRepository.GetAccountByIdAsync(@event.AccountId);
-        this.CheckAccount(account);
-
-        account!.OvertimeRateUpdated(@event);
-        await _accountRepository.UpdateOvertimeRateAsync(account);
-    }
-
+     
     private async Task Handle(PieceProductAdded @event, CancellationToken cancellationToken = default)
     {
         if (@event == null)

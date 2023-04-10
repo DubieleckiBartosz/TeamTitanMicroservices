@@ -23,6 +23,7 @@ public class AccountReader : IRead
     public decimal? OvertimeRate { get; private set; }
     public DateTime? ExpirationDate { get; private set; }
     public int? SettlementDayMonth { get; private set; }
+    public decimal? PayoutAmount { get; private set; }
 
     public List<ProductItemReader> ProductItems { get; private set; } = new List<ProductItemReader>();
     public List<WorkDayReader> WorkDays { get; private set; } = new List<WorkDayReader>();
@@ -54,6 +55,7 @@ public class AccountReader : IRead
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
+    /// <param name="payoutAmount"></param>
     /// <param name="productItems"></param>
     /// <param name="workDays"></param>
     /// <param name="bonuses"></param>
@@ -61,9 +63,9 @@ public class AccountReader : IRead
     private AccountReader(Guid id, string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, 
-        decimal balance, DateTime? expirationDate, int? settlementDayMonth,
-        List<ProductItemReader> productItems, List<WorkDayReader> workDays, 
-        List<BonusReader> bonuses, List<SettlementReader> settlements)
+        decimal balance, DateTime? expirationDate, int? settlementDayMonth, decimal? payoutAmount,
+        List<ProductItemReader>? productItems, List<WorkDayReader>? workDays, 
+        List<BonusReader>? bonuses, List<SettlementReader>? settlements)
     {
         this.Id = id;
         this.AccountOwner = accountOwner;
@@ -78,12 +80,13 @@ public class AccountReader : IRead
         this.HourlyRate = hourlyRate;
         this.OvertimeRate = overtimeRate;
         this.Balance = balance;
-        this.ProductItems = productItems;
-        this.WorkDays = workDays;
-        this.Bonuses = bonuses;
+        this.PayoutAmount = payoutAmount;
+        this.ProductItems = productItems ?? new();
+        this.WorkDays = workDays ?? new();
+        this.Bonuses = bonuses ?? new();
         this.ExpirationDate = expirationDate;
         this.SettlementDayMonth = settlementDayMonth;
-        this.Settlements = settlements;
+        this.Settlements = settlements ?? new();
     }
 
     /// <summary>
@@ -110,12 +113,14 @@ public class AccountReader : IRead
 
     public static AccountReader Load(Guid id, string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth,
-        List<ProductItemReader> productItems, List<WorkDayReader> workDays, List<BonusReader> bonuses, List<SettlementReader> settlements)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate,
+        int? settlementDayMonth, decimal? payoutAmount, List<ProductItemReader> productItems, 
+        List<WorkDayReader>? workDays, List<BonusReader>? bonuses, List<SettlementReader>? settlements)
     {
         return new AccountReader(id, accountOwner, companyCode, countingType,
-            accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth,
+            accountStatus, activatedBy, createdBy, deactivatedBy, isActive, 
+            workDayHours, hourlyRate, overtimeRate, balance,
+            expirationDate, settlementDayMonth, payoutAmount,
             productItems, workDays, bonuses, settlements);
     }
 
@@ -127,6 +132,7 @@ public class AccountReader : IRead
         WorkDayHours = @event.WorkDayHours;
         SettlementDayMonth = @event.SettlementDayMonth; 
         ExpirationDate = @event.ExpirationDate;
+        PayoutAmount = @event.PayoutAmount;
 
         return this;
     }
@@ -163,21 +169,7 @@ public class AccountReader : IRead
 
         return this;
     }
-
-    public AccountReader HourlyRateUpdated(HourlyRateChanged @event)
-    {
-        HourlyRate = @event.NewHourlyRate;
-
-        return this;
-    }
-
-    public AccountReader OvertimeRateUpdated(OvertimeRateChanged @event)
-    {
-        OvertimeRate = @event.NewOvertimeRate;
-
-        return this;
-    }
-
+     
     public AccountReader CountingTypeUpdated(CountingTypeChanged @event)
     {
         CountingType = @event.NewCountingType;

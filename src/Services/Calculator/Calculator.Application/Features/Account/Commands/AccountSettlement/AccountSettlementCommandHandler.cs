@@ -22,12 +22,15 @@ public class AccountSettlementCommandHandler : ICommandHandler<AccountSettlement
     public async Task<Unit> Handle(AccountSettlementCommand request, CancellationToken cancellationToken)
     {
         var account = await _repository.GetAggregateFromSnapshotAsync<AccountSnapshot>(request.AccountId);
-
+         
         account.CheckAndThrowWhenNullOrNotMatch("Account");
         account!.AccountSettlement();
-        if (!account.IsActive)
+
+        var expirationDate = account!.Details.ExpirationDate;
+
+        if (!account.IsActive || (expirationDate.HasValue && expirationDate.Value < DateTime.UtcNow))
         {
-            //This is the last payment because the account has been deactivated
+            //This is the last payment because the account has been deactivated or expiration date is in the past
             var jobName = Keys.SettlementBackgroundJobName(account.Id.ToString());
             _jobService.DeleteBackgroundJobByUniqueJobName(jobName, $"Job removed: {jobName}");
 

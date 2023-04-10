@@ -21,6 +21,7 @@ public class AccountDao
     public decimal? OvertimeRate { get; init; }
     public DateTime? ExpirationDate { get; init; }
     public int? SettlementDayMonth { get; init; }
+    public decimal? PayoutAmount { get; init; }
     public List<ProductItemDao> ProductItems { get; init; } = new();
     public List<WorkDayDao> WorkDays { get; init; } = new();
     public List<BonusDao> Bonuses { get; init; } = new();
@@ -42,7 +43,8 @@ public class AccountDao
 
         return AccountReader.Load(Id, AccountOwner, CompanyCode, CountingType,
             AccountStatus, ActivatedBy, CreatedBy, DeactivatedBy, IsActive,
-            WorkDayHours, HourlyRate, OvertimeRate, Balance, ExpirationDate, SettlementDayMonth, products, workDays,
+            WorkDayHours, HourlyRate, OvertimeRate, Balance, ExpirationDate, SettlementDayMonth, PayoutAmount, products,
+            workDays,
             bonuses, settlements);
     }
 }

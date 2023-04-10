@@ -18,6 +18,7 @@ BEGIN
 	IsActive BIT NOT NULL,
 	ExpirationDate DATETIME NULL, 
 	SettlementDayMonth INT NULL,
+	PayoutAmount DECIMAL NULL,
 	Created DATETIME DEFAULT GETDATE(),
 	Modified DATETIME DEFAULT GETDATE()
 ) 
