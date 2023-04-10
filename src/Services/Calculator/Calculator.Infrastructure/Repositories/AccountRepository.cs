@@ -248,6 +248,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@status", (int) accountReader.AccountStatus);
         parameters.Add("@workDayHours", accountReader.WorkDayHours);
         parameters.Add("@settlementDayMonth", accountReader.SettlementDayMonth);
+        parameters.Add("@payoutAmount", accountReader.PayoutAmount);
          
         await ExecuteAsync("account_updateData_U", parameters, CommandType.StoredProcedure);
     }
@@ -281,28 +282,8 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@newWorkDayHours", accountReader.WorkDayHours);
 
         await ExecuteAsync("account_newWorkDayHours_U", parameters, CommandType.StoredProcedure);
-    }
+    } 
 
-    public async Task UpdateHourlyRateAsync(AccountReader accountReader)
-    {
-        var parameters = new DynamicParameters();
-
-        parameters.Add("@accountId", accountReader.Id);
-        parameters.Add("@newHourlyRate", accountReader.HourlyRate);
-
-        await ExecuteAsync("account_newHourlyRate_U", parameters, CommandType.StoredProcedure);
-    }
-
-    public async Task UpdateOvertimeRateAsync(AccountReader accountReader)
-    {
-        var parameters = new DynamicParameters();
-
-        parameters.Add("@accountId", accountReader.Id);
-        parameters.Add("@newOvertimeRate", accountReader.OvertimeRate);
-
-        await ExecuteAsync("account_newOvertimeRate_U", parameters, CommandType.StoredProcedure);
-    }
-     
     public async Task UpdateStatusToActiveAsync(AccountReader accountReader)
     {
         var parameters = new DynamicParameters();

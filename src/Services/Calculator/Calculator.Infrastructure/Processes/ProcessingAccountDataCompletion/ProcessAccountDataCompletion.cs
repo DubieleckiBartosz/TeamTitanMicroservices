@@ -26,7 +26,7 @@ public class ProcessAccountDataCompletion : IEventHandler<AccountDataCompleted>
         var data = notification.DomainEvent;
 
         var command = UpdateAccountDataCommand.Create((CountingType) data.CountingType, (AccountStatus) data.Status,
-            data.WorkDayHours, data.SettlementDayMonth, data.AccountId, data.ExpirationDate);
+            data.WorkDayHours, data.SettlementDayMonth, data.AccountId, data.ExpirationDate, data.Salary);
 
         await _commandBus.Send(command, cancellationToken);
     }

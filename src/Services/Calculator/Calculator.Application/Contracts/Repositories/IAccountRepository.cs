@@ -28,9 +28,7 @@ public interface IAccountRepository
     Task UpdateBonusAccountAsync(BonusReader bonusValue, AccountReader account);
     Task UpdateStatusToDeactivateAsync(AccountReader accountReader);
     Task UpdateCountingTypeAsync(AccountReader accountReader);
-    Task UpdateWorkDayHoursAsync(AccountReader accountReader);
-    Task UpdateHourlyRateAsync(AccountReader accountReader);
-    Task UpdateOvertimeRateAsync(AccountReader accountReader);
+    Task UpdateWorkDayHoursAsync(AccountReader accountReader); 
     Task UpdateStatusToActiveAsync(AccountReader accountReader);
     Task UpdateSettlementDayMonthAsync(AccountReader accountReader);
 }

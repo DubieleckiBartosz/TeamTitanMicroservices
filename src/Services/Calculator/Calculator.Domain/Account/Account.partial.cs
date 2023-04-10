@@ -42,17 +42,7 @@ public partial class Account
     {
         Details.UpdateWorkDayHours(@event.NewWorkDayHours);
     }
-
-    private void HourlyRateUpdated(HourlyRateChanged @event)
-    {
-        Details.UpdateHourlyRate(@event.NewHourlyRate);
-    }
-
-    private void OvertimeRateUpdated(OvertimeRateChanged @event)
-    {
-        Details.UpdateOvertimeRate(@event.NewOvertimeRate);
-    }
-
+     
     private void CountingTypeUpdated(CountingTypeChanged @event)
     {
         Details.UpdateCountingType(@event.NewCountingType);

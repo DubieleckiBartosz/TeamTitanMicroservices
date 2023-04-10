@@ -20,8 +20,8 @@ public class AccountDetails
     public decimal? HourlyRate { get; private set; }
     public decimal? OvertimeRate { get; private set; } 
     public DateTime? ExpirationDate { get; private set; }
-    public int? SettlementDayMonth { get; private set; }
-
+    public int? SettlementDayMonth { get; private set; } 
+    public decimal? PayoutAmount { get; private set; }
 
     //Constructor for serializer
     public AccountDetails()
@@ -47,7 +47,8 @@ public class AccountDetails
     /// <param name="settlementDayMonth"></param>
     private AccountDetails(string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate,
+        int? settlementDayMonth)
     {
         AccountOwner = accountOwner;
         CompanyCode = companyCode;
@@ -110,7 +111,7 @@ public class AccountDetails
     /// <summary>
     /// For loading data, e.g. from a snapshot
     /// </summary>
-    /// <param name="accountExternalId"></param>
+    /// <param name="accountOwner"></param>
     /// <param name="companyCode"></param>
     /// <param name="countingType"></param>
     /// <param name="accountStatus"></param>
@@ -125,12 +126,12 @@ public class AccountDetails
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
     /// <returns></returns>
-    public static AccountDetails LoadAccountDetails(string accountExternalId, string companyCode,
-        CountingType countingType,
+    public static AccountDetails LoadAccountDetails(string accountOwner, string companyCode,
+        CountingType countingType,  
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth)
     {
-        return new AccountDetails(accountExternalId, companyCode,
+        return new AccountDetails(accountOwner, companyCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
             workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth);
     }
@@ -142,7 +143,8 @@ public class AccountDetails
 
     public void AssignData(CountingType countingType,
         AccountStatus accountStatus, bool isActive,
-        int workDayHours, int settlementDayMonth, DateTime? expirationDate)
+        int workDayHours, int settlementDayMonth, DateTime? expirationDate, 
+        decimal? payoutAmount = null)
     {           
         CountingType = countingType;
         AccountStatus = accountStatus;
@@ -150,6 +152,12 @@ public class AccountDetails
         WorkDayHours = workDayHours; 
         ExpirationDate = expirationDate;
         SettlementDayMonth = settlementDayMonth;
+        PayoutAmount = payoutAmount;
+    }
+
+    public void UpdatePayoutAmount(decimal payoutAmount)
+    {
+        PayoutAmount = payoutAmount;
     }
 
     public void UpdateSettlementDayMonth(int newSettlementDayMonth)
@@ -168,16 +176,7 @@ public class AccountDetails
     { 
         WorkDayHours = newWorkDayHours;
     }
-    public void UpdateOvertimeRate(decimal overtimeRate)
-    {        
-        OvertimeRate = overtimeRate;
-    }
-
-    public void UpdateHourlyRate(decimal hourlyRate)
-    { 
-        HourlyRate = hourlyRate;
-    }
-
+ 
     public void Deactivate(string deactivatedBy)
     { 
         DeactivatedBy = deactivatedBy;
@@ -193,8 +192,7 @@ public class AccountDetails
     } 
     
     public void UpdateCountingType(CountingType countingType)
-    {
-        //Validation
+    { 
         CountingType = countingType; 
     } 
     
