@@ -5,7 +5,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.Decorators;
 using Shared.Implementations.EventStore;
 
-namespace Calculator.Infrastructure.Processes.ProcessingAccountDataCompletion;
+namespace Calculator.Application.Processes.ProcessingAccountDataCompletion;
 
 public class ProcessAccountDataCompletion : IEventHandler<AccountDataCompleted>
 {
@@ -25,7 +25,7 @@ public class ProcessAccountDataCompletion : IEventHandler<AccountDataCompleted>
 
         var data = notification.DomainEvent;
 
-        var command = UpdateAccountDataCommand.Create((CountingType) data.CountingType, (AccountStatus) data.Status,
+        var command = UpdateAccountDataCommand.Create((CountingType)data.CountingType, (AccountStatus)data.Status,
             data.WorkDayHours, data.SettlementDayMonth, data.AccountId, data.ExpirationDate);
 
         await _commandBus.Send(command, cancellationToken);

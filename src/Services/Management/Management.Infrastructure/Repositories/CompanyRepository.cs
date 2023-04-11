@@ -62,8 +62,8 @@ public class CompanyRepository : BaseRepository<CompanyRepository>, ICompanyRepo
         param.Add("@companyId", company.Id);
         param.Add("@companyName", company.CompanyName.ToString());
         param.Add("@isConfirmed", company.IsConfirmed);
-        param.Add("@from", company.OpeningHours!.From);
-        param.Add("@to", company.OpeningHours!.To);
+        param.Add("@from", company.OpeningHours?.From);
+        param.Add("@to", company.OpeningHours?.To);
         param.Add("@city", company.CommunicationData!.Address.City);
         param.Add("@street", company.CommunicationData.Address.Street);
         param.Add("@numberStreet", company.CommunicationData.Address.NumberStreet);

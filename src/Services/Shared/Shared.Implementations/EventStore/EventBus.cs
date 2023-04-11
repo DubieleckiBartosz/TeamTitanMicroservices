@@ -1,5 +1,6 @@
 ﻿using Shared.Domain.Abstractions;
 using Shared.Implementations.Outbox;
+using Shared.Implementations.Tools;
 using System.Text;
 
 namespace Shared.Implementations.EventStore;
@@ -32,44 +33,14 @@ public class EventBus : IEventBus
 
     public async Task CommitStreamAsync(StreamState stream, string? key = null)
     {
-        var message = new OutboxMessage(stream.EventType, stream.StreamData,
-            key ?? CreateAlternativeKey(stream.EventType));
+        var queueKey = key ?? stream.EventType.CreateAlternativeKey();
+        var message = new OutboxMessage(stream.EventType, stream.StreamData, queueKey);
+
         await _outboxListener.Commit(message);
     }
 
     private async Task SendToMessageBroker(IEvent @event)
     {
         await _outboxListener.Commit(@event);
-    }
-
-    private string CreateAlternativeKey(string typeName)
-    {
-        var indexTypeName = typeName.IndexOf(',');
-        var baseTypeName = typeName.Substring(0, indexTypeName) + "_key";
-        var indexKey = baseTypeName.LastIndexOf('.');
-        var key = baseTypeName.Substring(indexKey + 1);
-
-        var builder = new StringBuilder();
-
-        foreach (var charItem in key)
-        {
-            if (char.IsUpper(charItem))
-            {
-                if (builder.Length > 0)
-                {
-                    builder.Append('_');
-                }
-
-                builder.Append(char.ToLower(charItem));
-            }
-            else
-            {
-                builder.Append(charItem);
-            }
-        }
-
-        var responseKey = builder.ToString();
-
-        return responseKey;
-    }
+    } 
 }

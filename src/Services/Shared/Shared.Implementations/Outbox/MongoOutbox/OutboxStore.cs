@@ -23,7 +23,7 @@ public class OutboxStore : IOutboxStore
 
     public async Task<IEnumerable<Guid>> GetUnprocessedMessageIdsAsync()
     {
-        var filter = Builders<OutboxMessage>.Filter.Where(_ => !_.Processed.HasValue);
+        var filter = Builders<OutboxMessage>.Filter.Where(_ => _.IsProcessed == false);
         var cursor = await _collection.Find(filter).ToCursorAsync();
 
         var result = cursor
@@ -36,7 +36,9 @@ public class OutboxStore : IOutboxStore
     public async Task SetMessageToProcessedAsync(Guid id)
     {
         var filter = Builders<OutboxMessage>.Filter.Where(_ => _.Id == id);
-        var update = Builders<OutboxMessage>.Update.Set(_ => _.Processed, DateTime.UtcNow);
+        var update = Builders<OutboxMessage>.Update
+            .Set(_ => _.Processed, DateTime.UtcNow)
+            .Set(_ => _.IsProcessed, true);
 
         var result = await _collection.UpdateOneAsync(filter, update);
 

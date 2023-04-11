@@ -16,6 +16,7 @@ public class OutboxMessage : IIdentifier
         Data = data;
         QueueKey = queueKey;
         Created = DateTime.UtcNow;
+        IsProcessed = false;
     }
 
     [BsonId] 
@@ -24,5 +25,6 @@ public class OutboxMessage : IIdentifier
     public string Type { get; set; }
     public string Data { get; set; }
     public string? QueueKey { get; set; }
-    public DateTime? Processed { get; set; }
+    public bool IsProcessed { get; set; }
+    public DateTime? Processed { get; set; } = null;
 }

@@ -3,7 +3,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.Decorators;
 using Shared.Implementations.EventStore;
 
-namespace Calculator.Infrastructure.Processes.ProcessingFinancialData;
+namespace Calculator.Application.Processes.ProcessingFinancialData;
 
 public class ProcessNewFinancialData : IEventHandler<FinancialDataChanged>
 {

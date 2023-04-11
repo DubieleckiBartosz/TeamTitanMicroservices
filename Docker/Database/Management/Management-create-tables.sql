@@ -82,6 +82,8 @@ BEGIN
 	ContractType INT NOT NULL,
 	SettlementType INT NOT NULL, 
 	Salary DECIMAL DEFAULT 0.00, 
+	HourlyRate DECIMAL DEFAULT 0.00,
+	OvertimeRate DECIMAL DEFAULT 0.00, 
 	StartContract DATETIME NOT NULL,
 	EndContract DATETIME NULL,
 	NumberHoursPerDay INT NULL,

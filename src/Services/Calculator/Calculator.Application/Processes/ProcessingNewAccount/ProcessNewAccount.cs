@@ -3,7 +3,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.Decorators;
 using Shared.Implementations.EventStore;
 
-namespace Calculator.Infrastructure.Processes.ProcessingNewAccount;
+namespace Calculator.Application.Processes.ProcessingNewAccount;
 
 public class ProcessNewAccount : IEventHandler<AccountCreated>
 {
