@@ -131,14 +131,14 @@ public class AccountReader : IRead
         IsActive = false;
         WorkDayHours = @event.WorkDayHours;
         SettlementDayMonth = @event.SettlementDayMonth; 
-        ExpirationDate = @event.ExpirationDate;
-        PayoutAmount = @event.PayoutAmount;
+        ExpirationDate = @event.ExpirationDate; 
 
         return this;
     }
 
     public AccountReader AssignFinancialData(FinancialDataUpdated @event)
-    { 
+    {
+        PayoutAmount = @event.PaymentAmount;
         HourlyRate = @event.HourlyRate;
         OvertimeRate = @event.OvertimeRate;
 

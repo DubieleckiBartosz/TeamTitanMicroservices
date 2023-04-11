@@ -19,11 +19,11 @@ public class AccountState
     private AccountState(string accountOwnerExternalId, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance,
-        DateTime? expiration, int settlementDayMonth, List<Settlement> settlements)
+        DateTime? expiration, int settlementDayMonth, decimal? payoutAmount, List<Settlement> settlements)
     {
         Details = AccountDetails.CreateAccountDetails(accountOwnerExternalId, companyCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance, expiration, settlementDayMonth);
+            workDayHours, hourlyRate, overtimeRate, balance, expiration, settlementDayMonth, payoutAmount);
 
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
@@ -49,6 +49,7 @@ public class AccountState
             details.Balance, 
             details.ExpirationDate,
             details.SettlementDayMonth!.Value,
+            details.PayoutAmount,
             account.Settlements);
     }
 }

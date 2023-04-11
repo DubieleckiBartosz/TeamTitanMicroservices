@@ -847,14 +847,16 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE contract_hourlyRates_U 
+CREATE OR ALTER PROCEDURE contract_financialData_U 
 	@contractId INT,
-	@newHourlyRate DECIMAL,
-	@newOvertimeRate DECIMAL,
+	@salary DECIMAL NULL,
+	@newHourlyRate DECIMAL NULL,
+	@newOvertimeRate DECIMAL NULL,
 	@version INT
 AS
 BEGIN
 	UPDATE EmployeeContracts SET
+		Salary = @salary,
 		HourlyRate = @newHourlyRate,
 		OvertimeRate = @newOvertimeRate,
 		[Version] = @version

@@ -36,8 +36,7 @@ CREATE OR ALTER PROCEDURE account_updateData_U
 	@status INT,
 	@workDayHours INT,
 	@settlementDayMonth INT,
-	@expirationDate DATETIME NULL,
-	@payoutAmount DECIMAL NULL
+	@expirationDate DATETIME NULL 
 AS
 BEGIN 
 	UPDATE Accounts SET 
@@ -45,19 +44,20 @@ BEGIN
 		CountingType = @countingType,
 		AccountStatus = @status,
 		WorkDayHours = @workDayHours,
-		SettlementDayMonth = @settlementDayMonth,
-		PayoutAmount = @payoutAmount
+		SettlementDayMonth = @settlementDayMonth 
 	WHERE Id = @accountId
 END
 GO
 
 CREATE OR ALTER PROCEDURE  account_financialData_U
 	@accountId UNIQUEIDENTIFIER, 
+	@payoutAmount DECIMAL NULL,
 	@overtimeRate DECIMAL NULL,
 	@hourlyRate DECIMAL NULL
 AS
 BEGIN 
 	UPDATE Accounts SET 
+		PayoutAmount = @payoutAmount,
 		OvertimeRate = @overtimeRate,
 		HourlyRate = @hourlyRate
 	WHERE Id = @accountId

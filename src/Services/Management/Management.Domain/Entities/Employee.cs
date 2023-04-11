@@ -150,7 +150,7 @@ public class Employee : Entity
         var countingType = contract.SettlementType.Id;
         var workDayHours = contract.NumberHoursPerDay;
         var settlementDayMonth = contract.PaymentMonthDay; 
-        var expirationDate = contract.TimeRange.EndContract;
+        var expirationDate = contract.TimeRange.EndContract; 
 
         Events.Add(new ContractCreated(countingType, workDayHours, settlementDayMonth, AccountId!.Value, expirationDate));
     }

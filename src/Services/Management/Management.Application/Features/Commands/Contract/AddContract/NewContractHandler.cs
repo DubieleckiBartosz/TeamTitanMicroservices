@@ -34,21 +34,16 @@ public class NewContractHandler : ICommandHandler<NewContractCommand, Unit>
 
         var position = request.Position;
         var contractType = Enumeration.GetById<ContractType>((int)request.ContractType);
-        var settlementType = Enumeration.GetById<SettlementType>((int)request.SettlementType);
-        var salary = request.Salary;
+        var settlementType = Enumeration.GetById<SettlementType>((int)request.SettlementType); 
         var timeRange = TimeRange.Create(request.StartContract, request.EndContract);
         var numberHoursPerDay = request.NumberHoursPerDay;
         var freeDaysPerYear = request.FreeDaysPerYear;
-        var bankAccountNumber = request.BankAccountNumber; 
-        var hourlyRate = request.HourlyRate;
-        var overtimeRate = request.OvertimeRate;
+        var bankAccountNumber = request.BankAccountNumber;  
         var paymentMonthDay = request.PaymentMonthDay;
         var userCode = _currentUser.VerificationCode!;
 
-        var newContract = EmployeeContract.Create(position, contractType, settlementType, salary, timeRange,
-            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, userCode,
-            hourlyRate,
-            overtimeRate, paymentMonthDay);
+        var newContract = EmployeeContract.Create(position, contractType, settlementType, timeRange,
+            numberHoursPerDay, freeDaysPerYear, bankAccountNumber, userCode, paymentMonthDay);
 
         employee.AddContract(newContract);
 

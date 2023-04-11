@@ -92,11 +92,12 @@ public class ContractRepository : BaseRepository<ContractRepository>, IContractR
         var param = new DynamicParameters();
 
         param.Add("@contractId", contract.Id);
+        param.Add("@salary", contract.Salary);
         param.Add("@newHourlyRate", contract.HourlyRate);
         param.Add("@newOvertimeRate", contract.OvertimeRate);
         param.Add("@version", contract.Version);
 
-        var result = await ExecuteAsync("contract_hourlyRates_U", param, CommandType.StoredProcedure);
+        var result = await ExecuteAsync("contract_financialData_U", param, CommandType.StoredProcedure);
         if (result <= 0)
         {
             throw new DatabaseException("The call to procedure 'contract_hourlyRates_U' failed", "Database Error");
