@@ -10,5 +10,5 @@ public static class Configurations
         app.UseSubscribeAllEvents(typeof(AssemblyCalculatorApplicationReference).Assembly);
 
         return app;
-    } 
+    }
 }

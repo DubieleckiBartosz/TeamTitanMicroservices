@@ -33,14 +33,7 @@ builder.RegisterSharedImplementations(typeof(AssemblyCalculatorApplicationRefere
     }, withBackgroundDb: true, types: new[]
 {
     typeof(AssemblyCalculatorApplicationReference), typeof(AssemblySharedImplementationsReference)
-});
-
-//builder.StoreConfiguration(_ => new List<IProjection>
-//    {
-//        new AccountProjection(_.GetService<IAccountRepository>()!),
-//        new ProductProjection(_.GetService<IProductRepository>()!)
-//    }, typeof(AssemblyCalculatorApplicationReference), typeof(AssemblySharedImplementationsReference))
-//    .RegisterBackgroundProcess().GetHangfire().GetAutoMapper(typeof(AssemblyCalculatorApplicationReference).Assembly);
+}); 
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

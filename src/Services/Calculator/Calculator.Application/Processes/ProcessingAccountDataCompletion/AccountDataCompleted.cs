@@ -2,7 +2,7 @@
 using Shared.Domain.Abstractions;
 using Shared.Implementations.EventStore;
 
-namespace Calculator.Infrastructure.Processes.ProcessingAccountDataCompletion;
+namespace Calculator.Application.Processes.ProcessingAccountDataCompletion;
 
 [EventQueue(routingKey: Keys.DataCompletionQueueRoutingKey)]
 public record AccountDataCompleted(int CountingType, int Status, int WorkDayHours,

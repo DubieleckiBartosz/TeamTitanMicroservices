@@ -2,7 +2,7 @@
 using Shared.Implementations.Decorators;
 using Shared.Implementations.EventStore;
 
-namespace Calculator.Infrastructure.Processes.ProcessingPaymentDay;
+namespace Calculator.Application.Processes.ProcessingPaymentDay;
 
 public class ProcessNewPaymentDay : IEventHandler<PaymentDayChanged>
 {

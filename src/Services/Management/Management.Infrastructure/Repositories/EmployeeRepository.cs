@@ -68,7 +68,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
                 }
 
                 return value;
-            }, "Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
+            }, "Id,Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
 
         return result;
     }
@@ -103,7 +103,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
                 }
 
                 return value;
-            }, splitOn: "Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
+            }, splitOn: "Id,Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
         return result;
     }
 
@@ -153,15 +153,12 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         param.Add("@version", employee.Version);
         param.Add("@position", contract.Position);
         param.Add("@contractType", contract.ContractType.Id);
-        param.Add("@settlementType", contract.SettlementType.Id);
-        param.Add("@salary", contract.Salary);
+        param.Add("@settlementType", contract.SettlementType.Id); 
         param.Add("@startContract", contract.TimeRange.StartContract);
         param.Add("@endContract", contract.TimeRange.EndContract);
         param.Add("@numberHoursPerDay", contract.NumberHoursPerDay);
         param.Add("@freeDaysPerYear", contract.FreeDaysPerYear);
-        param.Add("@bankAccountNumber", contract.BankAccountNumber); 
-        param.Add("@hourlyRate", contract.HourlyRate);
-        param.Add("@overtimeRate", contract.OvertimeRate);
+        param.Add("@bankAccountNumber", contract.BankAccountNumber);  
         param.Add("@createdBy", contract.CreatedBy);
         param.Add("@paymentMonthDay", contract.PaymentMonthDay); 
 

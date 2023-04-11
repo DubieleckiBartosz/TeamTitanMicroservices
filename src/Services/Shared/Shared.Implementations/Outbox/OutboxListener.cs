@@ -2,6 +2,7 @@
 using Shared.Domain.Abstractions;
 using Shared.Implementations.Logging;
 using Shared.Implementations.Outbox.MongoOutbox;
+using Shared.Implementations.Tools;
 
 namespace Shared.Implementations.Outbox;
 
@@ -29,6 +30,7 @@ public class OutboxListener : IOutboxListener
             var outboxMessage = new OutboxMessage
             {
                 Type = type,
+                QueueKey = type.CreateAlternativeKey(),
                 Data = JsonConvert.SerializeObject(@event, new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.All

@@ -1,7 +1,7 @@
 SET QUOTED_IDENTIFIER ON;
 GO
 
-CREATE OR ALTER PROCEDURE company_initComany_I
+CREATE OR ALTER PROCEDURE company_initCompany_I
 	@companyStatus INT,
 	@isConfirmed BIT,
 	@companyCode VARCHAR(50),
@@ -399,7 +399,8 @@ CREATE OR ALTER PROCEDURE employee_newEmployee_I
 	@postalCode VARChAR(10),
 	@phoneNumber VARCHAR(20),
 	@email VARCHAR(50),
-	@leader VARCHAR(50)
+	@leader VARCHAR(50),
+	@version INT
 AS
 BEGIN
 	BEGIN TRY  
@@ -476,6 +477,7 @@ BEGIN
 		   e.[Birthday],
 		   e.[PersonIdentifier],
 		   e.[Version],
+		   cd.[Id],
            cd.[City],
            cd.[Street],
            cd.[NumberStreet],
@@ -489,6 +491,8 @@ BEGIN
 		   ec.[ContractType],
 		   ec.[SettlementType],
 		   ec.[Salary],
+		   ec.[HourlyRate],
+		   ec.[OvertimeRate],
 		   ec.[StartContract],
 		   ec.[EndContract],
 		   ec.[NumberHoursPerDay],
@@ -530,6 +534,7 @@ BEGIN
 		   e.[Birthday],
 		   e.[PersonIdentifier], 
 		   e.[Version],
+		   cd.[Id],
 		   cd.[City],
            cd.[Street],
            cd.[NumberStreet],
@@ -543,6 +548,8 @@ BEGIN
 		   ec.[ContractType],
 		   ec.[SettlementType],
 		   ec.[Salary],
+		   ec.[HourlyRate],
+		   ec.[OvertimeRate],
 		   ec.[StartContract],
 		   ec.[EndContract],
 		   ec.[NumberHoursPerDay],
@@ -661,6 +668,7 @@ BEGIN
 		   e.[Birthday],
 		   e.[PersonIdentifier], 
 		   e.[Version],
+		   cd.[Id],
 		   cd.[City],
            cd.[Street],
            cd.[NumberStreet],
@@ -696,15 +704,12 @@ CREATE OR ALTER PROCEDURE contract_newContract_I
 	@version INT,
 	@position VARCHAR(100),
 	@contractType INT,
-	@settlementType INT,
-	@salary DECIMAL, 
+	@settlementType INT, 
 	@startContract DATETIME,
 	@endContract DATETIME,
 	@numberHoursPerDay INT,
 	@freeDaysPerYear INT,
-	@bankAccountNumber VARCHAR(MAX), 
-	@hourlyRate DECIMAL,
-	@overtimeRate DECIMAL,
+	@bankAccountNumber VARCHAR(MAX),  
 	@paymentMonthDay DECIMAL,
 	@createdBy VARCHAR(50)
 AS
@@ -719,8 +724,7 @@ BEGIN
 					   ([EmployeeId]
 					   ,[Position]
 					   ,[ContractType]
-					   ,[SettlementType]
-					   ,[Salary]
+					   ,[SettlementType] 
 					   ,[StartContract]
 					   ,[EndContract]
 					   ,[NumberHoursPerDay]
@@ -732,8 +736,7 @@ BEGIN
 						(@employeeId, 
 						 @position, 
 						 @contractType, 
-						 @settlementType, 
-						 @salary, 
+						 @settlementType,  
 						 @startContract, 
 						 @endContract, 
 						 @numberHoursPerDay,
@@ -769,6 +772,8 @@ BEGIN
 		   ec.[ContractType],
 		   ec.[SettlementType],
 		   ec.[Salary],
+		   ec.[HourlyRate],
+		   ec.[OvertimeRate],
 		   ec.[StartContract],
 		   ec.[EndContract],
 		   ec.[NumberHoursPerDay],
@@ -786,7 +791,7 @@ GO
 
 CREATE OR ALTER PROCEDURE contract_getById_S
 	@contractId INT
-AS
+AS	 
 BEGIN
 	SELECT [Id],
 		   [EmployeeId],
@@ -794,6 +799,8 @@ BEGIN
 		   [ContractType],
 		   [SettlementType],
 		   [Salary],
+		   [HourlyRate],
+		   [OvertimeRate],
 		   [StartContract],
 		   [EndContract],
 		   [NumberHoursPerDay],
@@ -803,7 +810,6 @@ BEGIN
 		   [PaymentMonthDay],
 		   [Version] 
 	  FROM [TeamTitanManagement].[dbo].[EmployeeContracts]    
-	  INNER JOIN Employees AS e ON e.Id = ec.EmployeeId 
 	  WHERE Id = @contractId
 END
 GO

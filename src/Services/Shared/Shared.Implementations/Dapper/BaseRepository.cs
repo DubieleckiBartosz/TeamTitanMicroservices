@@ -55,6 +55,6 @@ public abstract class BaseRepository<TRepository>
     {
         return await _connection.WithConnection(
             async _ => await _.ExecuteAsync(sql, param,
-                commandType: commandType, transaction: transaction));
+                commandType: commandType, transaction: transaction), transaction);
     }
 }

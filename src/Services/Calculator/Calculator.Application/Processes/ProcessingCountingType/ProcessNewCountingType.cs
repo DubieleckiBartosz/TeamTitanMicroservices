@@ -4,7 +4,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.Decorators;
 using Shared.Implementations.EventStore;
 
-namespace Calculator.Infrastructure.Processes.ProcessingCountingType;
+namespace Calculator.Application.Processes.ProcessingCountingType;
 
 public class ProcessNewCountingType : IEventHandler<CountingTypeChanged>
 {
