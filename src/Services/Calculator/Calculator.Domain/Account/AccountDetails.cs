@@ -45,10 +45,11 @@ public class AccountDetails
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
+    /// <param name="payoutAmount"></param>
     private AccountDetails(string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
         int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate,
-        int? settlementDayMonth)
+        int? settlementDayMonth, decimal? payoutAmount)
     {
         AccountOwner = accountOwner;
         CompanyCode = companyCode;
@@ -64,6 +65,7 @@ public class AccountDetails
         Balance = balance;
         ExpirationDate = expirationDate;
         SettlementDayMonth = settlementDayMonth;
+        PayoutAmount = payoutAmount;
     }
 
     /// <summary>
@@ -97,15 +99,18 @@ public class AccountDetails
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
+    /// <param name="payoutAmount"></param>
     /// <returns></returns>
     public static AccountDetails CreateAccountDetails(string accountExternalId, string companyCode,
         CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate,
+        int? settlementDayMonth, decimal? payoutAmount)
     {
         return new AccountDetails(accountExternalId, companyCode,
-            countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth: settlementDayMonth);
+            countingType, accountStatus, activatedBy, createdBy, deactivatedBy,
+            isActive, workDayHours, hourlyRate, overtimeRate, balance, expirationDate, 
+            settlementDayMonth: settlementDayMonth, payoutAmount);
     }
 
     /// <summary>
@@ -125,15 +130,17 @@ public class AccountDetails
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
+    /// <param name="payoutAmount"></param>
     /// <returns></returns>
     public static AccountDetails LoadAccountDetails(string accountOwner, string companyCode,
         CountingType countingType,  
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int? settlementDayMonth)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate,
+        int? settlementDayMonth, decimal? payoutAmount)
     {
         return new AccountDetails(accountOwner, companyCode,
             countingType, accountStatus, activatedBy, createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth);
+            workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth, payoutAmount);
     }
 
     public static AccountDetails Init(string accountOwner, string companyCode, string createdBy)
@@ -165,8 +172,9 @@ public class AccountDetails
         SettlementDayMonth = newSettlementDayMonth;
     }
 
-    public void AssignFinancialData(decimal? hourlyRate, decimal? overtimeRate)
+    public void AssignFinancialData(decimal? paymentAmount, decimal? hourlyRate, decimal? overtimeRate)
     {
+        PayoutAmount = paymentAmount;
         HourlyRate = hourlyRate;
         OvertimeRate = overtimeRate ?? hourlyRate; 
     }

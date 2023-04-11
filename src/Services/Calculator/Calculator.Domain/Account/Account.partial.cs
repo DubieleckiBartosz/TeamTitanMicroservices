@@ -24,7 +24,7 @@ public partial class Account
 
     public void AccountFinancialDataUpdated(FinancialDataUpdated @event)
     {
-        Details.AssignFinancialData(@event.HourlyRate, @event.OvertimeRate);
+        Details.AssignFinancialData(@event.PaymentAmount, @event.HourlyRate, @event.OvertimeRate);
     }
 
 

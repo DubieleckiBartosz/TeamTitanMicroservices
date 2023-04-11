@@ -3,20 +3,20 @@ using Management.Application.Contracts.Repositories;
 using MediatR;
 using Shared.Implementations.Core.Exceptions;
 
-namespace Management.Application.Features.Commands.Contract.UpdateHourlyRates;
+namespace Management.Application.Features.Commands.Contract.UpdateFinancialData;
 
-public class UpdateHourlyRatesHandler : ICommandHandler<UpdateHourlyRatesCommand, Unit>
+public class UpdateFinancialDataHandler : ICommandHandler<UpdateFinancialDataCommand, Unit>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IContractRepository _contractRepository;
 
-    public UpdateHourlyRatesHandler(IUnitOfWork unitOfWork)
+    public UpdateFinancialDataHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         _contractRepository = unitOfWork.ContractRepository;
     }
 
-    public async Task<Unit> Handle(UpdateHourlyRatesCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateFinancialDataCommand request, CancellationToken cancellationToken)
     {
         var result = await _contractRepository.GetContractWithAccountByIdAsync(request.ContractId);
         if (result == null)
@@ -27,7 +27,7 @@ public class UpdateHourlyRatesHandler : ICommandHandler<UpdateHourlyRatesCommand
 
         var contract = result.Map();
 
-        contract.UpdateHourlyRates(request.HourlyRate, request.OvertimeRate, result.AccountId);
+        contract.UpdateFinancialData(request.Salary, request.HourlyRate, request.OvertimeRate, result.AccountId);
 
         await _contractRepository.UpdateHourlyRatesAsync(contract);
         await _unitOfWork.CompleteAsync(contract);

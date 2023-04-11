@@ -1,5 +1,5 @@
 ﻿using Management.Application.Features.Commands.Contract.UpdateBankAccount;
-using Management.Application.Features.Commands.Contract.UpdateHourlyRates;
+using Management.Application.Features.Commands.Contract.UpdateFinancialData;
 using Management.Application.Features.Commands.Contract.UpdatePaymentMonthDay;
 using Management.Application.Features.Commands.Contract.UpdateSalary;
 using Management.Application.Features.Commands.Contract.UpdateSettlementType;
@@ -33,15 +33,15 @@ public class ContractController : BaseController
     }
 
     /// <summary>
-    /// Changing hourly rate or overtime rate
+    /// Changing financial data
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
     [HttpPut("[action]")]
-    public async Task<IActionResult> UpdateHourlyRates([FromBody] UpdateHourlyRatesParameters parameters)
+    public async Task<IActionResult> UpdateFinancialData([FromBody] UpdateFinancialDataParameters parameters)
     {
-        var command = UpdateHourlyRatesCommand.Create(parameters);
+        var command = UpdateFinancialDataCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
     }

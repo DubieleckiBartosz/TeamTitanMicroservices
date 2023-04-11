@@ -57,9 +57,11 @@ public partial class Account : Aggregate
     /// <param name="balance"></param>
     /// <param name="expirationDate"></param>
     /// <param name="settlementDayMonth"></param>
+    /// <param name="payoutAmount"></param>
     private Account(Guid accountId, int version, string accountOwner, string companyCode, CountingType countingType,
         AccountStatus accountStatus, string? activatedBy, string createdBy, string? deactivatedBy, bool isActive,
-        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate, int settlementDayMonth)
+        int workDayHours, decimal? hourlyRate, decimal? overtimeRate, decimal balance, DateTime? expirationDate,
+        int settlementDayMonth, decimal? payoutAmount)
     {
         Id = accountId;
         Version = version;
@@ -67,7 +69,8 @@ public partial class Account : Aggregate
             accountOwner, companyCode,
             countingType, accountStatus, activatedBy, 
             createdBy, deactivatedBy, isActive,
-            workDayHours, hourlyRate, overtimeRate, balance, expirationDate, settlementDayMonth); 
+            workDayHours, hourlyRate, overtimeRate,
+            balance, expirationDate, settlementDayMonth, payoutAmount); 
 
         ProductItems = new List<ProductItem>();
         WorkDays = new List<WorkDay>();
@@ -79,11 +82,11 @@ public partial class Account : Aggregate
     }
 
     public void UpdateAccount(CountingType countingType, int workDayHours, int settlementDayMonth,
-        DateTime? expirationDate, decimal? payoutAmount = null)
+        DateTime? expirationDate)
     {
         var @event =
             AccountDataUpdated.Create(countingType, AccountStatus.New, workDayHours, settlementDayMonth, Id,
-                expirationDate, payoutAmount);
+                expirationDate);
         Apply(@event);
         Enqueue(@event);
     }
@@ -186,11 +189,11 @@ public partial class Account : Aggregate
         this.Enqueue(@event);
     }
 
-    public void AccountUpdateFinancialData(decimal? overtimeRate, decimal? hourlyRate)
+    public void AccountUpdateFinancialData(decimal? payoutAmount, decimal? overtimeRate, decimal? hourlyRate)
     {
         this.ThrowWhenNotActive();
 
-        var @event = FinancialDataUpdated.Create(overtimeRate, hourlyRate, this.Id);
+        var @event = FinancialDataUpdated.Create(payoutAmount, overtimeRate, hourlyRate, this.Id);
         Apply(@event);
         this.Enqueue(@event);
     }
@@ -270,7 +273,8 @@ public partial class Account : Aggregate
             details.OvertimeRate,
             details.Balance,
             details.ExpirationDate,
-            details.SettlementDayMonth!.Value);
+            details.SettlementDayMonth!.Value,
+            details.PayoutAmount);
     }
     protected override void When(IEvent @event)
     {

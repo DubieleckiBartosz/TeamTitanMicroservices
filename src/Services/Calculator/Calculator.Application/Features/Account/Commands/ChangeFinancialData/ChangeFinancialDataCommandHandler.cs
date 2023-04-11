@@ -21,10 +21,11 @@ public class ChangeFinancialDataCommandHandler : ICommandHandler<ChangeFinancial
 
         account.CheckAndThrowWhenNullOrNotMatch("Account");
 
+        var payoutAmount = request.PayoutAmount;
         var overtime = request.OvertimeRate;
         var hourlyRate = request.HourlyRate;
 
-        account!.AccountUpdateFinancialData(overtime, hourlyRate);
+        account!.AccountUpdateFinancialData(payoutAmount, overtime, hourlyRate);
 
         await _repository.UpdateAsync(account);
 

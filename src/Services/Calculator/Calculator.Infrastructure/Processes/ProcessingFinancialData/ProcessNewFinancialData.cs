@@ -23,7 +23,8 @@ public class ProcessNewFinancialData : IEventHandler<FinancialDataChanged>
 
         var data = notification.DomainEvent;
 
-        var command = ChangeFinancialDataCommand.Create(data.OvertimeRate, data.HourlyRate, data.AccountId);
+        var command =
+            ChangeFinancialDataCommand.Create(data.Salary, data.OvertimeRate, data.HourlyRate, data.AccountId);
         await _commandBus.Send(command, cancellationToken);
     }
 }

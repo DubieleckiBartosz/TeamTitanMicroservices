@@ -6,15 +6,15 @@ using Shared.Implementations.EventStore;
 
 namespace Management.Application.NotificationHandlers;
 
-public class NewHourlyRatesNotificationHandler : INotificationHandler<DomainNotification<HourlyRatesChanged>>
+public class NewFinancialDataNotificationHandler : INotificationHandler<DomainNotification<FinancialDataChanged>>
 {
     private readonly IEventBus _eventBus;
 
-    public NewHourlyRatesNotificationHandler(IEventBus eventBus)
+    public NewFinancialDataNotificationHandler(IEventBus eventBus)
     {
         _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
     }
-    public async Task Handle(DomainNotification<HourlyRatesChanged> notification, CancellationToken cancellationToken)
+    public async Task Handle(DomainNotification<FinancialDataChanged> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification?.DomainEvent;
         if (domainEvent == null)
@@ -22,7 +22,7 @@ public class NewHourlyRatesNotificationHandler : INotificationHandler<DomainNoti
             throw new ArgumentException(nameof(domainEvent) + "cannot be null.");
         }
 
-        var processEvent = new NewHourlyRatesProcess(domainEvent.AccountId, domainEvent.HourlyRate, domainEvent.OvertimeRate); 
+        var processEvent = new NewFinancialDataProcess(domainEvent.AccountId, domainEvent.Salary, domainEvent.HourlyRate, domainEvent.OvertimeRate); 
 
         await _eventBus.CommitAsync(processEvent);
     }
