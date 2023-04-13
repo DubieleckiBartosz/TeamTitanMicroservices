@@ -192,7 +192,7 @@ public partial class Account : Aggregate
     public void AccountUpdateFinancialData(decimal? payoutAmount, decimal? overtimeRate, decimal? hourlyRate)
     {
         this.ThrowWhenNotActive();
-
+        
         var @event = FinancialDataUpdated.Create(payoutAmount, overtimeRate, hourlyRate, this.Id);
         Apply(@event);
         this.Enqueue(@event);

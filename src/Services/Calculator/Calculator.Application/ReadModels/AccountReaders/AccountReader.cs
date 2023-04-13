@@ -128,7 +128,7 @@ public class AccountReader : IRead
     {
         CountingType = @event.CountingType;
         AccountStatus = @event.Status;
-        IsActive = false;
+        IsActive = true;
         WorkDayHours = @event.WorkDayHours;
         SettlementDayMonth = @event.SettlementDayMonth; 
         ExpirationDate = @event.ExpirationDate; 
