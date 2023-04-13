@@ -11,5 +11,6 @@ public class Keys
     public const string NewFinancialDataQueueRoutingKey = "new_financial_data_process_key";
     public const string NewPaymentDayQueueRoutingKey = "new_payment_month_day_process_key";
     public const string NewSettlementTypeQueueRoutingKey = "new_settlement_type_process_key"; 
+    public const string NewDayHoursQueueRoutingKey = "new_day_hours_process_key"; 
 
 }
