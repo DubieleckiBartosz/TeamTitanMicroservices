@@ -17,6 +17,7 @@ var commonFolder = Path.Combine(env.ContentRootPath, "..\\..", "Shared");
 
 builder.Configuration.AddJsonFile(Path.Combine(commonFolder, "SharedSettings.json"), optional: true)
     .AddJsonFile("SharedSettings.json", optional: true)
+    .AddJsonFile($"SharedSettings.{env.EnvironmentName}.json", optional: true)
     .AddJsonFile("appsettings.json", optional: true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true).AddEnvironmentVariables();
 
@@ -37,14 +38,9 @@ builder.RegisterSharedImplementations(typeof(AssemblyCalculatorApplicationRefere
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer(); 
 
-
-var issuer = builder.Configuration["JwtSettings:Issuer"];
-var audience = builder.Configuration["JwtSettings:Audience"];
-var key = builder.Configuration["JwtSettings:Key"];
-
-builder.Services.RegisterJwtBearer(issuer, audience, key);
+builder.RegisterJwtBearer();
 
 builder.Host.UseSerilog((ctx, lc) => lc.LogConfigurationService());
 builder.GetSwaggerConfiguration();

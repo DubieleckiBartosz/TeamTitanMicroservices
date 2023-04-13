@@ -45,9 +45,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Domain", "src\Serv
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E5C3EE0D-0DD7-4A73-A15A-67A68BE00317}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.IntegrationTests", "src\Services\Calculator\Tests\Calculator.IntegrationTests\Calculator.IntegrationTests.csproj", "{99B33975-8393-48FD-BAF6-6B2CF6169331}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator.IntegrationTests", "src\Services\Calculator\Tests\Calculator.IntegrationTests\Calculator.IntegrationTests.csproj", "{99B33975-8393-48FD-BAF6-6B2CF6169331}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator.UnitTests", "src\Services\Calculator\Tests\Calculator.UnitTests\Calculator.UnitTests.csproj", "{B9399114-3200-496D-8691-D23A4C04FEA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calculator.UnitTests", "src\Services\Calculator\Tests\Calculator.UnitTests\Calculator.UnitTests.csproj", "{B9399114-3200-496D-8691-D23A4C04FEA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", "{4780E879-D39E-4D61-A305-74E944701F36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.OcelotGateway", "src\ApiGateway\Titan.OcelotGateway\Titan.OcelotGateway.csproj", "{0F2DC300-12A2-4F57-B451-CC96739E498C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthManager", "AuthManager", "{2C800069-412F-42BB-BF29-F1DF8A13E152}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtAuthenticationManager", "src\AuthManager\JwtAuthenticationManager\JwtAuthenticationManager.csproj", "{01386F5E-870D-46E7-9ADC-79B2BB4E8023}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +127,14 @@ Global
 		{B9399114-3200-496D-8691-D23A4C04FEA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9399114-3200-496D-8691-D23A4C04FEA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9399114-3200-496D-8691-D23A4C04FEA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F2DC300-12A2-4F57-B451-CC96739E498C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F2DC300-12A2-4F57-B451-CC96739E498C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F2DC300-12A2-4F57-B451-CC96739E498C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F2DC300-12A2-4F57-B451-CC96739E498C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01386F5E-870D-46E7-9ADC-79B2BB4E8023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01386F5E-870D-46E7-9ADC-79B2BB4E8023}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01386F5E-870D-46E7-9ADC-79B2BB4E8023}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01386F5E-870D-46E7-9ADC-79B2BB4E8023}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,6 +162,10 @@ Global
 		{E5C3EE0D-0DD7-4A73-A15A-67A68BE00317} = {A87E1EC8-EDEB-49AB-8326-2B0C6A9B27C4}
 		{99B33975-8393-48FD-BAF6-6B2CF6169331} = {E5C3EE0D-0DD7-4A73-A15A-67A68BE00317}
 		{B9399114-3200-496D-8691-D23A4C04FEA7} = {E5C3EE0D-0DD7-4A73-A15A-67A68BE00317}
+		{4780E879-D39E-4D61-A305-74E944701F36} = {E972D8C4-27A3-4DCE-813D-CEA8617BE84E}
+		{0F2DC300-12A2-4F57-B451-CC96739E498C} = {4780E879-D39E-4D61-A305-74E944701F36}
+		{2C800069-412F-42BB-BF29-F1DF8A13E152} = {E972D8C4-27A3-4DCE-813D-CEA8617BE84E}
+		{01386F5E-870D-46E7-9ADC-79B2BB4E8023} = {2C800069-412F-42BB-BF29-F1DF8A13E152}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6FB9205-7C78-4F1D-9BD6-1DBC3C5958C2}

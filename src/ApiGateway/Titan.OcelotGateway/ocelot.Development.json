@@ -1,0 +1,259 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/Account/new-owner",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/new-owner",
+      "UpstreamHttpMethod": [ "Get" ],
+      "SwaggerKey": "TeamTitan Identity API",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "User"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/AssignUserCodes",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/AssignUserCodes",
+      "UpstreamHttpMethod": [ "Put" ],
+      "SwaggerKey": "TeamTitan Identity API",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/ClearUserCodes",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/ClearUserCodes",
+      "UpstreamHttpMethod": [ "Put" ],
+      "SwaggerKey": "TeamTitan Identity API",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/InitUserOrganization",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/InitUserOrganization",
+      "UpstreamHttpMethod": [ "Post" ],
+      "SwaggerKey": "TeamTitan Identity API",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/RegisterNewUser",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/RegisterNewUser",
+      "UpstreamHttpMethod": [ "Post" ],
+      "SwaggerKey": "TeamTitan Identity API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/confirm-account",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/confirm-account",
+      "UpstreamHttpMethod": [ "Get" ],
+      "SwaggerKey": "TeamTitan Identity API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/LoginUser",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/LoginUser",
+      "UpstreamHttpMethod": [ "Post" ],
+      "SwaggerKey": "TeamTitan Identity API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/RefreshToken",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/RefreshToken",
+      "UpstreamHttpMethod": [ "Post" ],
+      "SwaggerKey": "TeamTitan Identity API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/ForgotPassword",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/ForgotPassword",
+      "UpstreamHttpMethod": [ "Post" ],
+      "SwaggerKey": "TeamTitan Identity API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/reset-password",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7147
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Account/reset-password",
+      "UpstreamHttpMethod": [ "Post" ],
+      "SwaggerKey": "TeamTitan Identity API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/company/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/company/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "SwaggerKey": "TeamTitan Management API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/contract/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/contract/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "TeamTitan Management API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/department/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/department/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "TeamTitan Management API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/employee/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7205
+        }
+      ],
+      "UpstreamPathTemplate": "/api/employee/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "TeamTitan Management API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/account/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7098
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{controller}/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "TeamTitan Calculator API"
+    },
+    {
+      "DownstreamPathTemplate": "/api/product/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7098
+        }
+      ],
+      "UpstreamPathTemplate": "/api/product/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "TeamTitan Calculator API"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5001",
+    "RequestIdKey": "X-Request-ID"
+  },
+  "ReRoutesCaseSensitive": true
+}

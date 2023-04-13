@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Identity.Application.Common;
-using Identity.Application.Settings;
+using JwtAuthenticationManager.Models;
 
 namespace Identity.Application.Utils;
 
@@ -36,7 +36,7 @@ public static class TokenUtils
             issuer: jwtSettings.Issuer,
             audience: jwtSettings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(jwtSettings.DurationInMinutes),
+            expires: DateTime.UtcNow.AddMinutes(30),
             signingCredentials: signingCredentials);
 
         return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);

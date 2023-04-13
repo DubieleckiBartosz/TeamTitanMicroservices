@@ -15,7 +15,6 @@
     <PackageReference Include="Hangfire.SqlServer" Version="1.7.33" />
     <PackageReference Include="MailKit" Version="3.5.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="MimeKit" Version="3.5.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
@@ -30,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\AuthManager\JwtAuthenticationManager\JwtAuthenticationManager.csproj" />
     <ProjectReference Include="..\Shared.Domain\Shared.Domain.csproj" />
   </ItemGroup>
 
