@@ -882,3 +882,16 @@ BEGIN
 	WHERE Id = @contractId 
 END
 GO
+
+CREATE OR ALTER PROCEDURE contract_newDayHours_U  
+	@contractId INT,
+	@newDayHours INT,
+	@version INT
+AS
+BEGIN
+	UPDATE EmployeeContracts SET
+		NumberHoursPerDay = @newDayHours,
+		[Version] = @version
+	WHERE Id = @contractId 
+END
+GO

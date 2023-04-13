@@ -1,5 +1,5 @@
-﻿namespace Management.Application.NotificationHandlers.ProcessNotifications;
+﻿using Shared.Domain.Abstractions;
 
-public class NewDayHoursProcess
-{
-}
+namespace Management.Application.NotificationHandlers.ProcessNotifications;
+
+public record NewDayHoursProcess(Guid AccountId, int NewWorkDayHours) : IEvent; 

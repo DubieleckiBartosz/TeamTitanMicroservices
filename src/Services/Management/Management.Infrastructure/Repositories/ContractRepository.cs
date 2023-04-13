@@ -42,7 +42,7 @@ public class ContractRepository : BaseRepository<ContractRepository>, IContractR
         return result?.FirstOrDefault();
     }
 
-    public async Task UpdateBankAccountNumberAsync(EmployeeContract contract)
+    public async Task UpdateBankAccountNumberAsync(Contract contract)
     {
         var param = new DynamicParameters();
 
@@ -57,7 +57,7 @@ public class ContractRepository : BaseRepository<ContractRepository>, IContractR
         }
     }
 
-    public async Task UpdateSalaryAsync(EmployeeContract contract)
+    public async Task UpdateSalaryAsync(Contract contract)
     {
         var param = new DynamicParameters();
 
@@ -72,7 +72,7 @@ public class ContractRepository : BaseRepository<ContractRepository>, IContractR
         }
     }
 
-    public async Task UpdatePaymentMonthDayAsync(EmployeeContract contract)
+    public async Task UpdatePaymentMonthDayAsync(Contract contract)
     {
         var param = new DynamicParameters();
 
@@ -87,7 +87,7 @@ public class ContractRepository : BaseRepository<ContractRepository>, IContractR
         }
     }
 
-    public async Task UpdateHourlyRatesAsync(EmployeeContract contract)
+    public async Task UpdateHourlyRatesAsync(Contract contract)
     {
         var param = new DynamicParameters();
 
@@ -104,7 +104,7 @@ public class ContractRepository : BaseRepository<ContractRepository>, IContractR
         }
     }
      
-    public async Task UpdateSettlementTypeAsync(EmployeeContract contract)
+    public async Task UpdateSettlementTypeAsync(Contract contract)
     {
         var param = new DynamicParameters();
 
@@ -116,6 +116,21 @@ public class ContractRepository : BaseRepository<ContractRepository>, IContractR
         if (result <= 0)
         {
             throw new DatabaseException("The call to procedure 'contract_settlementType_U' failed", "Database Error");
+        }
+    }
+
+    public async Task UpdateDayHoursAsync(Contract contract)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@contractId", contract.Id);
+        param.Add("@newDayHours", contract.NumberHoursPerDay);
+        param.Add("@version", contract.Version);
+
+        var result = await ExecuteAsync("contract_newDayHours_U", param, CommandType.StoredProcedure);
+        if (result <= 0)
+        {
+            throw new DatabaseException("The call to procedure 'contract_newDayHours_U' failed", "Database Error");
         }
     }
 }

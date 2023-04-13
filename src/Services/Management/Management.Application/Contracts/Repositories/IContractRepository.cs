@@ -7,9 +7,10 @@ public interface IContractRepository
 {
     Task<ContractDao?> GetContractByIdAsync(int contractId); 
     Task<ContractWithAccountDao?> GetContractWithAccountByIdAsync(int contractId);
-    Task UpdateBankAccountNumberAsync(EmployeeContract contract);
-    Task UpdateSalaryAsync(EmployeeContract contract);
-    Task UpdatePaymentMonthDayAsync(EmployeeContract contract);
-    Task UpdateHourlyRatesAsync(EmployeeContract contract);
-    Task UpdateSettlementTypeAsync(EmployeeContract contract);
+    Task UpdateBankAccountNumberAsync(Contract contract);
+    Task UpdateSalaryAsync(Contract contract);
+    Task UpdatePaymentMonthDayAsync(Contract contract);
+    Task UpdateHourlyRatesAsync(Contract contract);
+    Task UpdateSettlementTypeAsync(Contract contract);
+    Task UpdateDayHoursAsync(Contract contract);
 }
