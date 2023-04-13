@@ -7,7 +7,7 @@ namespace Management.Domain.Entities;
 
 public class Employee : Entity
 {
-    private readonly HashSet<EmployeeContract> _employeeContracts = new();
+    private readonly HashSet<Contract> _employeeContracts = new();
     private readonly HashSet<DayOffRequest> _dayOffRequests = new();
     private string FullName => Name + " " + Surname;
     public Guid? AccountId { get; private set; }
@@ -20,7 +20,7 @@ public class Employee : Entity
     //PESEL
     public string? PersonIdentifier { get; } 
     public CommunicationData CommunicationData { get; }
-    public List<EmployeeContract> Contracts => _employeeContracts.ToList();
+    public List<Contract> Contracts => _employeeContracts.ToList();
     public List<DayOffRequest> DayOffRequests => _dayOffRequests.ToList();
  
 
@@ -96,7 +96,7 @@ public class Employee : Entity
     /// <param name="dayOffRequests"></param>
     private Employee(int id, int version, string leader, int departmentId, Guid? accountId, string employeeCode, string name,
         string surname, DateTime birthday,
-        string? personIdentifier, CommunicationData communicationData, List<EmployeeContract>? contracts = null,
+        string? personIdentifier, CommunicationData communicationData, List<Contract>? contracts = null,
         List<DayOffRequest>? dayOffRequests = null) : this(departmentId, leader, employeeCode, name, surname, birthday,
         personIdentifier, communicationData)
     {
@@ -118,7 +118,7 @@ public class Employee : Entity
     public static Employee Load(int id, int version, string leader, int departmentId, Guid? accountId,
         string employeeCode,
         string name, string surname, DateTime birthday,
-        string? personIdentifier, CommunicationData communicationData, List<EmployeeContract>? contracts = null,
+        string? personIdentifier, CommunicationData communicationData, List<Contract>? contracts = null,
         List<DayOffRequest>? dayOffRequests = null)
     {
         return new Employee(id, version, leader, departmentId, accountId, employeeCode, name, surname, birthday,
@@ -138,7 +138,7 @@ public class Employee : Entity
         IncrementVersion();
     }
 
-    public void AddContract(EmployeeContract contract)
+    public void AddContract(Contract contract)
     {
         if (ContractsOverlap(contract))
         {
@@ -189,7 +189,7 @@ public class Employee : Entity
         IncrementVersion();
     }
 
-    public EmployeeContract? FindContract(int contractId) => Contracts.FirstOrDefault(_ => _.Id == contractId);
+    public Contract? FindContract(int contractId) => Contracts.FirstOrDefault(_ => _.Id == contractId);
 
     private bool DoesRangeDaysOffOverlap(RangeDaysOff newRange)
     {
@@ -197,7 +197,7 @@ public class Employee : Entity
             .Any(_ => newRange.FromDate <= _.DaysOff.ToDate && newRange.ToDate >= _.DaysOff.FromDate);
     }
 
-    private bool ContractsOverlap(EmployeeContract newRange)
+    private bool ContractsOverlap(Contract newRange)
     {
         return Contracts.Any(_ =>
             (newRange.TimeRange.StartContract <= _.TimeRange.EndContract) || _.TimeRange.EndContract == null);

@@ -42,7 +42,7 @@ public class NewContractHandler : ICommandHandler<NewContractCommand, Unit>
         var paymentMonthDay = request.PaymentMonthDay;
         var userCode = _currentUser.VerificationCode!;
 
-        var newContract = EmployeeContract.Create(position, contractType, settlementType, timeRange,
+        var newContract = Domain.Entities.Contract.Create(position, contractType, settlementType, timeRange,
             numberHoursPerDay, freeDaysPerYear, bankAccountNumber, userCode, paymentMonthDay);
 
         employee.AddContract(newContract);

@@ -6,7 +6,7 @@ using Shared.Domain.DomainExceptions;
 
 namespace Management.Domain.Entities;
 
-public class EmployeeContract : Entity
+public class Contract : Entity
 {
     public string Position { get; } 
     public ContractType ContractType { get; }
@@ -21,7 +21,7 @@ public class EmployeeContract : Entity
     public int PaymentMonthDay { get; private set; }
     public string CreatedBy { get; }
 
-    private EmployeeContract(string position,
+    private Contract(string position,
         ContractType contractType, SettlementType settlementType, TimeRange timeRange,
         int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, string createdBy, int paymentMonthDay)
     {
@@ -36,7 +36,7 @@ public class EmployeeContract : Entity
         PaymentMonthDay = paymentMonthDay;
     }
 
-    public EmployeeContract(int id, int version, string position,
+    public Contract(int id, int version, string position,
         ContractType contractType, SettlementType settlementType, decimal? salary, TimeRange timeRange,
         int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, string createdBy, decimal? hourlyRate,
         decimal? overtimeRate, int paymentMonthDay) : this(position,
@@ -50,21 +50,21 @@ public class EmployeeContract : Entity
         HourlyRate = hourlyRate;
     }
 
-    public static EmployeeContract Create(string position,
+    public static Contract Create(string position,
         ContractType contractType, SettlementType settlementType, TimeRange timeRange,
         int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, 
         string createdBy, int paymentMonthDay)
     {
-        return new EmployeeContract(position, contractType, settlementType, timeRange,
+        return new Contract(position, contractType, settlementType, timeRange,
             numberHoursPerDay, freeDaysPerYear, bankAccountNumber, createdBy,   paymentMonthDay);
     }
 
-    public static EmployeeContract Load(int id, int version, string position,
+    public static Contract Load(int id, int version, string position,
         ContractType contractType, SettlementType settlementType, decimal salary, TimeRange timeRange,
         int numberHoursPerDay, int freeDaysPerYear, string? bankAccountNumber, string createdBy,
         decimal? hourlyRate, decimal? overtimeRate, int paymentMonthDay)
     {
-        return new EmployeeContract(id, version, position, contractType, settlementType, salary, timeRange,
+        return new Contract(id, version, position, contractType, settlementType, salary, timeRange,
             numberHoursPerDay, freeDaysPerYear, bankAccountNumber, createdBy, hourlyRate,
             overtimeRate, paymentMonthDay);
     } 
@@ -107,6 +107,13 @@ public class EmployeeContract : Entity
         CheckPossibilityOfChangeOrThrow();
         BankAccountNumber = bankAccount; 
         IncrementVersion();
+    }
+    
+    public void UpdateDayHours(int newDayHours, Guid account)
+    {
+        CheckPossibilityOfChangeOrThrow();
+        NumberHoursPerDay = newDayHours; 
+        Events.Add(new DayHoursChanged(account, newDayHours)); 
     }
 
     public void UpdatePaymentMonthDay(int paymentMonthDay, Guid account)

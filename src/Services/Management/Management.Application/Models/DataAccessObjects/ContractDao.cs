@@ -23,13 +23,13 @@ public class ContractDao
     public int PaymentMonthDay { get; init; }
     public string CreatedBy { get; init; } = default!;
 
-    public EmployeeContract Map()
+    public Contract Map()
     {
         var settlementType = Enumeration.GetById<SettlementType>(SettlementType);
         var contractType = Enumeration.GetById<ContractType>(ContractType);
         var timeRange = TimeRange.Create(StartContract, EndContract);
 
-        var contract = EmployeeContract.Load(Id, Version, Position, contractType, settlementType, Salary, timeRange,
+        var contract = Contract.Load(Id, Version, Position, contractType, settlementType, Salary, timeRange,
             NumberHoursPerDay, FreeDaysPerYear, BankAccountNumber, CreatedBy, HourlyRate, OvertimeRate,
             PaymentMonthDay);
 
