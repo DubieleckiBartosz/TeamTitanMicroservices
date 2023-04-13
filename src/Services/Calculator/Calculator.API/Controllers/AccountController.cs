@@ -3,9 +3,6 @@ using Calculator.Application.Features.Account.Commands.AddBonus;
 using Calculator.Application.Features.Account.Commands.AddPieceProduct;
 using Calculator.Application.Features.Account.Commands.AddWorkDay;
 using Calculator.Application.Features.Account.Commands.CancelBonus;
-using Calculator.Application.Features.Account.Commands.ChangeCountingType;
-using Calculator.Application.Features.Account.Commands.ChangeDayHours;
-using Calculator.Application.Features.Account.Commands.ChangeFinancialData;
 using Calculator.Application.Features.Account.Commands.DeactivateAccount;
 using Calculator.Application.Features.Account.Queries.GetAccountsBySearch;
 using Calculator.Application.Parameters.AccountParameters;
@@ -107,21 +104,7 @@ public class AccountController : BaseController
         var command = CancelBonusAccountCommand.Create(parameters);
         await CommandBus.Send(command);
         return NoContent();
-    } 
-
-    /// <summary>
-    /// Change day hours
-    /// </summary>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
-    [Authorize(Roles = "Admin,Owner,Manager")]
-    [HttpPut("[action]")]
-    public async Task<IActionResult> ChangeDayHours([FromBody] ChangeDayHoursParameters parameters)
-    {
-        var command = ChangeDayHoursCommand.Create(parameters);
-        await CommandBus.Send(command);
-        return NoContent();
-    }
+    }  
      
     /// <summary>
     /// Deactivate account
