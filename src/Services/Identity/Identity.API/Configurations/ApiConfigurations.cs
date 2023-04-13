@@ -1,5 +1,6 @@
 ﻿using FluentValidation.AspNetCore;
 using Identity.Application.Settings;
+using JwtAuthenticationManager.Models;
 using Shared.Implementations.Communications.Email;
 using Shared.Implementations;
 
@@ -17,7 +18,7 @@ public static class ApiConfigurations
         var audience = builder.Configuration["JwtSettings:Audience"];
         var key = builder.Configuration["JwtSettings:Key"];
 
-        builder.Services.RegisterJwtBearer(issuer, audience, key);
+        builder.RegisterJwtBearer(issuer, audience, key);
         builder.Services.AddControllers().AddFluentValidation();
         builder.Services.GetSwaggerConfiguration();
 

@@ -18,6 +18,7 @@ using Shared.Implementations.Logging;
 using Shared.Implementations.Utils;
 using System.Net;
 using System.Text;
+using JwtAuthenticationManager.Models;
 using Shared.Implementations.Services;
 using Shared.Implementations.Tools;
 

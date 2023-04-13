@@ -5,6 +5,10 @@ using Shared.Implementations.Core;
 using Shared.Implementations.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+var env = builder.Environment;
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true)
+    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true).AddEnvironmentVariables();
 
 // Add services to the container.
 builder.Host.UseSerilog((ctx, lc) => lc.LogConfigurationService());
@@ -23,15 +27,7 @@ if (app.Environment.IsDevelopment())
 app.UseLoggerHandler();
 app.UseCustomExceptionHandler(ErrorMiddleware.GetStatusCode, ErrorMiddleware.GetErrorResponse);
 
-app.UseHttpsRedirection();
-
-app.UseCors(config =>
-{
-    config
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-});
+app.UseHttpsRedirection(); 
 
 app.UseAuthentication();
 app.UseAuthorization();
