@@ -248,6 +248,7 @@ public class AccountRepository : BaseRepository<AccountRepository>, IAccountRepo
         parameters.Add("@status", (int) accountReader.AccountStatus);
         parameters.Add("@workDayHours", accountReader.WorkDayHours);
         parameters.Add("@settlementDayMonth", accountReader.SettlementDayMonth); 
+        parameters.Add("@isActive", accountReader.IsActive); 
          
         await ExecuteAsync("account_updateData_U", parameters, CommandType.StoredProcedure);
     }

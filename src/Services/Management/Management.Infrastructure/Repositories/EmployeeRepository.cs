@@ -29,12 +29,32 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
 
     public async Task<EmployeeDao?> GetEmployeeWithContractsByIdAsync(int id)
     {
+        var dict = new Dictionary<int, EmployeeDao>();
+
         var param = new DynamicParameters();
 
         param.Add("@employeeId", id);
 
         var result =
-            await this.QueryAsync<EmployeeDao>("employee_getWithContractsById_S", param, CommandType.StoredProcedure);
+            await QueryAsync<EmployeeDao, CommunicationDao?, ContractDao?, EmployeeDao>(
+                "employee_getWithContractsById_S",
+                (e, cd, c) =>
+                {
+                    if (!dict.TryGetValue(e.Id, out var value))
+                    {
+                        value = e;
+                        value.Communication = cd;
+                        dict.Add(e.Id, value);
+                    }
+
+                    if (c != null)
+                    {
+                        value.Contracts.Add(c);
+                    }
+
+                    return e;
+                }, splitOn: "Id,Id,Id",
+                param, CommandType.StoredProcedure);
 
         return result?.FirstOrDefault();
     }
@@ -68,7 +88,7 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
                 }
 
                 return value;
-            }, "Id,Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
+            }, splitOn: "Id,Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
 
         return result;
     }

@@ -36,6 +36,7 @@ CREATE OR ALTER PROCEDURE account_updateData_U
 	@status INT,
 	@workDayHours INT,
 	@settlementDayMonth INT,
+	@isActive BIT,
 	@expirationDate DATETIME NULL 
 AS
 BEGIN 
@@ -44,6 +45,7 @@ BEGIN
 		CountingType = @countingType,
 		AccountStatus = @status,
 		WorkDayHours = @workDayHours,
+		IsActive = @isActive,
 		SettlementDayMonth = @settlementDayMonth 
 	WHERE Id = @accountId
 END

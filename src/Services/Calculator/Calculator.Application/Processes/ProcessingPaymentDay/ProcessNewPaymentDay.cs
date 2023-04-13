@@ -1,4 +1,5 @@
-﻿using Shared.Implementations.Abstractions;
+﻿using Calculator.Application.Features.Account.Commands.UpdateSettlementDay;
+using Shared.Implementations.Abstractions;
 using Shared.Implementations.Decorators;
 using Shared.Implementations.EventStore;
 
@@ -21,5 +22,8 @@ public class ProcessNewPaymentDay : IEventHandler<PaymentDayChanged>
         }
 
         var data = notification.DomainEvent;
+
+        var command = UpdateSettlementDayCommand.Create(data.PaymentMonthDay, data.AccountId);
+        await _commandBus.Send(command, cancellationToken);
     }
 }

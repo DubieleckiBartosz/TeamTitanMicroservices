@@ -41,8 +41,13 @@ public class SnapshotState : IIdentifier
     public string SnapshotData { get; set; }
     public DateTime Created { get; }
 
-    public static SnapshotState Deserialize(BsonDocument doc)
-    { 
+    public static SnapshotState? Deserialize(BsonDocument? doc)
+    {
+        if (doc == null)
+        {
+            return null;
+        }
+
         var id = Guid.Parse(doc["_id"].AsString);
         var aggregateId = Guid.Parse(doc[nameof(AggregateId)].AsString);
         var type = doc[nameof(SnapshotType)].AsString;

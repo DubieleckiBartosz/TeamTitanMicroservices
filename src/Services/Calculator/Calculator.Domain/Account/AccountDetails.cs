@@ -77,6 +77,7 @@ public class AccountDetails
     private AccountDetails(string accountOwner, string companyCode, string createdBy)
     {
         Balance = 0;
+        IsActive = false;
         AccountOwner = accountOwner;
         CompanyCode = companyCode;
         CreatedBy = createdBy;
@@ -161,12 +162,7 @@ public class AccountDetails
         SettlementDayMonth = settlementDayMonth;
         PayoutAmount = payoutAmount;
     }
-
-    public void UpdatePayoutAmount(decimal payoutAmount)
-    {
-        PayoutAmount = payoutAmount;
-    }
-
+      
     public void UpdateSettlementDayMonth(int newSettlementDayMonth)
     {
         SettlementDayMonth = newSettlementDayMonth;

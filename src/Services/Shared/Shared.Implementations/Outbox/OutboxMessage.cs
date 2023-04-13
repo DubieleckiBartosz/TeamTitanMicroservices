@@ -5,17 +5,17 @@ namespace Shared.Implementations.Outbox;
 
 public class OutboxMessage : IIdentifier
 {
-    internal OutboxMessage()
-    {
-    }
-
-    public OutboxMessage(string type, string data, string? queueKey = null)
+    public OutboxMessage()
     {
         Id = Guid.NewGuid();
+        Created = DateTime.UtcNow;
+    }
+
+    public OutboxMessage(string type, string data, string? queueKey = null) : this()
+    { 
         Type = type;
         Data = data;
-        QueueKey = queueKey;
-        Created = DateTime.UtcNow;
+        QueueKey = queueKey; 
         IsProcessed = false;
     }
 
