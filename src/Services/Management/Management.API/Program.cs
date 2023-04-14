@@ -3,6 +3,7 @@ using Management.Application;
 using Management.Infrastructure.Configurations;
 using Serilog;
 using Shared.Implementations;
+using Shared.Implementations.Core;
 using Shared.Implementations.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCustomExceptionHandler(_ => 0, ErrorHandlingMiddleware.GetBaseErrorResponse);
 
 app.UseHttpsRedirection();
 

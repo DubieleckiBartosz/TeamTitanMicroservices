@@ -80,8 +80,7 @@ public static class DaoGenerators
             .Create();
 
         return employee;
-    }
-
+    } 
 
     public static EmployeeDao GetEmployeeDaoWithDayOffRequests(this Fixture fixture)
     { 
