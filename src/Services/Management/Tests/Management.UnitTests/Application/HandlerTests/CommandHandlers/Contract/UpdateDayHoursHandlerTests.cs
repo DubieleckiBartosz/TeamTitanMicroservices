@@ -1,6 +1,6 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Features.Commands.Contract.UpdateDayHours;
-using Management.UnitTests.Application.HandlerTests.ModelGenerators;
+using Management.UnitTests.ModelGenerators;
 using MediatR;
 using Moq;
 using Shared.Implementations.Core.Exceptions;
@@ -35,6 +35,6 @@ public class UpdateDayHoursHandlerTests : CommandHandlerBaseTests<UpdateDayHours
 
         await Handler.Handle(command, CancellationToken.None);
 
-        UnitOfWork.Verify(v => v.CompleteAsync(It.IsAny<Domain.Entities.Contract>()), Times.Once);
+        UnitOfWork.Verify(v => v.CompleteAsync(It.IsAny<Management.Domain.Entities.Contract>()), Times.Once);
     }
 }

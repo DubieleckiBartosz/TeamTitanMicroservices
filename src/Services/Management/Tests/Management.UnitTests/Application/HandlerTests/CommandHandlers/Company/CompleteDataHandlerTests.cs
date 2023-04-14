@@ -1,6 +1,6 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Features.Commands.Company.CompleteData;
-using Management.UnitTests.Application.HandlerTests.ModelGenerators;
+using Management.UnitTests.ModelGenerators;
 using MediatR;
 using Moq;
 using Shared.Implementations.Core.Exceptions;
@@ -48,6 +48,6 @@ public class CompleteDataHandlerTests : CommandHandlerBaseTests<CompleteDataHand
 
         await this.Handler.Handle(command, CancellationToken.None);
          
-        this.CompanyRepositoryMock.Verify(v=>v.CompleteDataAsync(It.IsAny<Domain.Entities.Company>()), Times.Once);
+        this.CompanyRepositoryMock.Verify(v=>v.CompleteDataAsync(It.IsAny<Management.Domain.Entities.Company>()), Times.Once);
     }
 }

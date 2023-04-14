@@ -1,6 +1,6 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Features.Commands.Employee.UpdateEmployeeLeader;
-using Management.UnitTests.Application.HandlerTests.ModelGenerators;
+using Management.UnitTests.ModelGenerators;
 using MediatR;
 using Moq;
 using Shared.Implementations.Core.Exceptions;
@@ -35,6 +35,6 @@ public class UpdateEmployeeLeaderHandlerTests : CommandHandlerBaseTests<UpdateEm
 
         await Handler.Handle(command, CancellationToken.None);
 
-        EmployeeRepositoryMock.Verify(v => v.UpdateLeaderAsync(It.IsAny<Domain.Entities.Employee>()), Times.Once);
+        EmployeeRepositoryMock.Verify(v => v.UpdateLeaderAsync(It.IsAny<Management.Domain.Entities.Employee>()), Times.Once);
     }
 }

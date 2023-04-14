@@ -1,6 +1,6 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Features.Commands.DayOffRequest.ConsiderDayOffRequest;
-using Management.UnitTests.Application.HandlerTests.ModelGenerators;
+using Management.UnitTests.ModelGenerators;
 using MediatR;
 using Moq;
 using Shared.Implementations.Core.Exceptions;
@@ -35,6 +35,6 @@ public class ConsiderDayOffRequestHandlerTests : CommandHandlerBaseTests<Conside
 
         await Handler.Handle(command, CancellationToken.None);
 
-        DayOffRequestRepositoryMock.Verify(v => v.ConsiderDayOffRequestAsync(It.IsAny<Domain.Entities.DayOffRequest>()), Times.Once);
+        DayOffRequestRepositoryMock.Verify(v => v.ConsiderDayOffRequestAsync(It.IsAny<Management.Domain.Entities.DayOffRequest>()), Times.Once);
     }
 }

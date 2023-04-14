@@ -83,6 +83,7 @@ public class Employee : Entity
     /// Load all data
     /// </summary>
     /// <param name="id"></param>
+    /// <param name="version"></param>
     /// <param name="leader"></param>
     /// <param name="departmentId"></param>
     /// <param name="accountId"></param> 

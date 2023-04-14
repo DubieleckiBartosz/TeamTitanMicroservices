@@ -1,5 +1,5 @@
 ﻿using Management.Application.Features.Commands.Company.InitCompany;
-using Management.UnitTests.Application.HandlerTests.ModelGenerators;
+using Management.UnitTests.ModelGenerators;
 using MediatR;
 using Moq;
 
@@ -30,6 +30,6 @@ public class InitCompanyHandlerTests : CommandHandlerBaseTests<InitCompanyHandle
 
         await Handler.Handle(command, CancellationToken.None);
 
-        UnitOfWork.Verify(v => v.CompleteAsync(It.IsAny<Domain.Entities.Company>()), Times.Once);
+        UnitOfWork.Verify(v => v.CompleteAsync(It.IsAny<Management.Domain.Entities.Company>()), Times.Once);
     }
 }
