@@ -1,8 +1,6 @@
-﻿using Management.Application.Constants;
-using Management.Application.Contracts.Repositories;
+﻿using Management.Application.Contracts.Repositories;
 using Management.Application.Generators;
 using MediatR;
-using Shared.Domain.DomainExceptions;
 using Shared.Implementations.Dapper;
 using Shared.Implementations.Services;
 
@@ -25,12 +23,7 @@ public class InitCompanyHandler : ICommandHandler<InitCompanyCommand, Unit>
     }
 
     public async Task<Unit> Handle(InitCompanyCommand request, CancellationToken cancellationToken)
-    {
-        if (_currentUser.IsInRole(Positions.OwnerPosition))
-        {
-            throw new BusinessException("Incorrect role", "The current user is already an owner.");
-        }
-
+    { 
         var companyCode = string.Empty;
         var repeat = true;
         while (repeat)

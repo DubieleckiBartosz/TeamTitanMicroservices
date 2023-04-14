@@ -28,7 +28,7 @@ public class DayOffRequestHandler : ICommandHandler<DayOffRequestCommand, Unit>
         if (employee == null)
         {
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),
-                Titles.MethodFailedTitle("GetEmployeeByCodeAsync"));
+                Titles.MethodFailedTitle("GetEmployeeWithDetailsByCodeAsync"));
         }
 
         var range = RangeDaysOff.CreateRangeDaysOff(request.From, request.To);

@@ -1,6 +1,5 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Contracts.Repositories;
-using Management.Domain.Entities;
 using Management.Domain.Types;
 using Management.Domain.ValueObjects;
 using MediatR;
@@ -25,11 +24,11 @@ public class NewContractHandler : ICommandHandler<NewContractCommand, Unit>
 
     public async Task<Unit> Handle(NewContractCommand request, CancellationToken cancellationToken)
     {
-        var employee = (await _employeeRepository.GetEmployeeWithDetailsByIdAsync(request.EmployeeId))?.Map();
+        var employee = (await _employeeRepository.GetEmployeeWithContractsByIdAsync(request.EmployeeId))?.Map();
         if (employee == null)
         {
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),
-                Titles.MethodFailedTitle("GetEmployeeByIdAsync"));
+                Titles.MethodFailedTitle("GetEmployeeWithContractsByIdAsync"));
         }
 
         var position = request.Position;

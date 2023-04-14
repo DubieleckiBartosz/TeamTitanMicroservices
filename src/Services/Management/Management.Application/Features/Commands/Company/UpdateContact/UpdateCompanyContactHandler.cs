@@ -1,4 +1,5 @@
-﻿using Management.Application.Contracts.Repositories;
+﻿using Management.Application.Constants;
+using Management.Application.Contracts.Repositories;
 using MediatR;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
@@ -20,8 +21,10 @@ public class UpdateCompanyContactHandler : ICommandHandler<UpdateCompanyContactC
         var company = (await _companyRepository.GetCompanyByCodeAsync(_currentUser.OrganizationCode!))?.Map();
         if (company == null)
         {
-            throw new NotFoundException("Company not found by organization code", "Company not found");
+            throw new NotFoundException(Messages.DataNotFoundMessage("Company"),
+                Titles.MethodFailedTitle("GetCompanyByCodeAsync"));
         }
+
         var phoneNumber = request.PhoneNumber;
         var email = request.PhoneNumber;
         var city = request.PhoneNumber;

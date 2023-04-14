@@ -55,7 +55,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Titan.OcelotGateway", "src\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthManager", "AuthManager", "{2C800069-412F-42BB-BF29-F1DF8A13E152}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JwtAuthenticationManager", "src\AuthManager\JwtAuthenticationManager\JwtAuthenticationManager.csproj", "{01386F5E-870D-46E7-9ADC-79B2BB4E8023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtAuthenticationManager", "src\AuthManager\JwtAuthenticationManager\JwtAuthenticationManager.csproj", "{01386F5E-870D-46E7-9ADC-79B2BB4E8023}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{26F79D3F-1F02-42BE-A102-371DAD83EE62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Management.UnitTests", "src\Services\Management\Tests\Management.UnitTests\Management.UnitTests.csproj", "{DB1F98B2-B40C-4907-B16D-0057D173100F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +139,10 @@ Global
 		{01386F5E-870D-46E7-9ADC-79B2BB4E8023}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01386F5E-870D-46E7-9ADC-79B2BB4E8023}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01386F5E-870D-46E7-9ADC-79B2BB4E8023}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB1F98B2-B40C-4907-B16D-0057D173100F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB1F98B2-B40C-4907-B16D-0057D173100F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB1F98B2-B40C-4907-B16D-0057D173100F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB1F98B2-B40C-4907-B16D-0057D173100F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -166,6 +174,8 @@ Global
 		{0F2DC300-12A2-4F57-B451-CC96739E498C} = {4780E879-D39E-4D61-A305-74E944701F36}
 		{2C800069-412F-42BB-BF29-F1DF8A13E152} = {E972D8C4-27A3-4DCE-813D-CEA8617BE84E}
 		{01386F5E-870D-46E7-9ADC-79B2BB4E8023} = {2C800069-412F-42BB-BF29-F1DF8A13E152}
+		{26F79D3F-1F02-42BE-A102-371DAD83EE62} = {080F1A92-5240-4643-BB6D-D07D5A9723AD}
+		{DB1F98B2-B40C-4907-B16D-0057D173100F} = {26F79D3F-1F02-42BE-A102-371DAD83EE62}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6FB9205-7C78-4F1D-9BD6-1DBC3C5958C2}
