@@ -1,4 +1,5 @@
-﻿using Management.Application.Contracts.Repositories;
+﻿using Management.Application.Constants;
+using Management.Application.Contracts.Repositories;
 using Management.Domain.Entities;
 using Management.Domain.ValueObjects;
 using MediatR;
@@ -23,13 +24,14 @@ public class CompleteDataHandler : ICommandHandler<CompleteDataCommand, Unit>
         var result = await _companyRepository.CompanyNameExistsAsync(request.CompanyName);
         if (result)
         {
-            throw new BadRequestException("Company name already exists.", "The company name must be unique");
+            throw new BadRequestException(Messages.NameExistsMessageException, Titles.NameExistsTitle);
         }
 
         var company = (await _companyRepository.GetCompanyByOwnerCodeAsync(_currentUser.VerificationCode!))?.Map();
         if (company == null)
         {
-            throw new NotFoundException("Company not found by verification code", "Company not found");
+            throw new NotFoundException(Messages.DataNotFoundMessage("Company"),
+                Titles.MethodFailedTitle("GetCompanyByOwnerCodeAsync"));
         }
 
         var name = CompanyName.Create(request.CompanyName);

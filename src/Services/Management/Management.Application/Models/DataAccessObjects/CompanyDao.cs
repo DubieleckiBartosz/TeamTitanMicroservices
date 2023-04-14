@@ -39,7 +39,7 @@ public class CompanyDao
         var address = Address.Create(city, street, numberStreet, postalCode);
         var contact = Contact.Create(phoneNumber, email);
         var communicationData = CommunicationData.Load(address, contact, Communication.Version);
-        var companyName = Domain.ValueObjects.CompanyName.Create(CompanyName);
+        var companyName = CompanyName != null ? Domain.ValueObjects.CompanyName.Create(CompanyName) : null ;
         var openingHours = OpeningHours.Create(From, To);
         var departments = Departments.Select(_ => _.Map()).ToList();
 

@@ -59,6 +59,33 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
         return result?.FirstOrDefault();
     }
 
+    public async Task<EmployeeDao?> GetEmployeeWithCommunicationDataByIdAsync(int id)
+    {
+        var dict = new Dictionary<int, EmployeeDao>();
+
+        var param = new DynamicParameters();
+
+        param.Add("@employeeId", id);
+
+        var result =
+            await QueryAsync<EmployeeDao, CommunicationDao?, EmployeeDao>(
+                "employee_getWithCommunicationDataById_S",
+                (e, cd) =>
+                {
+                    if (!dict.TryGetValue(e.Id, out var value))
+                    {
+                        value = e;
+                        value.Communication = cd;
+                        dict.Add(e.Id, value);
+                    }
+
+                    return e;
+                }, splitOn: "Id,Id",
+                param, CommandType.StoredProcedure);
+
+        return result?.FirstOrDefault();
+    }
+
     public async Task<EmployeeDao?> GetEmployeeWithDetailsByIdAsync(int id)
     {
         var dict = new Dictionary<int, EmployeeDao>();
@@ -125,6 +152,18 @@ public class EmployeeRepository : BaseRepository<EmployeeRepository>, IEmployeeR
                 return value;
             }, splitOn: "Id,Id,Id,Id", param, CommandType.StoredProcedure)).FirstOrDefault();
         return result;
+    }
+
+    public async Task<EmployeeDao?> GetEmployeeNecessaryDataByCodeAsync(string code)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@code", code);
+
+        var result =
+            await this.QueryAsync<EmployeeDao>("employee_getNecessaryDataByCode_S", param, CommandType.StoredProcedure);
+
+        return result?.FirstOrDefault();
     }
 
     public async Task AddAccountToEmployeeAsync(Employee employee)

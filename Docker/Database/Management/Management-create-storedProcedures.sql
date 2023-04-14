@@ -654,6 +654,23 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE employee_getNecessaryDataByCode_S
+	@code INT
+AS
+BEGIN
+	SELECT [Id],
+		   [AccountId] ,
+		   [EmployeeCode],
+		   [Name],
+		   [Surname],
+		   [PersonIdentifier],
+		   [Leader],
+		   [Version]
+	  FROM [TeamTitanManagement].[dbo].[Employees]
+	  WHERE EmployeeCode = @code
+END
+GO
+
 CREATE OR ALTER PROCEDURE employee_getWithContractsById_S
 	@employeeId INT
 AS
@@ -693,6 +710,34 @@ BEGIN
 	  FROM [TeamTitanManagement].[dbo].[Employees] AS e
 	  INNER JOIN ContactDetails AS cd ON cd.EmployeeId = e.Id
 	  LEFT JOIN EmployeeContracts AS ec ON ec.EmployeeId = e.Id 
+	  WHERE e.Id = @employeeId
+END
+GO
+
+CREATE OR ALTER PROCEDURE employee_getWithCommunicationDataById_S
+	@employeeId INT
+AS
+BEGIN
+	SELECT e.[Id],
+		   e.[AccountId],
+		   e.[DepartmentId],
+		   e.[EmployeeCode],
+		   e.[Leader],
+		   e.[Name],
+		   e.[Surname],
+		   e.[Birthday],
+		   e.[PersonIdentifier], 
+		   e.[Version],
+		   cd.[Id],
+		   cd.[City],
+           cd.[Street],
+           cd.[NumberStreet],
+           cd.[PostalCode],
+           cd.[PhoneNumber],
+           cd.[Email],
+		   cd.[Version]
+	  FROM [TeamTitanManagement].[dbo].[Employees] AS e
+	  INNER JOIN ContactDetails AS cd ON cd.EmployeeId = e.Id
 	  WHERE e.Id = @employeeId
 END
 GO

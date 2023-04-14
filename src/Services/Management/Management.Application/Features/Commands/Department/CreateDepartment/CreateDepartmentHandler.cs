@@ -1,4 +1,5 @@
-﻿using Management.Application.Contracts.Repositories;
+﻿using Management.Application.Constants;
+using Management.Application.Contracts.Repositories;
 using MediatR;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
@@ -21,7 +22,8 @@ public class CreateDepartmentHandler : ICommandHandler<CreateDepartmentCommand, 
         var company = (await _companyRepository.GetCompanyWithDepartmentsByCodeAsync(companyCode))?.Map();
         if (company == null)
         {
-            throw new NotFoundException($"No company found with code  {companyCode}", "Data not found");
+            throw new NotFoundException(Messages.DataNotFoundMessage("Company"),
+                Titles.MethodFailedTitle("GetCompanyWithDepartmentsByCodeAsync"));
         }
 
         company.AddNewDepartment(request.DepartmentName);

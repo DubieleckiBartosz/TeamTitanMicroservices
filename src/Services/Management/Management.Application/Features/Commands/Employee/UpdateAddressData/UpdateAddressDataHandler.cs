@@ -16,11 +16,11 @@ public class UpdateAddressDataHandler : ICommandHandler<UpdateAddressDataCommand
 
     public async Task<Unit> Handle(UpdateAddressDataCommand request, CancellationToken cancellationToken)
     {
-        var employee = (await _employeeRepository.GetEmployeeWithDetailsByIdAsync(request.EmployeeId))?.Map();
+        var employee = (await _employeeRepository.GetEmployeeWithCommunicationDataByIdAsync(request.EmployeeId))?.Map();
         if (employee == null)
         {
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),
-                Titles.MethodFailedTitle("GetEmployeeByIdAsync"));
+                Titles.MethodFailedTitle("GetEmployeeWithCommunicationDataByIdAsync"));
         }
 
         employee.UpdateAddress(request.City, request.Street, request.NumberStreet, request.PostalCode);

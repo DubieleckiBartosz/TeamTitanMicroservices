@@ -19,13 +19,13 @@ public class AssignCalculationAccountHandler : ICommandHandler<AssignCalculation
 
     public async Task<Unit> Handle(AssignCalculationAccountCommand request, CancellationToken cancellationToken)
     {
-        var employee = (await _employeeRepository.GetEmployeeWithDetailsByCodeAsync(request.OwnerVerificationCode))?.Map();
+        var employee = (await _employeeRepository.GetEmployeeNecessaryDataByCodeAsync(request.OwnerVerificationCode))?.Map();
         if (employee == null)
         {
             _loggerManager.LogError(message: $"Account {request.AccountId} has not been assigned");
 
             throw new NotFoundException(Messages.DataNotFoundMessage("Employee"),
-                Titles.MethodFailedTitle("GetEmployeeByIdAsync"));
+                Titles.MethodFailedTitle("GetEmployeeNecessaryDataByCodeAsync"));
         }
 
         employee.AssignAccount(request.AccountId);

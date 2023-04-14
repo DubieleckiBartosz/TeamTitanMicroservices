@@ -73,7 +73,7 @@ public class Company : Entity, IAggregateRoot
     /// <param name="departments"></param>
     /// <param name="isConfirmed"></param>
     private Company(int id, int version, int ownerId, string ownerCode, CommunicationData communicationData, string companyCode,
-        CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments, bool isConfirmed)  
+        CompanyName? companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments, bool isConfirmed)  
         : this(ownerId, companyCode, ownerCode)
     {
         Id = id;
@@ -93,7 +93,7 @@ public class Company : Entity, IAggregateRoot
 
     public static Company Load(int id, int version, int ownerId, string ownerCode, CommunicationData communicationData,
         string companyCode,
-        CompanyName companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments, bool isConfirmed)
+        CompanyName? companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments, bool isConfirmed)
     {
         return new Company(id, version, ownerId, ownerCode, communicationData, companyCode,
             companyName, openingHours, companyStatus, departments, isConfirmed);
