@@ -24,7 +24,7 @@ using Management.Application.Parameters.DayOffRequestParameters;
 using Management.Application.Parameters.DepartmentParameters;
 using Management.Application.Parameters.EmployeeParameters;
 
-namespace Management.UnitTests.Application.HandlerTests.ModelGenerators;
+namespace Management.UnitTests.ModelGenerators;
 
 public static class CommandGenerators
 {
@@ -43,7 +43,7 @@ public static class CommandGenerators
     {
         var parameters = fixture.Create<UpdateCompanyContactParameters>();
         return UpdateCompanyContactCommand.Create(parameters);
-    } 
+    }
 
     public static NewContractCommand GetNewContractCommand(this Fixture fixture)
     {
@@ -56,36 +56,36 @@ public static class CommandGenerators
     }
 
     public static UpdateBankAccountCommand GetUpdateBankAccountCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Build<UpdateBankAccountParameters>().Create();
         return UpdateBankAccountCommand.Create(parameters);
     }
 
     public static UpdateDayHoursCommand GetUpdateDayHoursCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Build<UpdateDayHoursParameters>().Create();
         return UpdateDayHoursCommand.Create(parameters);
     }
     public static UpdateFinancialDataCommand GetUpdateFinancialDataCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Build<UpdateFinancialDataParameters>().Create();
         return UpdateFinancialDataCommand.Create(parameters);
     }
-    
+
     public static UpdatePaymentMonthDayCommand GetUpdatePaymentMonthDayCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Build<UpdatePaymentMonthDayParameters>().Create();
         return UpdatePaymentMonthDayCommand.Create(parameters);
     }
-    
+
     public static UpdateSalaryCommand GetUpdateSalaryCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Build<UpdateSalaryParameters>().Create();
         return UpdateSalaryCommand.Create(parameters);
     }
-    
+
     public static UpdateSettlementTypeCommand GetUpdateSettlementTypeCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Build<UpdateSettlementTypeParameters>().Create();
         return UpdateSettlementTypeCommand.Create(parameters);
     }
@@ -99,28 +99,28 @@ public static class CommandGenerators
 
         return DayOffRequestCommand.Create(parameters);
     }
-    
+
     public static CancelDayOffRequestCommand GetCancelDayOffRequestCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Create<CancelDayOffRequestParameters>();
 
         return CancelDayOffRequestCommand.Create(parameters);
     }
-    
+
     public static ConsiderDayOffRequestCommand GetConsiderDayOffRequestCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Create<ConsiderDayOffRequestParameters>();
 
         return ConsiderDayOffRequestCommand.Create(parameters);
     }
-    
+
     public static CreateDepartmentCommand GetCreateDepartmentCommand(this Fixture fixture)
-    { 
+    {
         var parameters = fixture.Create<CreateDepartmentParameters>();
 
         return CreateDepartmentCommand.Create(parameters);
     }
-    
+
     public static AssignCalculationAccountCommand GetAssignCalculationAccountCommand(this Fixture fixture)
     {
         var ownerVerificationCode = fixture.Create<string>();
@@ -128,28 +128,28 @@ public static class CommandGenerators
 
         return AssignCalculationAccountCommand.Create(ownerVerificationCode, accountId);
     }
-    
+
     public static CreateEmployeeCommand GetCreateEmployeeCommand(this Fixture fixture)
     {
         var parameters = fixture.Create<CreateEmployeeParameters>();
 
         return CreateEmployeeCommand.Create(parameters);
     }
-    
+
     public static UpdateAddressDataCommand GetUpdateAddressDataCommand(this Fixture fixture)
     {
         var parameters = fixture.Create<UpdateAddressDataParameters>();
 
         return UpdateAddressDataCommand.Create(parameters);
     }
-    
+
     public static UpdateContactDataCommand GetUpdateContactDataCommand(this Fixture fixture)
     {
         var parameters = fixture.Create<UpdateContactDataParameters>();
 
         return UpdateContactDataCommand.Create(parameters);
     }
-    
+
     public static UpdateEmployeeLeaderCommand GetUpdateEmployeeLeaderCommand(this Fixture fixture)
     {
         var parameters = fixture.Create<UpdateEmployeeLeaderParameters>();

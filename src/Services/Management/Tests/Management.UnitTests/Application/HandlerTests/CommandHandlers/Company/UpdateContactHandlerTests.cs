@@ -1,6 +1,6 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Features.Commands.Company.UpdateContact;
-using Management.UnitTests.Application.HandlerTests.ModelGenerators;
+using Management.UnitTests.ModelGenerators;
 using MediatR;
 using Moq;
 using Shared.Implementations.Core.Exceptions;
@@ -32,6 +32,6 @@ public class UpdateContactHandlerTests : CommandHandlerBaseTests<UpdateCompanyCo
 
         await this.Handler.Handle(command, CancellationToken.None);
 
-        this.CompanyRepositoryMock.Verify(v => v.UpdateCommunicationDataAsync(It.IsAny<Domain.Entities.Company>()), Times.Once);
+        this.CompanyRepositoryMock.Verify(v => v.UpdateCommunicationDataAsync(It.IsAny<Management.Domain.Entities.Company>()), Times.Once);
     }
 }

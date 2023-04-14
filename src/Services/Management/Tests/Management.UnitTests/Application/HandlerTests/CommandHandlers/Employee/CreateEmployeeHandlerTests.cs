@@ -1,6 +1,6 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Features.Commands.Employee.CreateEmployee;
-using Management.UnitTests.Application.HandlerTests.ModelGenerators;
+using Management.UnitTests.ModelGenerators;
 using Moq;
 using Shared.Implementations.Core.Exceptions;
 
@@ -36,6 +36,6 @@ public class CreateEmployeeHandlerTests : CommandHandlerBaseTests<CreateEmployee
 
         Assert.NotNull(result);
         Assert.NotEmpty(result);
-        UnitOfWork.Verify(v => v.CompleteAsync(It.IsAny<Domain.Entities.Department>()), Times.Once);
+        UnitOfWork.Verify(v => v.CompleteAsync(It.IsAny<Management.Domain.Entities.Department>()), Times.Once);
     }
 }

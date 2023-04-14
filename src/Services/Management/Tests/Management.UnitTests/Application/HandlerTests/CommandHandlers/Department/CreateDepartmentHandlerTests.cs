@@ -1,6 +1,6 @@
 ﻿using Management.Application.Constants;
 using Management.Application.Features.Commands.Department.CreateDepartment;
-using Management.UnitTests.Application.HandlerTests.ModelGenerators;
+using Management.UnitTests.ModelGenerators;
 using MediatR;
 using Moq;
 using Shared.Implementations.Core.Exceptions;
@@ -35,6 +35,6 @@ public class CreateDepartmentHandlerTests : CommandHandlerBaseTests<CreateDepart
 
         await Handler.Handle(command, CancellationToken.None);
 
-        CompanyRepositoryMock.Verify(v => v.AddNewDepartmentAsync(It.IsAny<Domain.Entities.Company>()), Times.Once);
+        CompanyRepositoryMock.Verify(v => v.AddNewDepartmentAsync(It.IsAny<Management.Domain.Entities.Company>()), Times.Once);
     }
 }

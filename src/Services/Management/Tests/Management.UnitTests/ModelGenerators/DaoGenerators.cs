@@ -1,13 +1,13 @@
 ﻿using AutoFixture;
 using Management.Application.Models.DataAccessObjects;
 
-namespace Management.UnitTests.Application.HandlerTests.ModelGenerators;
+namespace Management.UnitTests.ModelGenerators;
 
 public static class DaoGenerators
 {
     public static CompanyDao GetCompanyDao(this Fixture fixture)
     {
-        var rnd = new Random(); 
+        var rnd = new Random();
 
         var departments = new List<DepartmentDao>()
         {
@@ -22,7 +22,7 @@ public static class DaoGenerators
     }
 
     public static DepartmentDao GetDepartmentDao(this Fixture fixture)
-    { 
+    {
         var employees = new List<EmployeeDao>()
         {
             fixture.GetEmployeeDaoDetails()
@@ -46,8 +46,8 @@ public static class DaoGenerators
             .Create();
 
         return employee;
-    } 
-     
+    }
+
     public static EmployeeDao GetEmployeeDaoDetails(this Fixture fixture)
     {
         var contracts = new List<ContractDao>()
@@ -63,7 +63,7 @@ public static class DaoGenerators
         var employee = fixture.Build<EmployeeDao>()
             .With(w => w.DayOffRequests, dayOffRequests)
             .With(w => w.Contracts, contracts).Create();
-         
+
         return employee;
     }
 
@@ -72,7 +72,7 @@ public static class DaoGenerators
         var contracts = new List<ContractDao>()
         {
             fixture.GetContractDao()
-        }; 
+        };
 
         var employee = fixture.Build<EmployeeDao>()
             .With(w => w.Contracts, contracts)
@@ -80,10 +80,10 @@ public static class DaoGenerators
             .Create();
 
         return employee;
-    } 
+    }
 
     public static EmployeeDao GetEmployeeDaoWithDayOffRequests(this Fixture fixture)
-    { 
+    {
         var dayOffRequests = new List<DayOffRequestDao>()
         {
             fixture.GetDayOffRequestDao()
