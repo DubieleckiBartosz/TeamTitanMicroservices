@@ -10,8 +10,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/new-owner",
-      "UpstreamHttpMethod": [ "Get" ],
-      "SwaggerKey": "TeamTitan Identity API",
+      "UpstreamHttpMethod": [ "Get" ], 
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -30,8 +29,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/AssignUserCodes",
-      "UpstreamHttpMethod": [ "Put" ],
-      "SwaggerKey": "TeamTitan Identity API",
+      "UpstreamHttpMethod": [ "Put" ], 
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -47,8 +45,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/ClearUserCodes",
-      "UpstreamHttpMethod": [ "Put" ],
-      "SwaggerKey": "TeamTitan Identity API",
+      "UpstreamHttpMethod": [ "Put" ], 
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -64,8 +61,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/InitUserOrganization",
-      "UpstreamHttpMethod": [ "Post" ],
-      "SwaggerKey": "TeamTitan Identity API",
+      "UpstreamHttpMethod": [ "Post" ], 
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -81,8 +77,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/RegisterNewUser",
-      "UpstreamHttpMethod": [ "Post" ],
-      "SwaggerKey": "TeamTitan Identity API"
+      "UpstreamHttpMethod": [ "Post" ], 
     },
     {
       "DownstreamPathTemplate": "/api/Account/confirm-account",
@@ -94,8 +89,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/confirm-account",
-      "UpstreamHttpMethod": [ "Get" ],
-      "SwaggerKey": "TeamTitan Identity API"
+      "UpstreamHttpMethod": [ "Get" ]
     },
     {
       "DownstreamPathTemplate": "/api/Account/LoginUser",
@@ -107,8 +101,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/LoginUser",
-      "UpstreamHttpMethod": [ "Post" ],
-      "SwaggerKey": "TeamTitan Identity API"
+      "UpstreamHttpMethod": [ "Post" ] 
     },
     {
       "DownstreamPathTemplate": "/api/Account/RefreshToken",
@@ -120,8 +113,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/RefreshToken",
-      "UpstreamHttpMethod": [ "Post" ],
-      "SwaggerKey": "TeamTitan Identity API"
+      "UpstreamHttpMethod": [ "Post" ] 
     },
     {
       "DownstreamPathTemplate": "/api/Account/ForgotPassword",
@@ -133,8 +125,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/ForgotPassword",
-      "UpstreamHttpMethod": [ "Post" ],
-      "SwaggerKey": "TeamTitan Identity API"
+      "UpstreamHttpMethod": [ "Post" ] 
     },
     {
       "DownstreamPathTemplate": "/api/Account/reset-password",
@@ -146,8 +137,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/reset-password",
-      "UpstreamHttpMethod": [ "Post" ],
-      "SwaggerKey": "TeamTitan Identity API"
+      "UpstreamHttpMethod": [ "Post" ] 
     },
     {
       "DownstreamPathTemplate": "/api/company/{everything}",
@@ -162,8 +152,7 @@
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
-      },
-      "SwaggerKey": "TeamTitan Management API"
+      } 
     },
     {
       "DownstreamPathTemplate": "/api/contract/{everything}",
@@ -179,8 +168,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "SwaggerKey": "TeamTitan Management API"
+      } 
     },
     {
       "DownstreamPathTemplate": "/api/department/{everything}",
@@ -196,8 +184,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "SwaggerKey": "TeamTitan Management API"
+      } 
     },
     {
       "DownstreamPathTemplate": "/api/employee/{everything}",
@@ -213,8 +200,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "SwaggerKey": "TeamTitan Management API"
+      } 
     },
     {
       "DownstreamPathTemplate": "/api/account/{everything}",
@@ -230,8 +216,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "SwaggerKey": "TeamTitan Calculator API"
+      } 
     },
     {
       "DownstreamPathTemplate": "/api/product/{everything}",
@@ -247,8 +232,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "SwaggerKey": "TeamTitan Calculator API"
+      } 
     }
   ],
   "GlobalConfiguration": {
