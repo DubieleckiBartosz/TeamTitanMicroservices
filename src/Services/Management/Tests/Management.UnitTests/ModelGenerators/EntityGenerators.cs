@@ -2,12 +2,58 @@
 using Management.Domain.Entities;
 using Management.Domain.Types;
 using Management.Domain.ValueObjects;
-using Org.BouncyCastle.Asn1.X500;
 
 namespace Management.UnitTests.ModelGenerators;
 
 public static class EntityGenerators
 {
+    public static Company GetCompany(this Fixture fixture)
+    {
+        var ownerId = fixture.Create<int>();
+        var companyCode = fixture.Create<string>();
+        var ownerCode = fixture.Create<string>();
+
+        return Company.Init(ownerId, companyCode, ownerCode);
+    }
+
+    public static Company GetCompanyWithBaseData(
+        this Fixture fixture,
+        CompanyName? companyName = null,
+        CommunicationData? communicationData = null)
+    {
+        var address = Address.Create(fixture.Create<string>(), fixture.Create<string>(),
+            fixture.Create<string>(), fixture.Create<string>());
+
+        var contact = Contact.Create(fixture.Create<string>(), fixture.Create<string>());
+        companyName ??= CompanyName.Create(fixture.Create<string>());
+        communicationData ??= CommunicationData.Create(address, contact);
+        var company = fixture.GetCompany();
+
+        company.UpdateData(companyName, null, communicationData);
+        
+        return company;
+    }
+
+    public static Company GetCompanyWithDepartments(this Fixture fixture, string? departmentName = null)
+    {
+        var company = fixture.GetCompanyWithBaseData();
+        departmentName ??= fixture.Create<string>();
+
+        company.AddNewDepartment(departmentName);
+
+        return company;
+
+    }
+
+    public static Department GetDepartment(this Fixture fixture, string? name = null)
+    {
+        name ??= fixture.Create<string>();
+        var departmentName = DepartmentName.Create(name);
+        var newDepartment = Department.CreateDepartment(departmentName);
+
+        return newDepartment;
+    }
+
     public static Employee GetEmployee(this Fixture fixture,
         int? departmentId = null, string? leader = null, string? employeeCode = null,
         string? name = null, string? surname = null, DateTime? birthday = null,
