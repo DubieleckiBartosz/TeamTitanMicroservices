@@ -22,9 +22,9 @@ public class Company : Entity, IAggregateRoot
 
 
     /// <summary>
-    /// Creating new company
-    /// </summary> 
-    /// <param name="ownerId"></param> 
+    ///     Creating new company
+    /// </summary>
+    /// <param name="ownerId"></param>
     /// <param name="companyCode"></param>
     /// <param name="ownerCode"></param>
     private Company(int ownerId, string companyCode, string ownerCode)
@@ -39,7 +39,7 @@ public class Company : Entity, IAggregateRoot
     }
 
     /// <summary>
-    /// Load necessary data
+    ///     Load necessary data
     /// </summary>
     /// <param name="id"></param>
     /// <param name="version"></param>
@@ -72,8 +72,10 @@ public class Company : Entity, IAggregateRoot
     /// <param name="companyStatus"></param>
     /// <param name="departments"></param>
     /// <param name="isConfirmed"></param>
-    private Company(int id, int version, int ownerId, string ownerCode, CommunicationData communicationData, string companyCode,
-        CompanyName? companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments, bool isConfirmed)  
+    private Company(int id, int version, int ownerId, string ownerCode, CommunicationData communicationData,
+        string companyCode,
+        CompanyName? companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments,
+        bool isConfirmed)
         : this(ownerId, companyCode, ownerCode)
     {
         Id = id;
@@ -85,7 +87,8 @@ public class Company : Entity, IAggregateRoot
         IsConfirmed = isConfirmed;
 
         departments.ForEach(_ => _departments.Add(_));
-    } 
+    }
+
     public static Company Init(int ownerId, string uniqueCode, string ownerCode)
     {
         return new Company(ownerId, uniqueCode, ownerCode);
@@ -93,13 +96,15 @@ public class Company : Entity, IAggregateRoot
 
     public static Company Load(int id, int version, int ownerId, string ownerCode, CommunicationData communicationData,
         string companyCode,
-        CompanyName? companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments, bool isConfirmed)
+        CompanyName? companyName, OpeningHours? openingHours, CompanyStatus companyStatus, List<Department> departments,
+        bool isConfirmed)
     {
         return new Company(id, version, ownerId, ownerCode, communicationData, companyCode,
             companyName, openingHours, companyStatus, departments, isConfirmed);
     }
 
-    public static Company Load(int id, int version, int ownerId, string companyCode, string ownerCode, CompanyStatus companyStatus, bool isConfirmed)
+    public static Company Load(int id, int version, int ownerId, string companyCode, string ownerCode,
+        CompanyStatus companyStatus, bool isConfirmed)
     {
         return new Company(id, version, ownerId, ownerCode, companyCode, companyStatus, isConfirmed);
     }
