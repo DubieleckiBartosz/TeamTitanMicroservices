@@ -180,9 +180,11 @@ public partial class Account : Aggregate
         var now = DateTime.UtcNow;
         var currentMonth = now.Month;
         var currentYear = now.Year;
-         
-        var to = new DateTime(currentYear, currentMonth, (int) Details.SettlementDayMonth!);
-        var from = to.AddMonths(-1).AddDays(-1);
+        var date = new DateTime(currentYear, currentMonth, (int)Details.SettlementDayMonth!);
+        //inclusive
+        var to = date.AddDays(-1);
+        var from = date.AddMonths(-1);
+
         var @event = AccountSettled.Create(this.Id, Details.Balance, from, to);
 
         Apply(@event);
