@@ -128,6 +128,7 @@ public partial class Account
     {
         var dayMonth = (int)Details.SettlementDayMonth!;
         var currentDate = DateTime.UtcNow;
+
         var lastMonthEnd = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddDays(-1);
         var from = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddMonths(-1);
 
