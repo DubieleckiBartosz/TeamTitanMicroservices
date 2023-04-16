@@ -9,5 +9,5 @@ public record AddBonusToAccountCommand(Guid AccountId, decimal Amount) : IComman
     public static AddBonusToAccountCommand Create(AddBonusToAccountParameters parameters)
     {
         return new AddBonusToAccountCommand(parameters.AccountId, parameters.Amount);
-    }
+    } 
 }

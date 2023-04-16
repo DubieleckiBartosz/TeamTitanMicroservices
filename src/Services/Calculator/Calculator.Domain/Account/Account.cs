@@ -144,7 +144,16 @@ public partial class Account : Aggregate
                 "The maximum number of hours for this account is 8. The rest must be registered as overtime.");
         }
 
-        this.ThrowWhenDateOfRange(date);
+        if (!isDayOff)
+        {
+            this.ThrowWhenDateOfRange(date); 
+        }
+
+        var datesOverlap = WorkDays.FirstOrDefault(_ => _.IsDayOff && _.Date.Date == date.Date);
+        if (datesOverlap != null)
+        {
+            throw new BusinessException("Dates overlap", "This day is a day off");
+        }
 
         var @event = WorkDayAdded.Create(date, hoursWorked, overtime, isDayOff, createdBy, this.Id);
         Apply(@event);
