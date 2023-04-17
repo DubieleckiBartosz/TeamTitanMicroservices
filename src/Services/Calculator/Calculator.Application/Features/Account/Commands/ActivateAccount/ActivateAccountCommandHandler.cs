@@ -29,7 +29,7 @@ public class ActivateAccountCommandHandler : ICommandHandler<ActivateAccountComm
         account.CheckAndThrowWhenNullOrNotMatch("Account", _ => _.Details.CompanyCode == _currentUser.OrganizationCode);
 
         var userCode = _currentUser.VerificationCode!;
-        account!.ActiveAccount(userCode);
+        account!.ActivateAccount(userCode);
 
         await _repository.UpdateAsync(account);
 

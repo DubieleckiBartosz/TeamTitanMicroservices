@@ -11,7 +11,7 @@ using Shared.Implementations.Tools;
 namespace Calculator.UnitTests.Application.HandlerTests.CommandHandlers.Account;
 
 public class AddBonusToAccountCommandHandlerTests : CommandHandlerBaseTests<AddBonusToAccountCommandHandler,
-    AddBonusToAccountCommand, Unit, Domain.Account.Account>
+    AddBonusToAccountCommand, Unit, Calculator.Domain.Account.Account>
 {
     [Fact]
     public async Task Should_Throw_NotFoundException_When_Account_Not_Found()
@@ -42,6 +42,6 @@ public class AddBonusToAccountCommandHandlerTests : CommandHandlerBaseTests<AddB
 
         await Handler.Handle(request, CancellationToken.None);
 
-        AggregateRepositoryMock.Verify(v => v.UpdateAsync(It.IsAny<Domain.Account.Account>()), Times.Once);
+        AggregateRepositoryMock.Verify(v => v.UpdateAsync(It.IsAny<Calculator.Domain.Account.Account>()), Times.Once);
     }
 }

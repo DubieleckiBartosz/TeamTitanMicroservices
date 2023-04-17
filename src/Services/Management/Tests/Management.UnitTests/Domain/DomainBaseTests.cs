@@ -2,10 +2,10 @@
 
 namespace Management.UnitTests.Domain;
 
-public class BaseDomainTests
+public class DomainBaseTests
 {
     protected readonly Fixture Fixture;
-    public BaseDomainTests()
+    public DomainBaseTests()
     {
         Fixture = new Fixture();
     }
