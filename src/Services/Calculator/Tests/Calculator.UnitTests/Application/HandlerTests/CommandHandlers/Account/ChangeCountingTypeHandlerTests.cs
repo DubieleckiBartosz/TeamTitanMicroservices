@@ -4,6 +4,6 @@ using MediatR;
 namespace Calculator.UnitTests.Application.HandlerTests.CommandHandlers.Account;
 
 public class ChangeCountingTypeHandlerTests : CommandHandlerBaseTests<ChangeCountingTypeCommandHandler,
-    ChangeCountingTypeCommand, Unit, Domain.Account.Account>
+    ChangeCountingTypeCommand, Unit, Calculator.Domain.Account.Account>
 {
 }

@@ -5,7 +5,7 @@ using Shared.Domain.DomainExceptions;
 
 namespace Management.UnitTests.Domain.Tests;
 
-public class EmployeeTests : BaseDomainTests
+public class EmployeeTests : DomainBaseTests
 { 
 
     [Fact]
@@ -64,7 +64,7 @@ public class EmployeeTests : BaseDomainTests
     {
         //Arrange
         var employee = Fixture.GetEmployeeWithDayOffRequests()!;
-        var dayOffRequest = Fixture.GetDayOffRequest();
+        var dayOffRequest = Fixture.GetDayOffRequest(daysOff: employee.DayOffRequests.First().DaysOff);
 
         //Act and Assert
         var responseException = Assert.Throws<BusinessException>(() => employee.AddDayOffRequest(dayOffRequest));

@@ -124,17 +124,25 @@ public partial class Account
         }
     }
 
-    private void ThrowWhenDateOfRange(DateTime date)
+    private void ThrowWhenDateOutOfRange(DateTime date)
     {
         var dayMonth = (int)Details.SettlementDayMonth!;
         var currentDate = DateTime.UtcNow;
 
-        var lastMonthEnd = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddDays(-1);
-        var from = new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddMonths(-1);
-
-        if (date < from || date > lastMonthEnd)
+        var settlementDayMonth =
+            new DateTime(currentDate.Year, currentDate.Month, dayMonth);
+        if (currentDate <= settlementDayMonth)
         {
-            throw new BusinessException("Incorrect date", "Fate is out of range.");
+            settlementDayMonth = settlementDayMonth.AddMonths(-1);
+        }
+
+        var nextSettlementDayMonth =
+            new DateTime(currentDate.Year, currentDate.Month, dayMonth).AddMonths(1);
+         
+
+        if (date < settlementDayMonth || date >= nextSettlementDayMonth)
+        {
+            throw new BusinessException("Incorrect date", "Date is out of range.");
         }
     }
 }

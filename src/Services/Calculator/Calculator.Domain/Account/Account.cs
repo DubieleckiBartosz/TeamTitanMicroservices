@@ -91,7 +91,7 @@ public partial class Account : Aggregate
         Enqueue(@event);
     }
 
-    public void ActiveAccount(string activateBy)
+    public void ActivateAccount(string activateBy)
     {
         if (Details.IsActive)
         {
@@ -146,7 +146,7 @@ public partial class Account : Aggregate
 
         if (!isDayOff)
         {
-            this.ThrowWhenDateOfRange(date); 
+            this.ThrowWhenDateOutOfRange(date); 
         }
 
         var datesOverlap = WorkDays.FirstOrDefault(_ => _.IsDayOff && _.Date.Date == date.Date);
@@ -163,7 +163,7 @@ public partial class Account : Aggregate
     public void AddNewPieceProductItem(Guid pieceworkProductId, decimal quantity, decimal currentPrice, DateTime date)
     {
         this.ThrowWhenNotActive();
-        this.ThrowWhenDateOfRange(date); 
+        this.ThrowWhenDateOutOfRange(date); 
 
         var @event = PieceProductAdded.Create(pieceworkProductId, quantity, currentPrice, this.Id, date);
         Apply(@event);
@@ -171,12 +171,7 @@ public partial class Account : Aggregate
     }
     
     public void AccountSettlement()
-    {
-        if (!ProductItems.Any() && !Bonuses.Any() && !WorkDays.Any() && !Details.IsActive)
-        {
-            //EXCEPTION
-        }
-
+    { 
         var now = DateTime.UtcNow;
         var currentMonth = now.Month;
         var currentYear = now.Year;
@@ -234,9 +229,9 @@ public partial class Account : Aggregate
     public void CancelBonus(string bonusCode)
     {
         this.ThrowWhenNotActive();
-        if (Bonuses == null)
+        if (!Bonuses.Any())
         {
-            throw new BusinessException("List is NULL", "List of bonuses is NULL.",
+            throw new BusinessException("List is empty", "List of bonuses is empty.",
                 HttpStatusCode.NotFound);
         }
 

@@ -11,7 +11,7 @@ using Shared.Implementations.Tools;
 namespace Calculator.UnitTests.Application.HandlerTests.CommandHandlers.Account;
 
 public class ActivateAccountHandlerTests : CommandHandlerBaseTests<ActivateAccountCommandHandler, ActivateAccountCommand
-    , Unit, Domain.Account.Account>
+    , Unit, Calculator.Domain.Account.Account>
 {
     [Fact]
     public async Task Should_Throw_NotFoundException_When_Account_Not_Found()
@@ -43,6 +43,6 @@ public class ActivateAccountHandlerTests : CommandHandlerBaseTests<ActivateAccou
         await Handler.Handle(request, CancellationToken.None);
 
         AggregateRepositoryMock.Verify(v =>
-            v.UpdateAsync(It.IsAny<Domain.Account.Account>()), Times.Once);
+            v.UpdateAsync(It.IsAny<Calculator.Domain.Account.Account>()), Times.Once);
     }
 }

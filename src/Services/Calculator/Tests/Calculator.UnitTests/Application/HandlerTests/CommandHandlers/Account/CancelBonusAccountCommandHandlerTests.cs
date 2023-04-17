@@ -4,6 +4,6 @@ using MediatR;
 namespace Calculator.UnitTests.Application.HandlerTests.CommandHandlers.Account;
 
 public class CancelBonusAccountCommandHandlerTests : CommandHandlerBaseTests<CancelBonusAccountCommandHandler,
-    CancelBonusAccountCommand, Unit, Domain.Account.Account>
+    CancelBonusAccountCommand, Unit, Calculator.Domain.Account.Account>
 {
 }

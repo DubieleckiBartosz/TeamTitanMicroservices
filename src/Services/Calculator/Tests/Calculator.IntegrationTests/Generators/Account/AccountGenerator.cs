@@ -17,7 +17,7 @@ public static class AccountGenerator
     public static Domain.Account.Account GetActivatedAccount()
     {
         var account = GetInitiatedAccount();
-        account.ActiveAccount(GlobalSettings.UserVerificationCode);
+        account.ActivateAccount(GlobalSettings.UserVerificationCode);
         return account;
     }
 

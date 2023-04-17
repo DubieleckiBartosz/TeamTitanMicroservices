@@ -6,7 +6,7 @@ using Shared.Domain.DomainExceptions;
 
 namespace Management.UnitTests.Domain.Tests;
 
-public class CompanyTests : BaseDomainTests
+public class CompanyTests : DomainBaseTests
 {
     private readonly string _city;
     private readonly string _street;

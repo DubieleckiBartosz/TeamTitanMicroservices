@@ -8,7 +8,7 @@ using Shared.Implementations.Core.Exceptions;
 namespace Calculator.UnitTests.Application.HandlerTests.CommandHandlers.Account;
 
 public class AddPieceProductHandlerTests : CommandHandlerBaseTests<AddPieceProductCommandHandler, AddPieceProductCommand
-    , Unit, Domain.Account.Account>
+    , Unit, Calculator.Domain.Account.Account>
 {
     [Fact]
     public async Task Should_Throw_NotFoundException_When_Account_Not_Found()

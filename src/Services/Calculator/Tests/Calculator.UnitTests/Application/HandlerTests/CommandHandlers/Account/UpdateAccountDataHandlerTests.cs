@@ -4,6 +4,6 @@ using MediatR;
 namespace Calculator.UnitTests.Application.HandlerTests.CommandHandlers.Account;
 
 public class UpdateAccountDataHandlerTests : CommandHandlerBaseTests<UpdateAccountDataCommandHandler,
-    UpdateAccountDataCommand, Unit, Domain.Account.Account>
+    UpdateAccountDataCommand, Unit, Calculator.Domain.Account.Account>
 {
 }
