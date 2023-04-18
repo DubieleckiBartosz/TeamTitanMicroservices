@@ -18,8 +18,8 @@ COPY ./Database/Management/Management-create-db.sql ./
 COPY ./Database/Management/Management-create-tables.sql ./
 COPY ./Database/Management/Management-create-storedProcedures.sql ./ 
 
-COPY entrypoint.sh ./ 
-COPY setupsql.sh ./ 
+COPY Database/entrypoint.sh ./ 
+COPY Database/setupsql.sh ./ 
 
 RUN chmod +x setupsql.sh
 CMD ["/bin/bash", "entrypoint.sh"]

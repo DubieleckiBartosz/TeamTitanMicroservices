@@ -24,6 +24,14 @@ services:
     networks:
         - team-titan-microservice-network
 
+  teamtitansmtp:
+    image: rnwood/smtp4dev
+    restart: unless-stopped
+    ports:
+      - "5010:80"
+    networks:
+        - team-titan-microservice-network
+
   seq:
     image: datalust/seq
     restart: unless-stopped  
@@ -78,6 +86,30 @@ services:
     #    - rabbitmq:/var/lib/rabbitmq/mnesia
     networks:
         - team-titan-microservice-network
+
+  #management-service: 
+  #  build:
+  #    context: .
+  #    dockerfile: src/Services/Management/Management.API/Dockerfile 
+  #  container_name: managementapi
+  #  environment: 
+  #    - ASPNETCORE_ENVIRONMENT=Development
+  #  #  - START_SERVICE=false
+  #  #command: >
+  #  #  sh -c '
+  #  #  if [ "$START_SERVICE" = "false" ]; then
+  #  #    dotnet /app/Management.API.dll;
+  #  #  else
+  #  #    sleep infinity;
+  #  #  fi'
+  #  ports:
+  #    - "8000:80"
+  #  depends_on:
+  #    - mssql
+  #    - mongo
+  #    - seq
+  #    - messages
+
 
 #volumes:
 #  teamtitan-sqldata:
