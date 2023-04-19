@@ -24,6 +24,15 @@ services:
     networks:
         - team-titan-microservice-network
 
+  teamtitansmtp:
+    image: rnwood/smtp4dev
+    restart: unless-stopped
+    ports:
+      - "5010:80"
+      - "25:25"
+    networks:
+        - team-titan-microservice-network
+
   seq:
     image: datalust/seq
     restart: unless-stopped  
@@ -65,6 +74,8 @@ services:
 
   messages:
     image: rabbitmq:3-management-alpine
+    env_file:
+      - .env
     hostname: "rabbitmq"
     container_name: rabbitmq
     restart: unless-stopped
@@ -74,10 +85,69 @@ services:
     ports:
      - "5672:5672"
      - "15672:15672"
+
     #volumes:
     #    - rabbitmq:/var/lib/rabbitmq/mnesia
     networks:
         - team-titan-microservice-network
+
+  management-service: 
+    build:
+      context: .
+      dockerfile: src/Services/Management/Management.API/Dockerfile 
+    container_name: managementapi
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Development
+    #  - START_SERVICE=false
+    #command: >
+    #  sh -c '
+    #  if [ "$START_SERVICE" = "false" ]; then
+    #    dotnet /app/Management.API.dll;
+    #  else
+    #    sleep infinity;
+    #  fi'
+    ports:
+      - "7205:80"
+    networks:
+        - team-titan-microservice-network
+    depends_on:
+      - mssql
+      - mongo
+      - seq
+      - messages
+
+  calculator-service: 
+    build:
+      context: .
+      dockerfile: src/Services/Calculator/Calculator.API/Dockerfile 
+    container_name: calculatorapi
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Development 
+    ports:
+      - "7098:80"
+    networks:
+        - team-titan-microservice-network
+    depends_on:
+      - mssql
+      - mongo
+      - seq
+      - messages
+
+  identity-service: 
+    build:
+      context: .
+      dockerfile: src/Services/Identity/Identity.API/Dockerfile 
+    container_name: identityapi
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Development 
+    ports:
+      - "7147:80"
+    networks:
+        - team-titan-microservice-network
+    depends_on: 
+      - seq 
+      - mssql
+      - teamtitansmtp
 
 #volumes:
 #  teamtitan-sqldata:

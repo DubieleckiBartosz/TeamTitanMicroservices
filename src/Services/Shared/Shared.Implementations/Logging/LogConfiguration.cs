@@ -24,6 +24,8 @@ public static class LogConfiguration
             )
             .WriteTo.File($"Logs/{dateTimeNowString}-All.log")
             .WriteTo.Console()
-            .WriteTo.Seq("http://localhost:5341");
+                        //.WriteTo.Seq("http://localhost:5341");
+            .WriteTo.Seq("http://seq");
+
     }
 }
