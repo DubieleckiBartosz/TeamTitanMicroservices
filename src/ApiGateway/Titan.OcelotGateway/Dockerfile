@@ -15,7 +15,7 @@ WORKDIR "/src/src/ApiGateway/Titan.OcelotGateway"
 RUN dotnet build "Titan.OcelotGateway.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Titan.OcelotGateway.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Titan.OcelotGateway.csproj" -c Release -o /app/publish 
 
 FROM base AS final
 WORKDIR /app

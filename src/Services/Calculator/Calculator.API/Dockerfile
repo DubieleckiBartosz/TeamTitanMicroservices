@@ -20,7 +20,7 @@ WORKDIR "/src/src/Services/Calculator/Calculator.API"
 RUN dotnet build "Calculator.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Calculator.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Calculator.API.csproj" -c Release -o /app/publish  
 
 FROM base AS final
 WORKDIR /app

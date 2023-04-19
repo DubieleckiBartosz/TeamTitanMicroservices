@@ -2,22 +2,36 @@
 using MimeKit;
 using Shared.Implementations.Logging;
 using System.Net;
-using MailKit.Net.Smtp;
-using Shared.Implementations.Core.Exceptions;
+using MailKit.Net.Smtp; 
+using Microsoft.Extensions.Configuration;
+using Shared.Implementations.Core.Exceptions; 
 
 namespace Shared.Implementations.Communications.Email;
 
 public class EmailRepository : IEmailRepository
 {
     private readonly ILoggerManager<EmailRepository> _loggerManager;
+    private readonly IConfiguration _configuration;
 
-    public EmailRepository(ILoggerManager<EmailRepository> loggerManager)
+    public EmailRepository(ILoggerManager<EmailRepository> loggerManager, IConfiguration configuration)
     {
         _loggerManager = loggerManager ?? throw new ArgumentNullException(nameof(loggerManager));
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     public async Task SendEmailAsync(EmailDetails email, EmailOptions emailOptions)
-    {
+    { 
+        if (_configuration["ASPNETCORE_ENVIRONMENT"] == "Development")
+        { 
+            var localEmailRepository = new LocalEmailRepository();
+
+            await localEmailRepository.SendAsync(email, emailOptions);
+
+            _loggerManager.LogInformation($"Send local email.");
+
+            return;
+        }
+         
         var mailMessage = new MimeMessage();
         mailMessage.From.Add(new MailboxAddress(email.FromName ?? emailOptions.FromName, emailOptions.FromAddress));
 
@@ -31,7 +45,7 @@ public class EmailRepository : IEmailRepository
         mailMessage.Body = new TextPart(TextFormat.Html) { Text = email.Body };
 
         try
-        {
+        { 
             using (var smtpClient = new SmtpClient())
             {
                 smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => true;

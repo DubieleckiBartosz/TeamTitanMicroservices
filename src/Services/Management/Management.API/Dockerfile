@@ -20,7 +20,7 @@ WORKDIR "/src/src/Services/Management/Management.API"
 RUN dotnet build "Management.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Management.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Management.API.csproj" -c Release -o /app/publish  
 
 FROM base AS final
 WORKDIR /app

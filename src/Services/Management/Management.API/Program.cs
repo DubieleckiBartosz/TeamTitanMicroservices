@@ -9,11 +9,7 @@ using Shared.Implementations.Logging;
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
 
-var commonFolder = Path.Combine(env.ContentRootPath, "..\\..", "Shared");
-
-builder.Configuration.AddJsonFile(Path.Combine(commonFolder, "SharedSettings.json"), optional: true)
-    .AddJsonFile("SharedSettings.json", optional: true)
-    .AddJsonFile($"SharedSettings.{env.EnvironmentName}.json", optional: true)
+builder.Configuration
     .AddJsonFile("appsettings.json", optional: true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true).AddEnvironmentVariables();
  
