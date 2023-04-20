@@ -32,8 +32,9 @@ public class RabbitBase : IRabbitBase
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         var rabbitOptions = options?.Value ?? throw new ArgumentNullException(nameof(options));
+         
         _connectionFactory = new ConnectionFactory
-        {
+        { 
             HostName = rabbitOptions.Host,
             Password = rabbitOptions.Password,
             UserName = rabbitOptions.User,

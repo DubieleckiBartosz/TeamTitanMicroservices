@@ -413,7 +413,7 @@ public class UserService : IUserService
         var tokenCode = user.VerificationToken.Token;
         tokenCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(tokenCode));
 
-        var routeUri = new Uri(string.Concat($"{origin}/", "api/account/confirm-account/"));
+        var routeUri = new Uri(string.Concat($"{origin}/", "api/account/confirm-account"));
         var verificationUri = QueryHelpers.AddQueryString(routeUri.ToString(), "code", tokenCode);
 
         await _identityEmailService.SendEmailAfterCreateNewAccountAsync(user.Email, verificationUri, user.UserName);
