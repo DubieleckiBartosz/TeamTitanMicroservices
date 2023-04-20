@@ -1,0 +1,70 @@
+version: '3.4'
+
+services:
+  management-service: 
+    build:
+      context: .
+      dockerfile: src/Services/Management/Management.API/Dockerfile 
+    container_name: managementapi
+    env_file:
+      - .env
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=${TEST_ENV} 
+      - ConnectionStrings__DefaultManagementConnection=${MANAGEMENT_MSSLQ_CONNECTION_ENV}
+      - ConnectionStrings__HangfireConnection=${HANGFIRE_CONNECTION_ENV}
+      - StoreOptions__ConnectionString=${MONGO_STORE_ENV} 
+      - RabbitOptions__Host=${RABBIT_CONNECTION_ENV}
+      - EmailOptions__Host=${SMTP_HOST_ENV}
+      - LinkOptions__Uri=${LINK_URI_ENV}
+    ports:
+      - "7205:80"
+    networks:
+        - team-titan-microservice-network
+    depends_on:
+      - mssql
+      - mongo
+      - seq
+      - messages
+
+  calculator-service: 
+    build:
+      context: .
+      dockerfile: src/Services/Calculator/Calculator.API/Dockerfile 
+    container_name: calculatorapi
+    env_file:
+      - .env
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=${TEST_ENV} 
+      - ConnectionStrings__DefaultCalculatorConnection=${CALCULATOR_MSSLQ_CONNECTION_ENV}
+      - ConnectionStrings__HangfireConnection=${HANGFIRE_CONNECTION_ENV}
+      - RabbitOptions__Host=${RABBIT_CONNECTION_ENV}
+      - StoreOptions__ConnectionString=${MONGO_STORE_ENV} 
+    ports:
+      - "7098:80"
+    networks:
+        - team-titan-microservice-network
+    depends_on:
+      - mssql
+      - mongo
+      - seq
+      - messages
+
+  identity-service: 
+    build:
+      context: .
+      dockerfile: src/Services/Identity/Identity.API/Dockerfile 
+    container_name: identityapi
+    env_file:
+      - .env
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=${TEST_ENV} 
+      - EmailOptions__Host=${SMTP_HOST_ENV}
+      - ConnectionStrings__DefaultConnection=${IDENTITY_MSSLQ_CONNECTION_ENV}
+    ports:
+      - "7147:80"
+    networks:
+        - team-titan-microservice-network
+    depends_on: 
+      - seq 
+      - mssql
+      - teamtitansmtp

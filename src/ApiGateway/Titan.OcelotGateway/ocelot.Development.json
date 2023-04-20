@@ -77,7 +77,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/RegisterNewUser",
-      "UpstreamHttpMethod": [ "Post" ], 
+      "UpstreamHttpMethod": [ "Post" ],
+      "UpstreamHeaderTransform": {
+        "origin": "https://localhost:5001"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/Account/confirm-account",
