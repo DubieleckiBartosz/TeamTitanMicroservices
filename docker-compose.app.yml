@@ -1,6 +1,24 @@
 version: '3.4'
 
 services:
+
+  ocelot-service:
+    build:
+      context: .
+      dockerfile: src/ApiGateway/Titan.OcelotGateway/Dockerfile 
+    container_name: ocelotapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development 
+      - Docker_Dev=1
+    depends_on:
+        - management-service
+        - calculator-service
+        - identity-service 
+    ports:
+      - "8010:80"
+    networks:
+        - team-titan-microservice-network
+
   management-service: 
     build:
       context: .
