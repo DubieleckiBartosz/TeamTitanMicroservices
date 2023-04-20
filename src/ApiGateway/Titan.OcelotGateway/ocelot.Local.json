@@ -2,15 +2,15 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/Account/new-owner",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/new-owner",
-      "UpstreamHttpMethod": [ "Get" ], 
+      "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -21,15 +21,15 @@
     },
     {
       "DownstreamPathTemplate": "/api/Account/AssignUserCodes",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/AssignUserCodes",
-      "UpstreamHttpMethod": [ "Put" ], 
+      "UpstreamHttpMethod": [ "Put" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -37,15 +37,15 @@
     },
     {
       "DownstreamPathTemplate": "/api/Account/ClearUserCodes",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/ClearUserCodes",
-      "UpstreamHttpMethod": [ "Put" ], 
+      "UpstreamHttpMethod": [ "Put" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -53,15 +53,15 @@
     },
     {
       "DownstreamPathTemplate": "/api/Account/InitUserOrganization",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/InitUserOrganization",
-      "UpstreamHttpMethod": [ "Post" ], 
+      "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -69,26 +69,26 @@
     },
     {
       "DownstreamPathTemplate": "/api/Account/RegisterNewUser",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/RegisterNewUser",
       "UpstreamHttpMethod": [ "Post" ],
       "UpstreamHeaderTransform": {
-        "origin": "http://localhost:8010"
+        "origin": "https://localhost:5001"
       }
     },
     {
       "DownstreamPathTemplate": "/api/Account/confirm-account",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/confirm-account",
@@ -96,74 +96,74 @@
     },
     {
       "DownstreamPathTemplate": "/api/Account/LoginUser",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/LoginUser",
-      "UpstreamHttpMethod": [ "Post" ] 
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/Account/RefreshToken",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/RefreshToken",
-      "UpstreamHttpMethod": [ "Post" ] 
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/Account/ForgotPassword",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/ForgotPassword",
-      "UpstreamHttpMethod": [ "Post" ] 
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/Account/reset-password",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "identity-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7147
         }
       ],
       "UpstreamPathTemplate": "/api/Account/reset-password",
-      "UpstreamHttpMethod": [ "Post" ] 
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/company/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "management-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7205
         }
       ],
       "UpstreamPathTemplate": "/api/company/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/contract/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "management-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7205
         }
       ],
       "UpstreamPathTemplate": "/api/contract/{everything}",
@@ -171,15 +171,15 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/department/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "management-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7205
         }
       ],
       "UpstreamPathTemplate": "/api/department/{everything}",
@@ -187,15 +187,15 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/employee/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "management-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7205
         }
       ],
       "UpstreamPathTemplate": "/api/employee/{everything}",
@@ -203,15 +203,15 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/account/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "calculator-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7098
         }
       ],
       "UpstreamPathTemplate": "/api/{controller}/{everything}",
@@ -219,15 +219,15 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/product/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "calculator-service",
-          "Port": 80
+          "Host": "localhost",
+          "Port": 7098
         }
       ],
       "UpstreamPathTemplate": "/api/product/{everything}",
@@ -235,11 +235,11 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5001",
+    "BaseUrl": "https://localhost:5001",
     "RequestIdKey": "X-Request-ID"
   },
   "ReRoutesCaseSensitive": true

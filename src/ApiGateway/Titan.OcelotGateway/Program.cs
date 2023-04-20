@@ -1,18 +1,21 @@
 using JwtAuthenticationManager;
 using JwtAuthenticationManager.Models;
 using Ocelot.DependencyInjection;
-using Ocelot.Middleware; 
+using Ocelot.Middleware;
+using Titan.OcelotGateway.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
-builder.Configuration 
-    .AddJsonFile("appsettings.json", true, true)
+
+var config = builder.Configuration;
+
+config.AddJsonFile("appsettings.json", true, true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-    .AddJsonFile($"ocelot.{env.EnvironmentName}.json", optional: true).AddEnvironmentVariables();
+    .GetOcelotFile(config, env.EnvironmentName);
 
 
 var settings = new JwtSettings();
-builder.Configuration.GetSection(nameof(JwtSettings)).Bind(settings);
+config.GetSection(nameof(JwtSettings)).Bind(settings);
 
 var issuer = settings.Issuer!;
 var audience = settings.Audience!;
@@ -27,7 +30,7 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader());
 });
 
-builder.Services.AddOcelot(builder.Configuration);
+builder.Services.AddOcelot(config);
 
 builder.Services.RegisterTokenBearer(issuer, audience, key); 
 
