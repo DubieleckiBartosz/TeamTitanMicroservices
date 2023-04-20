@@ -2,8 +2,7 @@
 using MimeKit;
 using Shared.Implementations.Logging;
 using System.Net;
-using MailKit.Net.Smtp; 
-using Microsoft.Extensions.Configuration;
+using MailKit.Net.Smtp;
 using Shared.Implementations.Core.Exceptions; 
 
 namespace Shared.Implementations.Communications.Email;
@@ -11,17 +10,15 @@ namespace Shared.Implementations.Communications.Email;
 public class EmailRepository : IEmailRepository
 {
     private readonly ILoggerManager<EmailRepository> _loggerManager;
-    private readonly IConfiguration _configuration;
 
-    public EmailRepository(ILoggerManager<EmailRepository> loggerManager, IConfiguration configuration)
+    public EmailRepository(ILoggerManager<EmailRepository> loggerManager)
     {
         _loggerManager = loggerManager ?? throw new ArgumentNullException(nameof(loggerManager));
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
     }
 
     public async Task SendEmailAsync(EmailDetails email, EmailOptions emailOptions)
     { 
-        if (_configuration["ASPNETCORE_ENVIRONMENT"] == "Development")
+        if (emailOptions.LocalMail)
         { 
             var localEmailRepository = new LocalEmailRepository();
 
