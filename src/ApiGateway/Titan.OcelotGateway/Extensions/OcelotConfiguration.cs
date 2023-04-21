@@ -2,13 +2,12 @@
 
 public static class OcelotConfiguration
 {
-    public static IConfigurationBuilder GetOcelotFile(this IConfigurationBuilder builderConfig, IConfiguration configuration, string envName)
+    public static IConfigurationBuilder GetOcelotFile(this IConfigurationBuilder builderConfig, string? envName = null)
     {
         //Temporarily we only have two environments local and docker. Now that should be enough
 
-        var ocelotEnvFileName = int.TryParse(configuration["Docker_Dev"], out int value) ? envName : "Local"; 
-
-        builderConfig.AddJsonFile($"ocelot.{ocelotEnvFileName}.json", optional: true).AddEnvironmentVariables();
+        envName ??= "Local";
+        builderConfig.AddJsonFile($"ocelot.{envName}.json", optional: true).AddEnvironmentVariables();
 
 
         return builderConfig;
