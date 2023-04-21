@@ -143,7 +143,7 @@
       "UpstreamHttpMethod": [ "Post" ]
     },
     {
-      "DownstreamPathTemplate": "/api/company/{everything}",
+      "DownstreamPathTemplate": "/api/Company/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -151,14 +151,14 @@
           "Port": 7205
         }
       ],
-      "UpstreamPathTemplate": "/api/company/{everything}",
+      "UpstreamPathTemplate": "/api/Company/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       }
     },
     {
-      "DownstreamPathTemplate": "/api/contract/{everything}",
+      "DownstreamPathTemplate": "/api/Contract/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -166,7 +166,7 @@
           "Port": 7205
         }
       ],
-      "UpstreamPathTemplate": "/api/contract/{everything}",
+      "UpstreamPathTemplate": "/api/Contract/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -174,7 +174,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/department/{everything}",
+      "DownstreamPathTemplate": "/api/Department/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -182,7 +182,7 @@
           "Port": 7205
         }
       ],
-      "UpstreamPathTemplate": "/api/department/{everything}",
+      "UpstreamPathTemplate": "/api/Department/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -190,7 +190,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/employee/{everything}",
+      "DownstreamPathTemplate": "/api/Employee/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -198,7 +198,7 @@
           "Port": 7205
         }
       ],
-      "UpstreamPathTemplate": "/api/employee/{everything}",
+      "UpstreamPathTemplate": "/api/Employee/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -206,7 +206,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/account/{everything}",
+      "DownstreamPathTemplate": "/api/Account/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -222,7 +222,7 @@
       }
     },
     {
-      "DownstreamPathTemplate": "/api/product/{everything}",
+      "DownstreamPathTemplate": "/api/Product/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -230,7 +230,7 @@
           "Port": 7098
         }
       ],
-      "UpstreamPathTemplate": "/api/product/{everything}",
+      "UpstreamPathTemplate": "/api/Product/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",

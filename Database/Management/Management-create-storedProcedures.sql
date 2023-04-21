@@ -655,7 +655,7 @@ END
 GO
 
 CREATE OR ALTER PROCEDURE employee_getNecessaryDataByCode_S
-	@code INT
+	@code VARCHAR(50)
 AS
 BEGIN
 	SELECT [Id],

@@ -8,8 +8,7 @@ services:
       dockerfile: src/ApiGateway/Titan.OcelotGateway/Dockerfile 
     container_name: ocelotapi
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development 
-      - Docker_Dev=1
+      - Container_ENV=Development  
     depends_on:
         - management-service
         - calculator-service

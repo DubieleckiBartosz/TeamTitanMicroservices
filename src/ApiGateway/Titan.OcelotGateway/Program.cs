@@ -8,10 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
 
 var config = builder.Configuration;
+var envName = config["Container_ENV"];
 
 config.AddJsonFile("appsettings.json", true, true)
     .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-    .GetOcelotFile(config, env.EnvironmentName);
+    .GetOcelotFile(envName);
 
 
 var settings = new JwtSettings();
