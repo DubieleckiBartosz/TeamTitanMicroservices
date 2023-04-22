@@ -83,7 +83,7 @@ public partial class Account : Aggregate
 
     public void UpdateAccount(CountingType countingType, int workDayHours, int settlementDayMonth,
         DateTime? expirationDate)
-    {
+    {  
         var @event =
             AccountDataUpdated.Create(countingType, AccountStatus.New, workDayHours, settlementDayMonth, Id,
                 expirationDate);

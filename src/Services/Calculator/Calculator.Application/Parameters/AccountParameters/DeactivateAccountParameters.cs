@@ -6,6 +6,11 @@ public class DeactivateAccountParameters
 {
     public Guid AccountId { get; init; }
 
+    //For tests
+    public DeactivateAccountParameters()
+    {
+    }
+
     [JsonConstructor]
     public DeactivateAccountParameters(Guid accountId)
     {

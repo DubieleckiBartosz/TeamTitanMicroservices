@@ -47,11 +47,11 @@ public class Repository<TAggregate> : IRepository<TAggregate> where TAggregate :
         var assemblyQualifiedName = typeof(TSnapshot).AssemblyQualifiedName!;
         var snapshot = aggregate.CreateSnapshot();
 
-        var stream = new SnapshotState(aggregate.Id, aggregate.Version,
+        var snapshotState = new SnapshotState(aggregate.Id, aggregate.Version,
             assemblyQualifiedName, JsonConvert.SerializeObject(snapshot,
                 new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All }));
          
-        await _snapshotStore.AddAsync(stream);
+        await _snapshotStore.AddAsync(snapshotState);
     }
 
 

@@ -61,7 +61,7 @@ public class EventStore : IEventStore
     public async Task<IReadOnlyList<StreamState>?> GetEventsAsync(Guid streamId, long? atStreamVersion = null,
         DateTime? atTimestamp = null)
     {
-        return await _store.GetEventsAsync(streamId, version: atStreamVersion, createdUtc: atTimestamp);
+        return await _store.GetEventsAsync(streamId, null, version: atStreamVersion, createdUtc: atTimestamp);
     }
 
     public async Task<TAggregate?> AggregateFromSnapshotAsync<TAggregate, TSnapshot>(Guid streamId,

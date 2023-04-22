@@ -1,7 +1,6 @@
 ﻿using Calculator.IntegrationTests.Common;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Shared.Implementations.EventStore;
-using System.Data.SqlClient;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Mvc.Testing;

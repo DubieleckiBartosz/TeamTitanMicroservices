@@ -2,11 +2,11 @@
 
 public class WorkDay
 { 
-    public DateTime Date { get; }
-    public int HoursWorked { get; }
-    public int Overtime { get; }
-    public bool IsDayOff { get; }
-    public string CreatedBy { get; }
+    public DateTime Date { get; private init; }
+    public int HoursWorked { get; private init; }
+    public int Overtime { get; private init; }
+    public bool IsDayOff { get; private init; }
+    public string CreatedBy { get; private init; }
 
     public WorkDay()
     {
