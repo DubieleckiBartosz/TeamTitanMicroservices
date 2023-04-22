@@ -2,14 +2,14 @@
 
 public class ProductItem
 {
-    public Guid PieceworkProductId { get; }
+    public Guid PieceworkProductId { get; private init; }
 
     //aggregates should not interact with each other
     //that's why we keep the price
-    public decimal CurrentPrice { get; }
-    public decimal Quantity { get; }
+    public decimal CurrentPrice { get; private init; }
+    public decimal Quantity { get; private init; }
     public bool IsConsidered { get; private set; }
-    public DateTime Date { get; }
+    public DateTime Date { get; private init; }
 
     public ProductItem()
     {

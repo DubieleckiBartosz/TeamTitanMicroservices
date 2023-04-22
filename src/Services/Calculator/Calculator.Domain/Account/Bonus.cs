@@ -2,12 +2,12 @@
 
 public class Bonus
 {
-    public string BonusCode { get; }
-    public string Creator { get; }
-    public decimal Amount { get; }
+    public string BonusCode { get; private init; }
+    public string Creator { get; private init; }
+    public decimal Amount { get; private init; }
     public bool Settled { get; private set; }
     public bool Canceled { get; private set; }
-    public DateTime Created { get; }
+    public DateTime Created { get; private init; }
 
     private Bonus(string creator, string bonusCode, decimal amount)
     {

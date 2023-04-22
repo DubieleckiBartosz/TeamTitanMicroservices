@@ -183,8 +183,7 @@ public class AccountReader : IRead
             @event.CreatedBy, this.Id);
 
         WorkDays.Add(workDay);
-
-
+         
         if (!@event.IsDayOff && CountingType == CountingType.ForAnHour)
         {
             Balance = workDay.HoursWorked * HourlyRate!.Value + workDay.Overtime * (HourlyRate ?? 0); 

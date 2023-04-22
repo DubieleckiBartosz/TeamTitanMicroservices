@@ -1,42 +1,35 @@
 ﻿using System.Net.Http.Headers;
 using AutoFixture;
+using Moq;
 using Moq.AutoMock;
 using Newtonsoft.Json;
 using Shared.Implementations.EventStore;
+using Shared.Implementations.Snapshot;
 using Shared.Implementations.Tools;
 
 namespace Calculator.IntegrationTests.Setup;
 
 public abstract class BaseSetup : IClassFixture<CustomWebApplicationFactory<Program>>
-{
-    private readonly CustomWebApplicationFactory<Program> _factory; 
+{ 
     protected MockServices Mocks;
     protected HttpClient Client;
     protected Fixture Fixture;
     protected AutoMocker Mocker;
     protected BaseSetup(CustomWebApplicationFactory<Program> factory)
-    {
-        this._factory = factory;
-        this.Mocks = _factory.FakeServices();
+    { 
+        this.Mocks = factory.FakeServices();
         this.Mocker = new AutoMocker();
         this.Fixture = new Fixture();
-        this.Client = _factory.CreateClient();
+        this.Client = factory.CreateClient();
     }
+
     protected JsonSerializerSettings? SerializerSettings() => new JsonSerializerSettings
     {
         ContractResolver = new PrivateResolver(),
         ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
         TypeNameHandling = TypeNameHandling.Auto,
         NullValueHandling = NullValueHandling.Ignore
-    };
-    //protected async Task<IReadOnlyList<StreamState>?> CheckEvents(Guid aggregateId, long? version = null,
-    //    DateTime? createdUtc = null)
-    //{  
-    //}
-
-    //protected async Task ClearEvents()
-    //{
-    //}
+    }; 
 
     protected async Task<HttpResponseMessage> ClientCall<TRequest>(TRequest? obj, HttpMethod methodType,
         string requestUri)
@@ -57,5 +50,22 @@ public abstract class BaseSetup : IClassFixture<CustomWebApplicationFactory<Prog
     {
         var contentString = await response.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<TResponse>(contentString, this.SerializerSettings());
+    }
+
+    protected void SetupStore(List<StreamState> streamStates)
+    {
+        Mocks.SnapshotStore.Setup(_ => _.GetLastSnapshotAsync(It.IsAny<Guid>())).ReturnsAsync(() => null);
+
+        Mocks.Store.Setup(_ =>
+                _.GetEventsAsync(It.IsAny<Guid>(), null, It.IsAny<long?>(), It.IsAny<DateTime?>()))
+            .ReturnsAsync(streamStates);
+
+        //it is not necessary, but for readability we do setup
+        Mocks.Store.Setup(_ => _.AddAsync(It.IsAny<StreamState>(), It.IsAny<long>()));
+    }
+
+    protected void SetupSnapShotStore(SnapshotState snapshotStates)
+    {
+        Mocks.SnapshotStore.Setup(_ => _.GetLastSnapshotAsync(It.IsAny<Guid>())).ReturnsAsync(snapshotStates);
     }
 }

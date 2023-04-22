@@ -10,6 +10,11 @@ public class AddWorkDayParameters
     public bool IsDayOff { get; init; }
     public Guid AccountId { get; init; }
 
+    //For tests
+    public AddWorkDayParameters()
+    {
+    }
+
     [JsonConstructor]
     public AddWorkDayParameters(DateTime date, int hoursWorked, int overtime, bool isDayOff, Guid accountId)
     {

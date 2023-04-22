@@ -2,9 +2,13 @@
 
 public class Settlement
 {
-    public DateTime From { get; }
-    public DateTime To { get; }
-    public decimal Value { get; }
+    public DateTime From { get; private init; }
+    public DateTime To { get; private init; }
+    public decimal Value { get; private init; }
+
+    public Settlement()
+    {
+    }
 
     private Settlement(decimal value, DateTime from, DateTime to)
     {
