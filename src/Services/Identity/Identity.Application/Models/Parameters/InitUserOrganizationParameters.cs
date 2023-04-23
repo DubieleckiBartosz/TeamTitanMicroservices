@@ -8,6 +8,10 @@ public class InitUserOrganizationParameters
     public string Role { get; init; }  
     public string UserCode { get; init; }
 
+    public InitUserOrganizationParameters()
+    {
+    }
+
     [JsonConstructor]
     public InitUserOrganizationParameters(string userCode, string mail, string role)
     {

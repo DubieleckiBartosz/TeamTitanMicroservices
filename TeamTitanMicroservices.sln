@@ -59,7 +59,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtAuthenticationManager", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{26F79D3F-1F02-42BE-A102-371DAD83EE62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Management.UnitTests", "src\Services\Management\Tests\Management.UnitTests\Management.UnitTests.csproj", "{DB1F98B2-B40C-4907-B16D-0057D173100F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Management.UnitTests", "src\Services\Management\Tests\Management.UnitTests\Management.UnitTests.csproj", "{DB1F98B2-B40C-4907-B16D-0057D173100F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C6A9BA0C-179C-4AD7-9675-282FF21DD0F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.UnitTests", "src\Services\Identity\Tests\Identity.UnitTests\Identity.UnitTests.csproj", "{9BA9F91B-38D4-421E-BEE3-C9265E789728}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +147,10 @@ Global
 		{DB1F98B2-B40C-4907-B16D-0057D173100F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB1F98B2-B40C-4907-B16D-0057D173100F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB1F98B2-B40C-4907-B16D-0057D173100F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BA9F91B-38D4-421E-BEE3-C9265E789728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BA9F91B-38D4-421E-BEE3-C9265E789728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BA9F91B-38D4-421E-BEE3-C9265E789728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BA9F91B-38D4-421E-BEE3-C9265E789728}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -176,6 +184,8 @@ Global
 		{01386F5E-870D-46E7-9ADC-79B2BB4E8023} = {2C800069-412F-42BB-BF29-F1DF8A13E152}
 		{26F79D3F-1F02-42BE-A102-371DAD83EE62} = {080F1A92-5240-4643-BB6D-D07D5A9723AD}
 		{DB1F98B2-B40C-4907-B16D-0057D173100F} = {26F79D3F-1F02-42BE-A102-371DAD83EE62}
+		{C6A9BA0C-179C-4AD7-9675-282FF21DD0F3} = {7FC0871A-E18D-4661-8670-DFE1EAA38CD1}
+		{9BA9F91B-38D4-421E-BEE3-C9265E789728} = {C6A9BA0C-179C-4AD7-9675-282FF21DD0F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6FB9205-7C78-4F1D-9BD6-1DBC3C5958C2}

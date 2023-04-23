@@ -4,8 +4,12 @@ namespace Identity.Application.Models.Parameters;
 
 public class LoginParameters
 {
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string Email { get; init; }
+    public string Password { get; init; }
+
+    public LoginParameters()
+    {
+    }
 
     [JsonConstructor]
     public LoginParameters(string email, string password)

@@ -11,6 +11,10 @@ public class ExceptionIdentityMessages
     {
         return $"Incorrect credentials for user {email}.";
     }
+    public static string MethodException(string method)
+    {
+        return $"Exception during call {method} method";
+    }
 
     public const string RegisterFailed = "Cannot create user, check the data and try again later.";
     public const string InitCodesFailed = "Codes cannot be assigned";

@@ -8,6 +8,7 @@ public interface IUserRepository
     Task<User> FindByCodeAsync(string code);
     Task MergeCodesAsync(User user);
     Task<bool> CodeIsInUseAsync(string code);
+    Task<bool> CodeExistsAsync(string code);
     Task<int> CreateAsync(User user);
     Task CreateTemporaryUserAsync(int roleId, string verificationCode, string organizationCode);
     Task ConfirmAccountAsync(User user);

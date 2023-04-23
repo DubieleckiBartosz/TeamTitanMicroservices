@@ -62,6 +62,18 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
 
         param.Add("@code", code);
 
+        var result = (await this.QueryAsync<bool>("user_codeIsInUse_S", param, CommandType.StoredProcedure))
+            .FirstOrDefault();
+
+        return result;
+    }
+
+    public async Task<bool> CodeExistsAsync(string code)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@code", code);
+
         var result = (await this.QueryAsync<bool>("user_codeExists_S", param, CommandType.StoredProcedure))
             .FirstOrDefault();
 
