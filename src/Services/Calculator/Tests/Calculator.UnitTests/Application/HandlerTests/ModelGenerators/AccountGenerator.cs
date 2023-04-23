@@ -26,9 +26,23 @@ public static class AccountGenerator
         countingType ??= fixture.Create<CountingType>();
         workDayHours ??= rnd.Next(4, 12);
         settlementDayMonth ??= rnd.Next(1, 28);
-        expirationDate ??= fixture.Create<DateTime>();
+        expirationDate ??= DateTime.UtcNow.AddMonths(1);
 
         account.UpdateAccount(countingType.Value, workDayHours.Value, settlementDayMonth.Value, expirationDate);
         return account;
+    }
+
+    public static Account GenerateAccountWithBonuses(this Fixture fixture, int countBonuses = 1)
+    {
+        var result = fixture.GenerateAccountWithBaseData();
+
+        for (var i = 0; i < countBonuses; i++)
+        {
+            var creator = fixture.Create<string>();
+            var amount = fixture.Create<decimal>();
+            result.AddBonus(creator, amount);
+        }
+
+        return result;
     }
 }

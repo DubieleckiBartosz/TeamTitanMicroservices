@@ -1,11 +1,15 @@
 ﻿using Calculator.Application.Contracts.Repositories;
+using Calculator.Application.Features.Account.ViewModels;
 using Calculator.Application.ReadModels.AccountReaders;
 using Calculator.Domain.Account;
 using Calculator.Domain.Account.Snapshots;
+using Calculator.Domain.Statuses;
+using Calculator.Domain.Types;
 using Calculator.IntegrationTests.Generators.Account;
 using Calculator.IntegrationTests.Setup;
 using Calculator.IntegrationTests.Setup.FakeRepositories;
 using Moq;
+using Shared.Implementations.Search;
 
 namespace Calculator.IntegrationTests.Tests;
 
@@ -17,7 +21,37 @@ public class AccountControllerTests : BaseSetup
     public AccountControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
     {  
         _accountRepositoryMock = Mocks.AccountRepository;
-        _accountFakeRepository = new AccountReaderFakeRepository(Fixture);
+        _accountFakeRepository = FakeRepositories.GetAccountReaderFakeRepository();
+    }
+
+    [Fact]
+    public async Task Should_Returns_Accounts_By_Some_Search()
+    {
+        //Arrange  
+        var accounts = _accountFakeRepository.GetAllAccounts();
+        var searchResponse = ResponseSearchList<AccountReader>.Create(accounts.ToList(), accounts.Count);
+
+        _accountRepositoryMock.Setup(_ => _.GetAccountsBySearchAsync(
+                It.IsAny<Guid?>(), It.IsAny<CountingType?>(), 
+                It.IsAny<AccountStatus?>(), It.IsAny<DateTime?>(),
+                It.IsAny<DateTime?>(), It.IsAny<string?>(),
+                It.IsAny<string?>(), It.IsAny<decimal?>(),
+                It.IsAny<decimal?>(), It.IsAny<int?>(), 
+                It.IsAny<decimal?>(), It.IsAny<decimal?>(),
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), 
+                It.IsAny<int>(), It.IsAny<string>()))
+            .ReturnsAsync(searchResponse);
+
+
+        var request = Fixture.GetAccountsSearchParameters();
+
+        //Act
+        var response = await ClientCall(request, HttpMethod.Post, Urls.SearchAccountsPath);
+        var responseData = await ReadFromResponse<AccountSearchViewModel>(response);
+
+        //Assert
+        Assert.True(response.IsSuccessStatusCode);
+        Assert.Equal(accounts.Count, responseData!.TotalCount);
     }
 
     [Fact]
@@ -26,9 +60,9 @@ public class AccountControllerTests : BaseSetup
         //Arrange
         var eventReader = _accountFakeRepository.GetFirstAccountAfterDataUpdateWithEvents();
         var account = eventReader!.Reader;
-        var events = eventReader.ToStreamList<Account>(account.Id);
+        var streamList = eventReader.ToStreamList<Account>(account.Id);
 
-        this.SetupStore(events); 
+        this.SetupStore(streamList); 
         _accountRepositoryMock.Setup(_ => _.GetAccountByIdWithBonusesAsync(account!.Id)).ReturnsAsync(account);
         //it is not necessary, but for readability we do setup
         _accountRepositoryMock.Setup(_ => _.AddBonusAsync(It.IsAny<AccountReader>()));
@@ -49,9 +83,9 @@ public class AccountControllerTests : BaseSetup
         //Arrange
         var eventReader = _accountFakeRepository.GetFirstAccountWithBonusWithEvents();
         var account = eventReader!.Reader;
-        var events = eventReader.ToStreamList<Account>(account.Id);
+        var streamList = eventReader.ToStreamList<Account>(account.Id);
 
-        this.SetupStore(events);
+        this.SetupStore(streamList);
         _accountRepositoryMock.Setup(_ => _.GetAccountByIdWithBonusesAsync(account!.Id)).ReturnsAsync(account);
         //it is not necessary, but for readability we do setup
         _accountRepositoryMock.Setup(_ =>
@@ -74,9 +108,9 @@ public class AccountControllerTests : BaseSetup
         //Arrange
         var eventReader = _accountFakeRepository.GetFirstAccountAfterDataUpdateWithEvents();
         var account = eventReader!.Reader;
-        var events = eventReader.ToStreamList<Account>(account.Id);
+        var streamList = eventReader.ToStreamList<Account>(account.Id);
 
-        this.SetupStore(events);
+        this.SetupStore(streamList);
         _accountRepositoryMock.Setup(_ => _.GetAccountByIdAsync(account!.Id)).ReturnsAsync(account);
 
         var request = Fixture.GetAddPieceProductParameters(account!.Id);
@@ -95,9 +129,9 @@ public class AccountControllerTests : BaseSetup
         //Arrange
         var eventReader = _accountFakeRepository.GetFirstAccountAfterDataUpdateWithEvents();
         var account = eventReader!.Reader;
-        var events = eventReader.ToStreamList<Account>(account.Id);
+        var streamList = eventReader.ToStreamList<Account>(account.Id);
 
-        this.SetupStore(events);
+        this.SetupStore(streamList);
         _accountRepositoryMock.Setup(_ => _.GetAccountByIdAsync(account!.Id)).ReturnsAsync(account);
 
         var request = Fixture.GetAddWorkDayParameters(account!.Id);
@@ -139,9 +173,9 @@ public class AccountControllerTests : BaseSetup
         //Arrange
         var eventReader = _accountFakeRepository.GetFirstAccountAfterDataUpdateWithEvents();
         var account = eventReader!.Reader;
-        var events = eventReader.ToStreamList<Account>(account.Id);
+        var streamList = eventReader.ToStreamList<Account>(account.Id);
 
-        this.SetupStore(events);
+        this.SetupStore(streamList);
         _accountRepositoryMock.Setup(_ => _.GetAccountByIdAsync(account!.Id)).ReturnsAsync(account);
 
         var request = Fixture.GetDeactivateAccountParameters(account!.Id);

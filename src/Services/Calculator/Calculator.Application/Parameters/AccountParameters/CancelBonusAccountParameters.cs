@@ -11,6 +11,10 @@ public class CancelBonusAccountParameters
         BonusCode = bonusCode;
     }
 
+    public CancelBonusAccountParameters()
+    {
+    }
+
     public Guid AccountId { get; init; }
     public string BonusCode { get; init; }
 }

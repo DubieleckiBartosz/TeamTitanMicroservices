@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using AutoFixture;
+using Calculator.IntegrationTests.Setup.FakeRepositories;
 using Moq;
 using Moq.AutoMock;
 using Newtonsoft.Json;
@@ -10,7 +11,8 @@ using Shared.Implementations.Tools;
 namespace Calculator.IntegrationTests.Setup;
 
 public abstract class BaseSetup : IClassFixture<CustomWebApplicationFactory<Program>>
-{ 
+{
+    protected FakeDataRepositories FakeRepositories; 
     protected MockServices Mocks;
     protected HttpClient Client;
     protected Fixture Fixture;
@@ -18,6 +20,7 @@ public abstract class BaseSetup : IClassFixture<CustomWebApplicationFactory<Prog
     protected BaseSetup(CustomWebApplicationFactory<Program> factory)
     { 
         this.Mocks = factory.FakeServices();
+        this.FakeRepositories = factory.FakeRepositories();
         this.Mocker = new AutoMocker();
         this.Fixture = new Fixture();
         this.Client = factory.CreateClient();

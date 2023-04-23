@@ -6,6 +6,10 @@ public class UpdateAvailabilityParameters
 {
     public Guid ProductId { get; init; }
 
+    public UpdateAvailabilityParameters()
+    {
+    }
+
     [JsonConstructor]
     public UpdateAvailabilityParameters(Guid productId)
     {

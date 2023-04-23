@@ -21,12 +21,12 @@ public class AccountController : BaseController
     {
     }
 
- 
+
     /// <summary>
     /// Search accounts
     /// </summary>
     /// <param name="parameters"></param>
-    /// <returns></returns>
+    /// <returns>AccountSearchViewModel</returns>
     [Authorize(Roles = "Admin,Owner,Manager")]
     [HttpPost("[action]")]
     public async Task<IActionResult> SearchAccounts([FromBody] GetAccountsBySearchParameters parameters)

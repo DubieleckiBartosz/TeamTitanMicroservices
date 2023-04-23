@@ -1,5 +1,12 @@
-﻿namespace Calculator.IntegrationTests.Generators.Product;
+﻿using AutoFixture;
+using Calculator.Application.Parameters.ProductParameters;
 
-public class ProductQueriesGenerator
+namespace Calculator.IntegrationTests.Generators.Product;
+
+public static class ProductQueriesGenerator
 {
+    public static GetProductsBySearchParameters GetSearchProductsParameters(this Fixture fixture)
+    {
+        return fixture.Create<GetProductsBySearchParameters>();
+    }
 }
