@@ -24,7 +24,7 @@ public class ProductController : BaseController
     /// <param name="productId"></param>
     /// <returns>ProductDetailsViewModel</returns>
     [Authorize(Roles = "Admin,Owner,Manager,Employee")]
-    [HttpPost("[action]/{productId:guid}")]
+    [HttpGet("[action]/{productId:guid}")]
     public async Task<IActionResult> GetProductById([FromRoute] Guid productId)
     {
         var query = GetProductDetailsByIdQuery.Create(productId);

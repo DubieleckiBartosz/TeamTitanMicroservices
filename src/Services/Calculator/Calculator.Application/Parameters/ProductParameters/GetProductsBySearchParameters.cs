@@ -16,6 +16,11 @@ public class GetProductsBySearchParameters : BaseSearchQueryParameters, IFilterM
     public bool? IsAvailable { get; init; }
     public SortModelParameters Sort { get; set; }
 
+    //For tests
+    public GetProductsBySearchParameters()
+    {
+    }
+
     [JsonConstructor]
     public GetProductsBySearchParameters(string? productSku, decimal? pricePerUnitFrom, decimal? pricePerUnitTo,
         string? countedInUnit, string? productName, DateTime? fromDate, DateTime? toDate, bool? isAvailable,

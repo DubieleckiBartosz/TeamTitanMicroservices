@@ -4,7 +4,7 @@ using Calculator.Application.Parameters.AccountParameters;
 namespace Calculator.IntegrationTests.Generators.Account;
 
 public static class AccountRequestsGenerator
-{
+{ 
     public static AddBonusToAccountParameters GetAddBonusToAccountParameters(this Fixture fixture,
         Guid? accountId = null)
     {
