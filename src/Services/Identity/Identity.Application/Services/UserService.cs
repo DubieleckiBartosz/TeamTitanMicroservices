@@ -4,7 +4,6 @@ using Identity.Application.Contracts;
 using Identity.Application.Contracts.Services;
 using Identity.Application.Enums;
 using Identity.Application.Models.DataTransferObjects;
-using Identity.Application.Settings;
 using Identity.Application.Utils;
 using Identity.Application.Wrappers;
 using Identity.Domain.Entities;
@@ -45,7 +44,7 @@ public class UserService : IUserService
         _jwtSettings = jwtSettings?.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
 
-    public async Task<Response<string>> MergeUserCodesAsync(AssignUserCodesDto assignUserCodesDto)
+    public async Task<Response<string>> MergeUserCodesAsync(AssignUserCodesDto? assignUserCodesDto)
     {
         if (assignUserCodesDto == null)
         {
@@ -77,10 +76,18 @@ public class UserService : IUserService
 
     public async Task<Response<string>> ClearUserCodesAsync()
     {
+        /*
+             if we no longer work in a given company, 
+             it is not equal to the fact that
+             we do not have an account in the system.
+             The company can remove us from its range and then the code is inactive,
+             but to clear it we have to do it manually
+        */
+
         var access = this._currentUser.IsInRoles(new string[]
         {
-            Roles.Employee.ToString(),
-            Roles.Manager.ToString(),
+            Roles.Employee.ToString(), 
+            Roles.Manager.ToString(), 
         });
 
         if (access)
@@ -100,14 +107,14 @@ public class UserService : IUserService
             ExceptionIdentityTitles.IncorrectRole);
     }
 
-    public async Task<Response<string>> InitUserOrganizationAsync(InitUserOrganizationDto initUserOrganizationDto)
+    public async Task<Response<string>> InitUserOrganizationAsync(InitUserOrganizationDto? initUserOrganizationDto)
     {
         if (initUserOrganizationDto == null)
         {
             throw new ArgumentNullException(nameof(initUserOrganizationDto));
         }
 
-        var isInUse = await this._userRepository.CodeIsInUseAsync(initUserOrganizationDto.UserCode);
+        var isInUse = await this._userRepository.CodeExistsAsync(initUserOrganizationDto.UserCode);
         if (isInUse)
         {
             throw new AuthException(ExceptionIdentityMessages.CodeIsInUse,
@@ -131,7 +138,7 @@ public class UserService : IUserService
         return Response<string>.Ok(ResponseStrings.OperationSuccess);
     }
 
-    public async Task<Response<int>> RegisterNewUserAsync(RegisterDto registerDto, string origin)
+    public async Task<Response<int>> RegisterNewUserAsync(RegisterDto? registerDto, string origin)
     {
         if (registerDto == null)
         {
@@ -174,7 +181,7 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<Response<AuthenticationDto>> LoginAsync(LoginDto loginDto)
+    public async Task<Response<AuthenticationDto>> LoginAsync(LoginDto? loginDto)
     {
         if (loginDto == null)
         {
@@ -199,7 +206,7 @@ public class UserService : IUserService
             this._passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
         if (verificationResult == PasswordVerificationResult.Failed)
         {
-            throw new AuthException(ExceptionIdentityMessages.IncorrectCredentials(loginDto.Email), ExceptionIdentityTitles.General);
+            throw new AuthException(ExceptionIdentityMessages.MethodException("VerifyHashedPassword"), ExceptionIdentityTitles.General);
         }
 
         var authenticationModel = new AuthenticationDto();
@@ -228,7 +235,7 @@ public class UserService : IUserService
         return Response<AuthenticationDto>.Ok(authenticationModel);
     }
 
-    public async Task<Response<string>> AddToRoleAsync(UserNewRoleDto userNewRoleDto)
+    public async Task<Response<string>> AddToRoleAsync(UserNewRoleDto? userNewRoleDto)
     {
         if (userNewRoleDto == null)
         {

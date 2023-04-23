@@ -5,7 +5,11 @@ namespace Identity.Application.Models.Parameters;
 public class AssignUserCodesParameters
 {
     public string OrganizationCode { get; init; } 
-    public string UserCode { get; init; } 
+    public string UserCode { get; init; }
+
+    public AssignUserCodesParameters()
+    {
+    }
 
     [JsonConstructor]
     public AssignUserCodesParameters(string userCode, string organizationCode)

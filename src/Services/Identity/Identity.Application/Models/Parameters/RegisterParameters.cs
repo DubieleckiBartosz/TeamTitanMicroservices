@@ -10,6 +10,10 @@ public class RegisterParameters
     public string Password { get; set; }
     public string ConfirmPassword { get; set; }
 
+    public RegisterParameters()
+    {
+    }
+
     [JsonConstructor]
     public RegisterParameters(string userName,
         string email, string phoneNumber, string password, string confirmPassword)
