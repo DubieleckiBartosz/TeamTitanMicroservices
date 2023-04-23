@@ -32,14 +32,17 @@ public class UpdateAccountDataHandlerTests : CommandHandlerBaseTests<UpdateAccou
     [Fact]
     public async Task Should_Throw_NotFoundException_When_Account_Not_Found()
     {
+        //Arrange
         var request = UpdateAccountDataCommand.Create(_countingType, _status, _workDayHours,
             _settlementDayMonth, Guid.NewGuid(), _expirationDate);
         AggregateRepositoryMock.Setup(_ => _.GetAggregateFromSnapshotAsync<AccountSnapshot>(It.IsAny<Guid>()))
             .ReturnsAsync(() => null);
 
+        //Act
         var message =
             await Assert.ThrowsAsync<NotFoundException>(() => Handler.Handle(request, CancellationToken.None));
 
+        //Assert
         Assert.Equal(
             AggregateNullMessageError("Account"), message.Message);
     }
@@ -47,6 +50,7 @@ public class UpdateAccountDataHandlerTests : CommandHandlerBaseTests<UpdateAccou
     [Fact]
     public async Task Should_Update_Base_Data_And_Should_Not_Call_JobService_When_Settlement_Day_Is_The_Same()
     {
+        //Arrange
         var account = Fixture.GenerateAccountWithBaseData(settlementDayMonth: _settlementDayMonth);
 
         var accountId = account.Id;
@@ -56,8 +60,10 @@ public class UpdateAccountDataHandlerTests : CommandHandlerBaseTests<UpdateAccou
         AggregateRepositoryMock.Setup(_ => _.GetAggregateFromSnapshotAsync<AccountSnapshot>(It.IsAny<Guid>()))
             .ReturnsAsync(account);
 
+        //Act
         await Handler.Handle(request, CancellationToken.None);
 
+        //Assert
         AggregateRepositoryMock.Verify(v => v.UpdateAsync(It.IsAny<Calculator.Domain.Account.Account>()), Times.Once);
         JobServiceMock.Verify(
             v => v.RecurringJobMediator(It.IsAny<string>(), It.IsAny<ICommand<Unit>>(), It.IsAny<string>()),
@@ -67,6 +73,7 @@ public class UpdateAccountDataHandlerTests : CommandHandlerBaseTests<UpdateAccou
     [Fact]
     public async Task Should_Update_Base_Data_And_Should_Call_JobService_When_Settlement_Days_Are_Different()
     {
+        //Arrange
         var account = Fixture.GenerateAccountWithBaseData(settlementDayMonth: GetRandomInt());
 
         var accountId = account.Id;
@@ -76,8 +83,10 @@ public class UpdateAccountDataHandlerTests : CommandHandlerBaseTests<UpdateAccou
         AggregateRepositoryMock.Setup(_ => _.GetAggregateFromSnapshotAsync<AccountSnapshot>(It.IsAny<Guid>()))
             .ReturnsAsync(account);
 
+        //Act
         await Handler.Handle(request, CancellationToken.None);
 
+        //Assert
         AggregateRepositoryMock.Verify(v => v.UpdateAsync(It.IsAny<Calculator.Domain.Account.Account>()), Times.Once);
         JobServiceMock.Verify(
             v => v.RecurringJobMediator(It.IsAny<string>(), It.IsAny<ICommand<Unit>>(), It.IsAny<string>()),
