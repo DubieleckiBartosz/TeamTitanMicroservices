@@ -7,10 +7,12 @@ on:
       - main
       - '*/Calculator*'
       - '*/Management*'
+      - '*/Identity*'
 
 env: 
   CALCULATOR_TESTS_PATH: 'src/Services/Calculator/Tests/Calculator.UnitTests/Calculator.UnitTests.csproj'
   MANAGEMENT_TESTS_PATH: 'src/Services/Management/Tests/Management.UnitTests/Management.UnitTests.csproj'
+  IDENTITY_TESTS_PATH: 'src/Services/Identity/Tests/Identity.UnitTests/Identity.UnitTests.csproj'
 
 jobs:
   calculator-tests:
@@ -45,4 +47,21 @@ jobs:
         run: dotnet build TeamTitanMicroservices.sln --no-restore
       - name: Run Management Service Tests
         if: ${{ contains(github.head_ref, 'Management') }}
-        run: dotnet test ${{ env.MANAGEMENT_TESTS_PATH }}        
+        run: dotnet test ${{ env.MANAGEMENT_TESTS_PATH }}   
+        
+  identity-tests:
+    runs-on: ubuntu-latest
+    if: ${{ startsWith( github.head_ref || github.ref_name, 'Identity' ) }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3.0.3
+        with:
+          dotnet-version: '6.0.x'
+      - name: Restore dependencies
+        run: dotnet restore TeamTitanMicroservices.sln
+      - name: Build
+        run: dotnet build TeamTitanMicroservices.sln --no-restore
+      - name: Run Identity Service Tests
+        if: ${{ contains(github.head_ref, 'Identity') }}
+        run: dotnet test ${{ env.IDENTITY_TESTS_PATH }}   
