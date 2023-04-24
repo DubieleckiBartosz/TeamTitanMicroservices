@@ -7,8 +7,7 @@ public static class OcelotConfiguration
         //Temporarily we only have two environments local and docker. Now that should be enough
 
         envName ??= "Local";
-        builderConfig.AddJsonFile($"ocelot.{envName}.json", optional: true).AddEnvironmentVariables();
-
+        builderConfig.AddJsonFile($"ocelot.{envName}.json", optional: true).AddEnvironmentVariables(); 
 
         return builderConfig;
     }

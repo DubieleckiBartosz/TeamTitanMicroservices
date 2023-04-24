@@ -118,14 +118,31 @@ BEGIN
 END
 GO
 
-
-CREATE OR ALTER PROCEDURE user_codeExists_S
+CREATE OR ALTER PROCEDURE user_codeIsInUse_S
 	@code VARCHAR(50)
 AS
 BEGIN
 	SELECT 1 FROM ApplicationUsers WHERE VerificationCode = @code
 END
 GO
+
+CREATE OR ALTER PROCEDURE user_codeExists_S
+	@code VARCHAR(50)
+AS
+BEGIN
+	
+	SELECT 
+    CASE 
+        WHEN EXISTS (SELECT 1 FROM ApplicationUsers WHERE VerificationCode = @code)
+            OR EXISTS (SELECT 1 FROM TempUsers WHERE VerificationCode = @code)
+        THEN 1
+        ELSE 0
+    END AS CodeExists;
+END
+GO
+
+
+
 
  CREATE OR ALTER PROCEDURE [dbo].[user_createNewUser_I]
     @roleId INT,
@@ -144,7 +161,7 @@ BEGIN
 	 
 			IF EXISTS (SELECT* FROM Roles WHERE Id = @roleId) 
 			BEGIN
-				INSERT INTO ApplicationUsers(IsConfirmed,
+					INSERT INTO ApplicationUsers(IsConfirmed,
 							UserName, Email, PhoneNumber, PasswordHash, VerificationToken, 
 							VerificationTokenExpirationDate, ResetToken, ResetTokenExpirationDate) 
 					VALUES (@isConfirmed, @userName, 

@@ -4,7 +4,6 @@ using Identity.Application.Contracts;
 using Identity.Application.Contracts.Services;
 using Identity.Application.Enums;
 using Identity.Application.Models.DataTransferObjects;
-using Identity.Application.Settings;
 using Identity.Application.Utils;
 using Identity.Application.Wrappers;
 using Identity.Domain.Entities;
@@ -21,6 +20,7 @@ using System.Text;
 using JwtAuthenticationManager.Models;
 using Shared.Implementations.Services;
 using Shared.Implementations.Tools;
+using Identity.Application.Settings;
 
 namespace Identity.Application.Services;
 
@@ -31,21 +31,23 @@ public class UserService : IUserService
     private readonly ILoggerManager<UserService> _loggerManager;
     private readonly IIdentityEmailService _identityEmailService;
     private readonly ICurrentUser _currentUser;
+    private readonly EncryptionSettings _encryptionSettings;
     private readonly JwtSettings _jwtSettings;
 
     public UserService(IUserRepository userRepository, IPasswordHasher<User> passwordHasher,
         IOptions<JwtSettings> jwtSettings, ILoggerManager<UserService> loggerManager,
-        IIdentityEmailService identityEmailService, ICurrentUser currentUser)
+        IIdentityEmailService identityEmailService, ICurrentUser currentUser, IOptions<EncryptionSettings> encryptionSettings)
     {
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         _loggerManager = loggerManager ?? throw new ArgumentNullException(nameof(loggerManager));
         _identityEmailService = identityEmailService ?? throw new ArgumentNullException(nameof(identityEmailService));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
+        _encryptionSettings = encryptionSettings?.Value ?? throw new ArgumentNullException(nameof(encryptionSettings));
         _jwtSettings = jwtSettings?.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
     }
 
-    public async Task<Response<string>> MergeUserCodesAsync(AssignUserCodesDto assignUserCodesDto)
+    public async Task<Response<string>> MergeUserCodesAsync(AssignUserCodesDto? assignUserCodesDto)
     {
         if (assignUserCodesDto == null)
         {
@@ -77,10 +79,18 @@ public class UserService : IUserService
 
     public async Task<Response<string>> ClearUserCodesAsync()
     {
+        /*
+             if we no longer work in a given company, 
+             it is not equal to the fact that
+             we do not have an account in the system.
+             The company can remove us from its range and then the code is inactive,
+             but to clear it we have to do it manually
+        */
+
         var access = this._currentUser.IsInRoles(new string[]
         {
-            Roles.Employee.ToString(),
-            Roles.Manager.ToString(),
+            Roles.Employee.ToString(), 
+            Roles.Manager.ToString(), 
         });
 
         if (access)
@@ -100,14 +110,14 @@ public class UserService : IUserService
             ExceptionIdentityTitles.IncorrectRole);
     }
 
-    public async Task<Response<string>> InitUserOrganizationAsync(InitUserOrganizationDto initUserOrganizationDto)
+    public async Task<Response<string>> InitUserOrganizationAsync(InitUserOrganizationDto? initUserOrganizationDto)
     {
         if (initUserOrganizationDto == null)
         {
             throw new ArgumentNullException(nameof(initUserOrganizationDto));
         }
 
-        var isInUse = await this._userRepository.CodeIsInUseAsync(initUserOrganizationDto.UserCode);
+        var isInUse = await this._userRepository.CodeExistsAsync(initUserOrganizationDto.UserCode);
         if (isInUse)
         {
             throw new AuthException(ExceptionIdentityMessages.CodeIsInUse,
@@ -131,7 +141,7 @@ public class UserService : IUserService
         return Response<string>.Ok(ResponseStrings.OperationSuccess);
     }
 
-    public async Task<Response<int>> RegisterNewUserAsync(RegisterDto registerDto, string origin)
+    public async Task<Response<int>> RegisterNewUserAsync(RegisterDto? registerDto, string origin)
     {
         if (registerDto == null)
         {
@@ -174,7 +184,7 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<Response<AuthenticationDto>> LoginAsync(LoginDto loginDto)
+    public async Task<Response<AuthenticationDto>> LoginAsync(LoginDto? loginDto)
     {
         if (loginDto == null)
         {
@@ -183,13 +193,9 @@ public class UserService : IUserService
 
 
         var user = await this._userRepository.FindByEmailAsync(loginDto.Email);
-        if (user == null)
-        {
-            throw new IdentityResultException(ExceptionIdentityMessages.UserNotFound,
-                ExceptionIdentityTitles.UserByEmail, HttpStatusCode.NotFound, null);
-        }
+        CheckUser(user, ExceptionIdentityTitles.UserByEmail);
 
-        if (!user.IsConfirmed)
+        if (!user!.IsConfirmed)
         {
             throw new IdentityResultException(ExceptionIdentityMessages.AccountNotApproval,
                 ExceptionIdentityTitles.UserByEmail, HttpStatusCode.BadRequest, null);
@@ -199,7 +205,7 @@ public class UserService : IUserService
             this._passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginDto.Password);
         if (verificationResult == PasswordVerificationResult.Failed)
         {
-            throw new AuthException(ExceptionIdentityMessages.IncorrectCredentials(loginDto.Email), ExceptionIdentityTitles.General);
+            throw new AuthException(ExceptionIdentityMessages.MethodException("VerifyHashedPassword"), ExceptionIdentityTitles.General);
         }
 
         var authenticationModel = new AuthenticationDto();
@@ -228,7 +234,7 @@ public class UserService : IUserService
         return Response<AuthenticationDto>.Ok(authenticationModel);
     }
 
-    public async Task<Response<string>> AddToRoleAsync(UserNewRoleDto userNewRoleDto)
+    public async Task<Response<string>> AddToRoleAsync(UserNewRoleDto? userNewRoleDto)
     {
         if (userNewRoleDto == null)
         {
@@ -236,13 +242,10 @@ public class UserService : IUserService
         }
 
         var user = await this._userRepository.FindByEmailAsync(userNewRoleDto.Email);
-        if (user == null)
-        {
-            throw new IdentityResultException(ExceptionIdentityMessages.UserNotFound,
-                ExceptionIdentityTitles.UserByEmail, HttpStatusCode.NotFound, null);
-        }
+    
+        CheckUser(user, ExceptionIdentityTitles.UserByEmail);
 
-        if (!user.IsConfirmed)
+        if (!user!.IsConfirmed)
         {
             throw new IdentityResultException(ExceptionIdentityMessages.AccountNotApproval,
                 ExceptionIdentityTitles.UserByEmail, HttpStatusCode.BadRequest, null);
@@ -257,25 +260,23 @@ public class UserService : IUserService
         return Response<string>.Ok(ResponseStrings.OperationSuccess);
     }
 
-    public async Task<Response<string>> AddToOwnerRoleAsync(UserOwnerRoleDto userOwnerRoleDto)
+    public async Task<Response<string>> AddToOwnerRoleAsync(UserOwnerRoleDto? userOwnerRoleDto)
     {
         if (userOwnerRoleDto == null)
         {
             throw new ArgumentNullException(nameof(userOwnerRoleDto));
-        } 
-
-        var recipient = userOwnerRoleDto.Recipient.Decrypt("fWj4aKQ4K4caBjcH");
-        var ownerCode = userOwnerRoleDto.OwnerCode.Decrypt("fWj4aKQ4K4caBjcH");
-        var organization = userOwnerRoleDto.Organization.Decrypt("fWj4aKQ4K4caBjcH");
-
-        var user = await this._userRepository.FindByEmailAsync(recipient);
-        if (user == null)
-        {
-            throw new IdentityResultException(ExceptionIdentityMessages.UserNotFound,
-                ExceptionIdentityTitles.UserByEmail, HttpStatusCode.NotFound, null);
         }
 
-        if (!user.IsConfirmed)
+        var key = _encryptionSettings.OwnerRoleEncryptionKey;
+        var recipient = userOwnerRoleDto.Recipient.Decrypt(key);
+        var ownerCode = userOwnerRoleDto.OwnerCode.Decrypt(key);
+        var organization = userOwnerRoleDto.Organization.Decrypt(key);
+
+        var user = await this._userRepository.FindByEmailAsync(recipient);
+
+        CheckUser(user, ExceptionIdentityTitles.UserByEmail);
+
+        if (!user!.IsConfirmed)
         {
             throw new IdentityResultException(ExceptionIdentityMessages.AccountNotApproval,
                 ExceptionIdentityTitles.UserByEmail, HttpStatusCode.BadRequest, null);
@@ -292,7 +293,7 @@ public class UserService : IUserService
     {
         if (string.IsNullOrEmpty(refreshTokenKey))
         {
-            throw new BadRequestException(ExceptionIdentityMessages.TokenIsEmptyOrNull,
+            throw new AuthException(ExceptionIdentityMessages.TokenIsEmptyOrNull,
                 ExceptionIdentityTitles.ValidationError);
         }
 
@@ -328,11 +329,11 @@ public class UserService : IUserService
         }
 
         var user = await this._userRepository.FindUserByTokenAsync(tokenKey);
-
+          
         var refreshToken = user.FindToken(tokenKey);
         if (refreshToken == null || !refreshToken.IsActive)
         {
-            throw new AuthException(ExceptionIdentityMessages.TokenNotActive, null);
+            throw new AuthException(ExceptionIdentityMessages.TokenNotActive, ExceptionIdentityTitles.ValidationError);
         }
 
         refreshToken.RevokeToken();
@@ -344,13 +345,9 @@ public class UserService : IUserService
     public async Task<Response<string>> ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto, string origin)
     {
         var user = await _userRepository.FindByEmailAsync(forgotPasswordDto.Email);
-
-        if (user == null)
-        {
-            throw new IdentityResultException(ExceptionIdentityMessages.UserNotFound,
-                ExceptionIdentityTitles.UserByEmail, HttpStatusCode.NotFound, null);
-        }
-
+       
+        CheckUser(user); 
+        
         var newToken = TokenUtils.RandomTokenString();
         user.SetResetToken(newToken);
 
@@ -376,7 +373,10 @@ public class UserService : IUserService
     public async Task<Response<string>> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
     {
         var user = await _userRepository.FindUserByResetTokenAsync(resetPasswordDto.Token);
-        if (user == null || user.ResetToken == null || user?.ResetToken?.IsActive == false)
+
+        CheckUser(user); 
+
+        if (user.ResetToken == null || user?.ResetToken?.IsActive == false)
         {
             throw new IdentityResultException(ExceptionIdentityMessages.ResetTokenExpired,
                 ExceptionIdentityTitles.ResetToken, HttpStatusCode.InternalServerError, null);
@@ -396,7 +396,7 @@ public class UserService : IUserService
     {
         var tokenCode = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(verifyAccountDto.Token));
         var user = await _userRepository.FindUserByVerificationTokenAsync(tokenCode);
-
+ 
         user.ConfirmAccount();
 
         _loggerManager.LogInformation("Account has been confirmed");
@@ -433,5 +433,14 @@ public class UserService : IUserService
         }
 
         return newRole;
+    }
+
+    private void CheckUser(User? user, string? message = null)
+    {
+        if (user == null)
+        {
+            throw new IdentityResultException(ExceptionIdentityMessages.UserNotFound,
+                message ?? ExceptionIdentityTitles.ValidationError, HttpStatusCode.NotFound, null);
+        }
     }
 }

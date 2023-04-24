@@ -5,7 +5,7 @@ namespace Identity.Domain.ValueObjects;
 public class TokenValue : ValueObject
 {
     public string Token { get; }
-    public DateTime? TokenExpirationDate { get; }
+    public DateTime? TokenExpirationDate { get; private set; }
     public bool IsActive => TokenExpirationDate > DateTime.UtcNow;
 
     private TokenValue(string token, DateTime? tokenExpirationDate)

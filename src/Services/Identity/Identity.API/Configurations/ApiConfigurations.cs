@@ -30,6 +30,7 @@ public static class ApiConfigurations
         builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
         builder.Services.Configure<ConnectionStrings>(builder.Configuration.GetSection("ConnectionStrings"));
+        builder.Services.Configure<EncryptionSettings>(builder.Configuration.GetSection("EncryptionSettings"));
 
         return builder;
     }
