@@ -12,7 +12,11 @@ public static class UserGenerator
         var email = fixture.Create<string>();
         var phoneNumber = fixture.Create<string>();
 
-        return User.CreateUser(verificationToken, userName, email, phoneNumber);
+        var user = User.CreateUser(verificationToken, userName, email, phoneNumber);
+        var somePassword = fixture.Create<string>();
+        user.SetPasswordHash(somePassword);
+
+        return user;
     }
 
     public static User GenerateUserCompany(this Fixture fixture, string? organizationCode = null, string? verificationCode = null)
@@ -41,6 +45,16 @@ public static class UserGenerator
 
         user.ConfirmAccount();
         user.AddNewRefreshToken(newToken);
+
+        return user;
+    }
+    
+    public static User GenerateApprovedUserWithResetToken(this Fixture fixture)
+    {
+        var user = fixture.GenerateApprovedUserWithActiveRefreshToken();
+        var resetToken = fixture.Create<string>();
+
+        user.SetResetToken(resetToken);
 
         return user;
     }

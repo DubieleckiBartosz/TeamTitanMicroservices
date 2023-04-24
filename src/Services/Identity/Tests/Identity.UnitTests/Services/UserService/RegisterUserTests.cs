@@ -61,8 +61,7 @@ public class RegisterUserTests : UserServiceBaseTests
     {
         //Arrange 
         var parameters = Fixture.Create<RegisterParameters>();
-        var registerDto = new RegisterDto(parameters);
-        var someOrigin = "https://0.0.0.0";
+        var registerDto = new RegisterDto(parameters); 
         var hashPwd = Fixture.Create<string>();
         var identifier = Fixture.Create<int>();
 
@@ -71,7 +70,7 @@ public class RegisterUserTests : UserServiceBaseTests
         UserRepositoryMock.Setup(_ => _.CreateAsync(It.IsAny<User>())).ReturnsAsync(identifier);
 
         //Act 
-        var result = await UserService.RegisterNewUserAsync(registerDto, someOrigin);
+        var result = await UserService.RegisterNewUserAsync(registerDto, TestOrigin);
 
         //Assert
         Assert.True(result.Success);
