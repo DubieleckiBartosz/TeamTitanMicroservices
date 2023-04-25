@@ -83,9 +83,163 @@ https://localhost:5001/
 ![image](https://user-images.githubusercontent.com/81367371/234428091-14395b6b-a846-411f-b359-26cf0adfd3ed.png)
 
 
-Structure project:
-![image](https://user-images.githubusercontent.com/81367371/234428181-d2c85916-c4bd-4476-9c58-4c49e47aaf24.png)
-![image](https://user-images.githubusercontent.com/81367371/234428239-8cdf0b52-1dca-4722-8e97-f5a5f4c8cc16.png)
-![image](https://user-images.githubusercontent.com/81367371/234428343-e22079a3-2aa5-4863-95ce-f956e5f6eae2.png)
-![image](https://user-images.githubusercontent.com/81367371/234428372-f093f60e-3cbd-4651-9490-2df25debfffc.png)
+Structure project: 
+
+![image](https://user-images.githubusercontent.com/81367371/234428763-5d403ea0-5547-454e-bee7-4d6667ed7a38.png)
+
+
+Endpoints:
+
+**Identity:**
+<li>api/account/new-owner</li> 
+<li>api/account/assignUserCodes</li>
+<li>api/account/clearUserCodes</li>
+<li>api/account/initUserOrganization</li>
+<li>api/account/registerNewUser</li>
+<li>api/account/confirmAccountByEmail</li>
+<li>api/account/loginUser</li>
+<li>api/account/refreshToken</li>
+<li>api/account/forgotPassword</li>
+<li>api/account/reset-password</li>
+<li>api/account/revokeToken</li>
+<li>api/account/addNewRoleToUser</li>
+<li>api/account/getCurrentUserInfo</li>
+
+/Account 
+
+GET AddOwnerRoleToUser: ALL
+
+PUT AssignUserCodes: User 
+
+PUT ClearUserCodes: Admin,Owner,Manager,Employee
+
+POST InitUserOrganization: Admin,Owner,Manager 
+
+POST RegisterNewUser: ALL
+
+POST ConfirmAccountByEmail: ALL
+
+POST LoginUser: ALL
+
+POST RefreshToken: ALL
+
+POST ForgotPassword: ALL
+
+POST ResetPassword: ALL 
+
+POST RevokeToken: User 
+
+PUT AddNewRoleToUser: ALL (Temporary for tests)
+
+GET GetCurrentUserInfo: User 
+
+
+**Management:**
+
+<ul>
+<li>api/company/getCompanyByCode</li>  
+<li>api/company/completeCompanyData</li>  
+<li>api/company/updateCommunicationData</li>  
+<li>api/company/initCompany</li>  
+<li>api/department/getDepartmentsByCompanyId/{companyId}</li>  
+<li>api/department/createDepartment</li>  
+<li>api/employee/updateContactData</li>  
+<li>api/employee/updateAddressData</li>  
+<li>api/employee/updateLeader</li>  
+<li>api/employee/cancelDayOffRequest</li>  
+<li>api/employee/considerDayOffRequest</li>  
+<li>api/employee/createEmployee</li>  
+<li>api/employee/newDayOffRequest</li> 
+<li>Api/employee/newEmployeeContract</li> 
+</ul>
+
+Permissions:
+
+/Company 
+
+PUT UpdateCommunication: Admin,Owner 
+
+PUT CompleteCompanyData: Admin,Owner 
+
+POST InitCompany: User 
+
+POST GetCompanyByCode: Admin,Owner,Manager 
+
+ 
+
+/Department 
+
+GET GetDepartmentsByCompanyId: Admin,Owner,Manager 
+
+POST CreateDepartment: Admin,Owner 
+
+ 
+
+/Employee 
+
+PUT UpdateContactData: Admin,Owner,Manager,Employee 
+
+PUT UpdateAddressData: Admin,Owner,Manager,Employee 
+
+PUT CancelDayOffRequest: Admin,Employee 
+
+PUT ConsiderDayOffRequest: Admin,Owner,Manager 
+
+PUT UpdateLeader: Admin,Owner,Manager 
+
+POST CreateEmployee: Admin,Owner,Manager 
+
+POST NewDayOffRequest: Admin,Owner,Manager,Employee 
+
+POST NewEmployeeContract: Admin,Owner,Manager 
+
+ 
+
+**Calculator:**
+
+<li>api/account/searchAccounts</li> 
+<li>api/account/addBonusToAccount</li>
+<li>api/account/addPieceProduct</li>
+<li>api/account/addWorkDay</li>
+<li>api/account/activateAccount</li>
+<li>api/account/cancelBonus</li>
+<li>api/account/deactivateAccount</li>
+<li>api/product/getProductById/{productId:guid}</li>
+<li>api/product/searchProducts</li>
+<li>api/product/createNewProduct</li>
+<li>api/product/updateAvailability</li>
+<li>api/product/updatePriceProduct</li>
+
+Permissions:
+
+/Account 
+
+POST SearchAccounts: Admin,Owner,Manager 
+
+POST AddBonusToAccount: Admin,Owner,Manager 
+
+POST AddPieceProduct: Admin,Owner,Manager 
+
+POST AddWorkDay: Admin,Owner,Manager 
+
+PUT ActivateAccount: Admin,Owner,Manager 
+
+PUT CancelBonus: Admin,Owner,Manager 
+
+PUT DeactivateAccount: Admin,Owner,Manager 
+
+/Product 
+
+POST GetProductById: Admin,Owner,Manager,Employee 
+
+POST SearchProducts: Admin,Owner,Manager,Employee 
+
+POST CreateNewProduct: Admin,Owner,Manager 
+
+PUT UpdateAvailability: Admin,Owner,Manager 
+
+PUT UpdatePriceProduct: Admin,Owner,Manager 
+
+
+
 
