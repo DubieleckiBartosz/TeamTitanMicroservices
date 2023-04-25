@@ -105,7 +105,10 @@ Endpoints:
 <li>api/account/addNewRoleToUser</li>
 <li>api/account/getCurrentUserInfo</li>
 
+
+
 /Account 
+
 
 GET AddOwnerRoleToUser: ALL
 
@@ -153,7 +156,9 @@ GET GetCurrentUserInfo: User
 <li>Api/employee/newEmployeeContract</li> 
 </ul>
 
+
 Permissions:
+
 
 /Company 
 
@@ -176,6 +181,7 @@ POST CreateDepartment: Admin,Owner
  
 
 /Employee 
+
 
 PUT UpdateContactData: Admin,Owner,Manager,Employee 
 
@@ -210,7 +216,10 @@ POST NewEmployeeContract: Admin,Owner,Manager
 <li>api/product/updateAvailability</li>
 <li>api/product/updatePriceProduct</li>
 
+
+
 Permissions:
+
 
 /Account 
 
