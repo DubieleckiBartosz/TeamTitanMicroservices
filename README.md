@@ -6,4 +6,5 @@ If you found this implementation helpful or used it in your projects, I am very 
 
 ## Current short overview
 
-![DiagramTeamTitan](https://user-images.githubusercontent.com/81367371/234418117-17c02273-e645-4c44-81a2-9c6da2c002ac.png)
+![image](https://user-images.githubusercontent.com/81367371/234418288-fd850549-6282-4743-ae4b-e39d5d5857c8.png)
+
