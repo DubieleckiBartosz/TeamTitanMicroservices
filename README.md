@@ -16,20 +16,21 @@ or if you want to run locally then you can run only *docker-compose -f docker-co
 **Second step**
 1. with docker 
 Open the browser and go to:
-http://localhost:8013/swagger/index.html - identity service
-http://localhost:8011/swagger/index.html - management service
-http://localhost:8012/swagger/index.html - calculator service
+http://localhost:8013/swagger/index.html - identity service </br>
+http://localhost:8011/swagger/index.html - management service </br>
+http://localhost:8012/swagger/index.html - calculator service </br>
 
 2. locally
- https://localhost:7147/swagger/index.html - identity service
- https://localhost:7205/swagger/index.html - management service
- https://localhost:7098/swagger/index.html - calculator service
+ https://localhost:7147/swagger/index.html - identity service </br>
+ https://localhost:7205/swagger/index.html - management service </br>
+ https://localhost:7098/swagger/index.html - calculator service </br>
 
-or you can use celot with postman ofc:
-docker:
+or you can use celot with postman ofc: </br> </br>
+
+docker: </br>
 http://localhost:8010/
 
-locally:
+locally: </br>
 https://localhost:5001/
 
 ## Current short overview
@@ -82,7 +83,7 @@ https://localhost:5001/
 
 ![image](https://user-images.githubusercontent.com/81367371/234428091-14395b6b-a846-411f-b359-26cf0adfd3ed.png)
 
-
+ </br>
 Structure project: 
 
 ![image](https://user-images.githubusercontent.com/81367371/234428763-5d403ea0-5547-454e-bee7-4d6667ed7a38.png)
@@ -91,6 +92,7 @@ Structure project:
 Endpoints:
 
 **Identity:**
+<ul>
 <li>api/account/new-owner</li> 
 <li>api/account/assignUserCodes</li>
 <li>api/account/clearUserCodes</li>
@@ -104,13 +106,11 @@ Endpoints:
 <li>api/account/revokeToken</li>
 <li>api/account/addNewRoleToUser</li>
 <li>api/account/getCurrentUserInfo</li>
+</ul> </br>
 
+/Account  
 
-
-/Account 
-
-
-GET AddOwnerRoleToUser: ALL
+GET AddOwnerRoleToUser: ALL </br>
 
 PUT AssignUserCodes: User 
 
@@ -135,8 +135,7 @@ POST RevokeToken: User
 PUT AddNewRoleToUser: ALL (Temporary for tests)
 
 GET GetCurrentUserInfo: User 
-
-
+ 
 **Management:**
 
 <ul>
@@ -203,6 +202,7 @@ POST NewEmployeeContract: Admin,Owner,Manager
 
 **Calculator:**
 
+<ul>
 <li>api/account/searchAccounts</li> 
 <li>api/account/addBonusToAccount</li>
 <li>api/account/addPieceProduct</li>
@@ -215,7 +215,7 @@ POST NewEmployeeContract: Admin,Owner,Manager
 <li>api/product/createNewProduct</li>
 <li>api/product/updateAvailability</li>
 <li>api/product/updatePriceProduct</li>
-
+</ul>
 
 
 Permissions:
