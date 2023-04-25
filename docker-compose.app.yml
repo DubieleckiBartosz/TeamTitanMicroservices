@@ -34,7 +34,7 @@ services:
       - EmailOptions__Host=${SMTP_HOST_ENV}
       - LinkOptions__Uri=${LINK_URI_ENV}
     ports:
-      - "7205:80"
+      - "8011:80"
     networks:
         - team-titan-microservice-network
     depends_on:
@@ -57,7 +57,7 @@ services:
       - RabbitOptions__Host=${RABBIT_CONNECTION_ENV}
       - StoreOptions__ConnectionString=${MONGO_STORE_ENV} 
     ports:
-      - "7098:80"
+      - "8012:80"
     networks:
         - team-titan-microservice-network
     depends_on:
@@ -77,8 +77,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=${TEST_ENV} 
       - EmailOptions__Host=${SMTP_HOST_ENV}
       - ConnectionStrings__DefaultConnection=${IDENTITY_MSSLQ_CONNECTION_ENV}
+      - ConnectionStrings__HangfireConnection=${HANGFIRE_CONNECTION_ENV}
     ports:
-      - "7147:80"
+      - "8013:80"
     networks:
         - team-titan-microservice-network
     depends_on: 

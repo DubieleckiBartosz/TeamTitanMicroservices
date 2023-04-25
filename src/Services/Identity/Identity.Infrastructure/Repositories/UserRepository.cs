@@ -362,5 +362,15 @@ public class UserRepository : BaseRepository<UserRepository>, IUserRepository
         await this.ExecuteAsync("user_clearRevokedTokens_D",
             commandType: CommandType.StoredProcedure);
     }
+    
+    public async Task ClearTempUsers(DateTime maxOldDate)
+    {
+        var param = new DynamicParameters();
+
+        param.Add("@maxOldDate", maxOldDate);
+
+        await this.ExecuteAsync("[dbo].[temp_clearOldTempUsers_D]",
+            commandType: CommandType.StoredProcedure);
+    }
 }
 

@@ -110,12 +110,24 @@ public static class SharedConfigurations
         //HANGFIRE
         if (withBackgroundDb)
         {
-            builder.GetBackgroundConnectionSettings(backgroundDbConnection ??
-                                                    builder.Configuration["ConnectionStrings:HangfireConnection"]);
+            builder.RegisterBackgroundConnectionSettings(backgroundDbConnection, true);
         } 
 
         return builder;
-    } 
+    }
+
+    public static WebApplicationBuilder RegisterBackgroundConnectionSettings(this WebApplicationBuilder builder, string? connection = null, bool withJobServiceMediator = false)
+    { 
+        if (withJobServiceMediator)
+        {
+            builder.Services.AddScoped<IJobService, JobService>();
+        }
+
+        builder.GetBackgroundConnectionSettings(connection ??
+                                                builder.Configuration["ConnectionStrings:HangfireConnection"]);
+
+        return builder;
+    }
 
     public static IServiceCollection GetAccessoriesDependencyInjection(this IServiceCollection services)
     {        
