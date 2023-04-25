@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Identity.Application.Contracts;
 using Identity.Application.Contracts.Services;
 using Identity.Application.Models.Parameters;
 using Identity.Application.Services;
@@ -24,6 +25,7 @@ public static class DependencyInjectionApplication
 
     public static IServiceCollection GetDependencyInjectionApplication(this IServiceCollection services)
     {
+        services.AddSingleton<IBackgroundService, BackgroundService>(); 
         services.AddScoped<IIdentityEmailService, IdentityEmailService>();
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddScoped<IUserService, UserService>();

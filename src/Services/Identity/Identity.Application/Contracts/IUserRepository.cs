@@ -22,5 +22,6 @@ public interface IUserRepository
     Task<List<string>> GetUserRolesAsync(User user);
     Task ClearResetTokenAsync(User user);
     Task ClearTokens();
+    Task ClearTempUsers(DateTime maxOldDate);
     Task ClearUserCodesAsync(User user, string oldVerificationCode);
 }

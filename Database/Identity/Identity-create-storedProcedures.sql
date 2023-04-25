@@ -469,3 +469,12 @@ BEGIN
 	VALUES(@roleId, @verificationCode, @organizationCode)
 END
 GO
+
+CREATE OR ALTER PROCEDURE [dbo].[temp_clearOldTempUsers_D]
+	@maxOldDate DATETIME
+AS
+BEGIN
+	DELETE FROM TempUsers
+	WHERE Created < @maxOldDate
+END
+GO
