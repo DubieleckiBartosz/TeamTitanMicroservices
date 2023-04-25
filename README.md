@@ -49,7 +49,7 @@ https://localhost:5001/ </br>
 <li>My own EventStore</li>
 <li>Command Query Responsibility Segregation (CQRS)</li>
 <li>Domain Driven Design (DDD)</li>
-<li>Each service has Architecture</li>
+<li>Each service has Clean Architecture</li>
 </ul>
 
 
