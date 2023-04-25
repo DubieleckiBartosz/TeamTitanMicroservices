@@ -14,13 +14,13 @@ You need to go to the docker files location and run the command:
 or if you want to run locally then you can run only *docker-compose -f docker-compose.yml up* command 
 
 **Second step**
-1. with docker 
-Open the browser and go to:
+1. with docker  </br>
+Open the browser and go to: </br>
 http://localhost:8013/swagger/index.html - identity service </br>
 http://localhost:8011/swagger/index.html - management service </br>
 http://localhost:8012/swagger/index.html - calculator service </br>
 
-2. locally
+2. locally </br>
  https://localhost:7147/swagger/index.html - identity service </br>
  https://localhost:7205/swagger/index.html - management service </br>
  https://localhost:7098/swagger/index.html - calculator service </br>
@@ -28,10 +28,10 @@ http://localhost:8012/swagger/index.html - calculator service </br>
 or you can use celot with postman ofc: </br> </br>
 
 docker: </br>
-http://localhost:8010/
+http://localhost:8010/ </br>
 
 locally: </br>
-https://localhost:5001/
+https://localhost:5001/ </br>
 
 ## Current short overview
 
