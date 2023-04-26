@@ -8,10 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
 
 var config = builder.Configuration;
-var envName = config["Container_ENV"];
+
+//Temporarily we only have two environments local and docker. Now that should be enough
+
+var envName = config["Container_ENV"] ?? "Local";
 
 config.AddJsonFile("appsettings.json", true, true)
-    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+    .AddJsonFile($"appsettings.{envName}.json", optional: false)
     .GetOcelotFile(envName);
 
 
