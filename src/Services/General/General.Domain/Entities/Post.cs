@@ -38,14 +38,20 @@ public class Post : Entity, IAggregateRoot
         new Post(creator, description, attachment);
 
     public void AddComment(int creator, string content)
-    {
-        var commentContent = Content.Create(content);
+    { 
         var newComment = Comment.Create(creator, content);
+        Comments.Add(newComment);
     }
 
-    public void RemoveComment()
+    public void RemoveComment(int commentId)
     {
+        var comment = Comments.FirstOrDefault(_ => _.Id == commentId);
+        if (comment == null)
+        {
+            throw new BusinessException("Comment not found", "The comment must exist to be removed");
+        }
 
+        Comments.Remove(comment);
     }
 
 

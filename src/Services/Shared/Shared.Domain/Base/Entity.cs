@@ -5,8 +5,8 @@ namespace Shared.Domain.Base;
 public abstract class Entity
 {
     public int Id { get; protected set; }
-    public int Version { get; protected set; }
-    public Watcher? Watcher { get; protected set; }  
+    public int Version { get; protected set; } 
+    public Watcher? Watcher { get; set; } 
 
     private readonly List<IDomainNotification> _events = new();
     private bool _versionIncremented;
