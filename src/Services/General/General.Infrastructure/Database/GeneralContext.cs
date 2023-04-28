@@ -14,6 +14,7 @@ public class GeneralContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GeneralContext).Assembly);
+        base.OnModelCreating(modelBuilder);
     }
 
     public async Task<int> SaveChangesAsync()

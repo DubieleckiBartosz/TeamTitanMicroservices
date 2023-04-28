@@ -12,6 +12,7 @@ public class ReactTypeConfiguration : IEntityTypeConfiguration<Reaction>
     public void Configure(EntityTypeBuilder<Reaction> builder)
     {
         builder.ToTable(Common.ReactionTable);
+        builder.Property<int>("Id");
         builder.HasKey("Id");
 
         builder.Property(_ => _.Creator).IsRequired();
@@ -19,13 +20,17 @@ public class ReactTypeConfiguration : IEntityTypeConfiguration<Reaction>
         builder
             .Property(_ => _.Type)
             .HasConversion<ReactionTypeConverter>()
-            .IsRequired();  
+            .IsRequired();
+
+        builder.Property<int>("PostId");
 
         builder.HasOne<Post>()
             .WithMany(_ => _.Reactions)
             .HasForeignKey("PostId")
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
+
+        builder.Property<int>("CommentId");
 
         builder.HasOne<Comment>()
             .WithMany(_ => _.Reactions)

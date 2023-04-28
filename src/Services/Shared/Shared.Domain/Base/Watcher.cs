@@ -8,12 +8,16 @@ public class Watcher
 
     private Watcher()
     {
-        Created = DateTime.UtcNow;
-        LastModified = DateTime.UtcNow;
-        DeletedAt = null;
     }
 
-    public static Watcher Create() => new Watcher();
+    public static Watcher Create() => new Watcher()
+    {
+
+        Created = DateTime.UtcNow,
+        LastModified = DateTime.UtcNow,
+        DeletedAt = null
+    };
+
     public void Update() => LastModified = DateTime.UtcNow;
     public void Delete() => DeletedAt = DateTime.UtcNow;
 }

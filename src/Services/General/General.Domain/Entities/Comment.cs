@@ -7,20 +7,20 @@ namespace General.Domain.Entities;
 public class Comment : Entity
 {
     public int Creator { get; private set; } 
-    public Content Content { get; private set; }
+    public Content Description { get; private set; }
     public List<Reaction> Reactions { get; private set; } = new();
 
     private Comment()
-    { 
+    {
     }
 
     private Comment(int creator, Content content)
     {
         Creator = creator;
-        Content = content; 
+        Description = content; 
     }
 
-    public static Comment Create(int creator, string content) => new Comment(creator, Content.Create(content)); 
+    public static Comment Create(int creator, string description) => new Comment(creator, Content.Create(description)); 
 
     public void AddNewReaction(int creator, int type)
     {

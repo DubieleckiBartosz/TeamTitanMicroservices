@@ -6,6 +6,10 @@ public class Content : ValueObject
 {
     public string Description { get; private set; }
 
+    private Content()
+    {
+    }
+
     private Content(string description)
     {
         Description = description;

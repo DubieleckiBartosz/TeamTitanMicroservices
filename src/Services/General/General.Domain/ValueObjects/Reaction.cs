@@ -8,6 +8,9 @@ public class Reaction : ValueObject
     public int Creator { get; private set; }
     public ReactionType Type { get; private set; }
 
+    private Reaction()
+    {
+    }
     private Reaction(int creator, ReactionType type)
     {
         Creator = creator;
