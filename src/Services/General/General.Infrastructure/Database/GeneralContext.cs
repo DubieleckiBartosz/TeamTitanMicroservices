@@ -6,6 +6,7 @@ namespace General.Infrastructure.Database;
 
 public class GeneralContext : DbContext
 {
+    public DbSet<Comment> Comments { get; set; } 
     public DbSet<Post> Posts { get; set; }
     public GeneralContext(DbContextOptions<GeneralContext> options) : base(options)
     {
@@ -19,19 +20,23 @@ public class GeneralContext : DbContext
     {
         var entries = ChangeTracker
             .Entries()
-            .Where(e => e.Entity is Entity && e.State is EntityState.Added or EntityState.Modified);
+            .Where(e => e.Entity is Entity && e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted);
 
         foreach (var entityEntry in entries)
         {
-
-            if (entityEntry.State == EntityState.Added)
+            switch (entityEntry.State)
             {
-                ((Entity) entityEntry.Entity).Watcher = Watcher.Create();
-            }
-            else
-            {
-                ((Entity)entityEntry.Entity).Watcher!.Update();
-            }
+                case EntityState.Added:
+                    ((Entity)entityEntry.Entity).Watcher = Watcher.Create();
+                    break;
+                case EntityState.Modified:
+                    ((Entity)entityEntry.Entity).Watcher!.Update();
+                    break;
+                case EntityState.Deleted:
+                    entityEntry.State = EntityState.Modified;
+                    ((Entity)entityEntry.Entity).Watcher!.Delete();
+                    break;
+            } 
         }
 
         return await base.SaveChangesAsync();

@@ -41,6 +41,7 @@ public class Post : Entity, IAggregateRoot
     { 
         var newComment = Comment.Create(creator, content);
         Comments.Add(newComment);
+        IncrementVersion();
     }
 
     public void RemoveComment(int commentId)
@@ -52,6 +53,7 @@ public class Post : Entity, IAggregateRoot
         }
 
         Comments.Remove(comment);
+        IncrementVersion();
     }
 
 
@@ -65,6 +67,7 @@ public class Post : Entity, IAggregateRoot
 
         var newReaction = Reaction.CreateReaction(creator, type);
         Reactions.Add(newReaction);
+        IncrementVersion();
     }
 
     public void RemoveReaction(int creator)
@@ -76,5 +79,6 @@ public class Post : Entity, IAggregateRoot
         }
 
         Reactions.Remove(reaction);
+        IncrementVersion();
     }
 }

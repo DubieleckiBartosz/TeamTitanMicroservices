@@ -1,5 +1,6 @@
 ﻿using General.Domain.Entities;
 using General.Domain.ValueObjects;
+using General.Infrastructure.Database;
 using General.Infrastructure.DomainConfigurations.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,12 +8,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace General.Infrastructure.DomainConfigurations;
 
 public class ReactTypeConfiguration : IEntityTypeConfiguration<Reaction>
-{
-    private const string ReactionTable = "Reactions";
-
+{ 
     public void Configure(EntityTypeBuilder<Reaction> builder)
     {
-        builder.ToTable(ReactionTable);
+        builder.ToTable(Common.ReactionTable);
         builder.HasKey("Id");
 
         builder.Property(_ => _.Creator).IsRequired();
@@ -23,13 +22,13 @@ public class ReactTypeConfiguration : IEntityTypeConfiguration<Reaction>
             .IsRequired();  
 
         builder.HasOne<Post>()
-            .WithMany()
+            .WithMany(_ => _.Reactions)
             .HasForeignKey("PostId")
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
 
         builder.HasOne<Comment>()
-            .WithMany()
+            .WithMany(_ => _.Reactions)
             .HasForeignKey("CommentId")
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);

@@ -10,4 +10,19 @@
     <ProjectReference Include="..\General.Domain\General.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Comments\Create\" />
+    <Folder Include="Comments\Delete\" />
+    <Folder Include="Comments\CreateReaction\" />
+    <Folder Include="Comments\DeleteReaction\" />
+    <Folder Include="Comments\Update\" />
+    <Folder Include="Posts\Commands\CreatePost\" />
+    <Folder Include="Posts\Commands\DeletePost\" />
+    <Folder Include="Posts\Commands\CreatePostReaction\" />
+    <Folder Include="Posts\Commands\DeletePostReaction\" />
+    <Folder Include="Posts\Commands\UpdatePost\" />
+    <Folder Include="Posts\Queries\GetPostDetails\" />
+    <Folder Include="Posts\Queries\GetPosts\" />
+  </ItemGroup>
+
 </Project>

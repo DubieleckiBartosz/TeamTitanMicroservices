@@ -33,6 +33,7 @@ public class Comment : Entity
 
         var newReaction = Reaction.CreateReaction(creator, type);
         Reactions.Add(newReaction);
+        IncrementVersion();
     }
 
     public void RemoveReaction(int creator)
@@ -44,5 +45,6 @@ public class Comment : Entity
         }
 
         Reactions.Remove(reaction);
+        IncrementVersion();
     }
 }

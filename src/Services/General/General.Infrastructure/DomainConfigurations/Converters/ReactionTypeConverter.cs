@@ -6,7 +6,8 @@ namespace General.Infrastructure.DomainConfigurations.Converters;
 
 public class ReactionTypeConverter : ValueConverter<ReactionType, int>
 {
-    public ReactionTypeConverter() : base(v => v.Id, v => Enumeration.GetById<ReactionType>(v))
+    public ReactionTypeConverter() : base(v => v.Id, 
+        v => Enumeration.GetById<ReactionType>(v))
     {
     }
 }

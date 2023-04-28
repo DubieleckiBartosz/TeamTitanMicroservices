@@ -1,5 +1,11 @@
-﻿namespace General.Infrastructure.Repositories;
+﻿using General.Domain.Entities;
+using General.Infrastructure.Database;
 
-public class PostRepository
-{
+namespace General.Infrastructure.Repositories;
+
+public class PostRepository : BaseRepository<Post>
+{ 
+    public PostRepository(GeneralContext context) : base(context)
+    { 
+    } 
 }
