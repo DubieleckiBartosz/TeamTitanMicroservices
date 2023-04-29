@@ -1,5 +1,6 @@
 ﻿using General.Application.Constants;
 using General.Application.Contracts;
+using General.Application.Validators.Logic;
 using MediatR;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.Core.Exceptions;
@@ -25,20 +26,9 @@ public class DeletePostHandler : ICommandHandler<DeletePostCommand, Unit>
             throw new NotFoundException(ExceptionDetails.DetailsNotFound("GetByIdAsync"),
                 ExceptionTitles.TitleNotFound("Post"));
         }
+        
+        post.ValidationAccessPostOperation(_currentUser);
 
-        var userMatch = post.CreatedBy == _currentUser.UserId;
-      
-        var postOrganization = post.Organization != null;
-        var userOrganizationMatch = postOrganization && post.Organization == _currentUser.OrganizationCode;
-
-        var userHasPermission = userMatch ||
-                                _currentUser.IsInRoles(new[] { UserAccess.Manager, UserAccess.Owner });
-
-        if ((postOrganization && !_currentUser.IsAdmin && (!userHasPermission || !userOrganizationMatch)) || (!userMatch && !_currentUser.IsAdmin))
-        {
-            throw new NotFoundException(ExceptionDetails.DetailsNoPermissions,
-                ExceptionTitles.TitleNoPermissions);
-        } 
         _postRepository.Remove(post);
         await _postRepository.SaveAsync();
 

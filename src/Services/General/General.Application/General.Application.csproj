@@ -20,6 +20,7 @@
     <Folder Include="Features\Reaction\CreatePostReaction\" />
     <Folder Include="Features\Reaction\DeletePostReaction\" />
     <Folder Include="Models\ViewModels\" />
+    <Folder Include="Validators\Commands\" />
   </ItemGroup>
 
 </Project>

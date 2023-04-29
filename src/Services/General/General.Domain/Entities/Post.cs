@@ -1,7 +1,7 @@
 ﻿using General.Domain.ValueObjects;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
-using Shared.Domain.DomainExceptions;
+using Shared.Domain.DomainExceptions; 
 
 namespace General.Domain.Entities;
 
@@ -35,7 +35,28 @@ public class Post : Entity, IAggregateRoot
 
     public void AddAttachment(Attachment attachment)
     {
+        var result = Attachments.FirstOrDefault(_ => _.Title == attachment.Title);
+        if (result != null)
+        {
+            throw new BusinessException("Duplicate attachment",
+                "Attachment must be unique within the scope of the post");
+        }
+
         Attachments.Add(attachment);
+    }
+
+    public void RemoveAttachment(string title)
+    {
+        var result = Attachments.FirstOrDefault(_ => _.Title == title);
+
+        if (result == null)
+        {
+            throw new BusinessException("Attachment does not exist",
+                $"Attachment '{title}' not found in the post");
+        }
+
+        Attachments.Remove(result);
+
     }
     public static Post Create(int creator, string? description, bool isPublic, string? organization)
     {
