@@ -31,6 +31,8 @@ public class NewAttachmentHandler : ICommandHandler<NewAttachmentCommand, Unit>
         var attachment = Attachment.Create(request.Title, request.Path);
         post.AddAttachment(attachment);
 
+        _postRepository.Update(post);
+
         var path = string.Empty;
         try
         {
