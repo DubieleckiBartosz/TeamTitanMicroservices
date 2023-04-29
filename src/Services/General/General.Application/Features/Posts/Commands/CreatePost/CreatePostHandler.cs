@@ -3,7 +3,7 @@ using General.Domain.Entities;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.Services;
 
-namespace General.Application.Features.Posts.CreatePost;
+namespace General.Application.Features.Posts.Commands.CreatePost;
 
 public class CreatePostHandler : ICommandHandler<CreatePostCommand, int>
 {

@@ -6,7 +6,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
 
-namespace General.Application.Features.Posts.DeletePost;
+namespace General.Application.Features.Posts.Commands.DeletePost;
 
 public class DeletePostHandler : ICommandHandler<DeletePostCommand, Unit>
 {
@@ -26,7 +26,7 @@ public class DeletePostHandler : ICommandHandler<DeletePostCommand, Unit>
             throw new NotFoundException(ExceptionDetails.DetailsNotFound("GetByIdAsync"),
                 ExceptionTitles.TitleNotFound("Post"));
         }
-        
+
         post.ValidationAccessPostOperation(_currentUser);
 
         _postRepository.Remove(post);

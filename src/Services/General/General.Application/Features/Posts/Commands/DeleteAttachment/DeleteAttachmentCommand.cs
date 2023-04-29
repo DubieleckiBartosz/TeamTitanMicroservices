@@ -2,7 +2,7 @@
 using MediatR;
 using Shared.Implementations.Abstractions;
 
-namespace General.Application.Features.Posts.DeleteAttachment;
+namespace General.Application.Features.Posts.Commands.DeleteAttachment;
 
 public record DeleteAttachmentCommand(int PostId, string AttachmentTitle) : ICommand<Unit>
 {

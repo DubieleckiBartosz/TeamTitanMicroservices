@@ -2,7 +2,7 @@
 using MediatR;
 using Shared.Implementations.Abstractions;
 
-namespace General.Application.Features.Comments.UpdateComment;
+namespace General.Application.Features.Comments.Commands.UpdateComment;
 
 public record UpdateCommentCommand(int CommentId, string NewContent) : ICommand<Unit>
 {

@@ -6,7 +6,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.FileOperations;
 
-namespace General.Application.Features.Posts.NewAttachment;
+namespace General.Application.Features.Posts.Commands.NewAttachment;
 
 public class NewAttachmentHandler : ICommandHandler<NewAttachmentCommand, Unit>
 {
@@ -48,7 +48,7 @@ public class NewAttachmentHandler : ICommandHandler<NewAttachmentCommand, Unit>
 
             throw;
         }
-        
+
         return Unit.Value;
     }
 }

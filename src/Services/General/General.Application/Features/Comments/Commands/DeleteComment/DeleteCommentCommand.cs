@@ -2,7 +2,7 @@
 using MediatR;
 using Shared.Implementations.Abstractions;
 
-namespace General.Application.Features.Comments.DeleteComment;
+namespace General.Application.Features.Comments.Commands.DeleteComment;
 
 public record DeleteCommentCommand(int PostId, int CommentId) : ICommand<Unit>
 {

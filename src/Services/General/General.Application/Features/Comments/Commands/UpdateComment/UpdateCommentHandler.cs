@@ -5,7 +5,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
 
-namespace General.Application.Features.Comments.UpdateComment;
+namespace General.Application.Features.Comments.Commands.UpdateComment;
 
 public class UpdateCommentHandler : ICommandHandler<UpdateCommentCommand, Unit>
 {
