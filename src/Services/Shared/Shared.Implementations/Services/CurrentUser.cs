@@ -30,6 +30,8 @@ public class CurrentUser : ICurrentUser
         return response ?? false;
     }
 
+    public bool IsAdmin => IsInRole("Admin");
+
     public int UserId
     {
         get

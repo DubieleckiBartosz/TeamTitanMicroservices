@@ -24,7 +24,7 @@ public class CreateCommentHandler : ICommandHandler<CreateCommentCommand, int>
         if (post == null)
         {
             throw new NotFoundException(ExceptionDetails.DetailsNotFound("GetByIdAsync"),
-                ExceptionDetails.DetailsNotFound("Post"));
+                ExceptionTitles.TitleNotFound("Post"));
         }
 
         var comment = post.AddComment(_currentUser.UserId, request.Comment);

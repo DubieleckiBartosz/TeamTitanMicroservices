@@ -7,7 +7,9 @@ namespace General.Domain.Entities;
 
 public class Post : Entity, IAggregateRoot
 {
-    public string CreatedBy { get; private init; } = default!;
+    public int CreatedBy { get; private init; }  
+    public bool IsPublic { get; private set; }
+    public string? Organization { get; private set; }
     public Content? Content { get; private set; }
     public List<Comment> Comments { get; private set; }  
     public List<Reaction> Reactions { get; private set; }  
@@ -16,13 +18,15 @@ public class Post : Entity, IAggregateRoot
     private Post()
     {
         Reactions = new();
-        Attachments = new();
-        Comments = new();
+        Attachments = new List<Attachment>();
+        Comments = new List<Comment>();
     }
 
-    private Post(string creator, string? description, Attachment? attachment)
+    private Post(int creator, string? description, bool isPublic, string? organization, Attachment? attachment)
     {
         CreatedBy = creator;
+        Organization = organization;
+        IsPublic = isPublic;
         if (description != null)
         {
             Content = Content.Create(description);
@@ -34,11 +38,14 @@ public class Post : Entity, IAggregateRoot
         }
     }
 
-    public static Post Create(string creator, string? description, Attachment? attachment) =>
-        new Post(creator, description, attachment);
+    public static Post Create(int creator, string? description, bool isPublic, string organization,
+        Attachment? attachment)
+    {
+        return new(creator, description, isPublic, organization, attachment);
+    }
 
     public Comment AddComment(int creator, string content)
-    { 
+    {
         var newComment = Comment.Create(creator, content);
         Comments.Add(newComment);
         IncrementVersion();
@@ -46,18 +53,18 @@ public class Post : Entity, IAggregateRoot
         return newComment;
     }
 
-    public void RemoveComment(int commentId)
+    public void AsPublic(string organization)
     {
-        var comment = Comments.FirstOrDefault(_ => _.Id == commentId);
-        if (comment == null)
-        {
-            throw new BusinessException("Comment not found", "The comment must exist to be removed");
-        }
-
-        Comments.Remove(comment);
-        IncrementVersion();
+        IsPublic = true;
+        Organization = organization;
     }
 
+    public void RemoveComment(int commentId)
+    {
+        var comment = GetCommentById(commentId);  
+        Comments.Remove(comment);
+        IncrementVersion();
+    }  
 
     public void AddNewReaction(int creator, int type)
     {
@@ -82,5 +89,11 @@ public class Post : Entity, IAggregateRoot
 
         Reactions.Remove(reaction);
         IncrementVersion();
+    }
+
+    public Comment GetCommentById(int commentId)
+    {
+        return Comments.FirstOrDefault(_ => _.Id == commentId) ??
+               throw new BusinessException("Comment not found", "The comment must exist to be removed");
     }
 }
