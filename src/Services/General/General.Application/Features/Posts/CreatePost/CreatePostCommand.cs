@@ -2,6 +2,6 @@
 
 namespace General.Application.Features.Posts.CreatePost;
 
-public class CreatePostCommand : ICommand<int>
+public record CreatePostCommand(string Description, bool IsPublic) : ICommand<int>
 {
 }

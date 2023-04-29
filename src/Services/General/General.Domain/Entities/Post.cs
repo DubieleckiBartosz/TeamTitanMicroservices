@@ -22,7 +22,7 @@ public class Post : Entity, IAggregateRoot
         Comments = new List<Comment>();
     }
 
-    private Post(int creator, string? description, bool isPublic, string? organization, Attachment? attachment)
+    private Post(int creator, string? description, bool isPublic, string? organization)
     {
         CreatedBy = creator;
         Organization = organization;
@@ -30,18 +30,16 @@ public class Post : Entity, IAggregateRoot
         if (description != null)
         {
             Content = Content.Create(description);
-        }
-
-        if (attachment != null)
-        { 
-            Attachments = new() {attachment};
-        }
+        } 
     }
 
-    public static Post Create(int creator, string? description, bool isPublic, string organization,
-        Attachment? attachment)
+    public void AddAttachment(Attachment attachment)
     {
-        return new(creator, description, isPublic, organization, attachment);
+        Attachments.Add(attachment);
+    }
+    public static Post Create(int creator, string? description, bool isPublic, string? organization)
+    {
+        return new(creator, description, isPublic, organization);
     }
 
     public Comment AddComment(int creator, string content)
