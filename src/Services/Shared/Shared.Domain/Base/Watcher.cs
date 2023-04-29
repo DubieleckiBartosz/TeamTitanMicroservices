@@ -3,7 +3,7 @@
 public class Watcher
 {
     public DateTime Created { get; init; }
-    public DateTime? LastModified { get; private set; }
+    public DateTime LastModified { get; private set; }
     public DateTime? DeletedAt { get; private set; }
 
     private Watcher()

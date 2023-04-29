@@ -10,9 +10,9 @@ public abstract class WatcherConfiguration
     { 
         builder.OwnsOne(_ => _.Watcher, w =>
         {
-            w.Property(_ => _.Created).HasColumnName("Created").IsRequired();
-            w.Property(_ => _.LastModified).HasColumnName("LastModified").IsRequired();
-            w.Property(_ => _.DeletedAt).HasColumnName("DeletedAt").IsRequired(false);
+            w.Property<DateTime>(_ => _.Created).HasColumnName("Created").IsRequired();
+            w.Property<DateTime>(_ => _.LastModified).HasColumnName("LastModified").IsRequired();
+            w.Property<DateTime?>(_ => _.DeletedAt).HasColumnName("DeletedAt").IsRequired(false);
         });
     }
 }

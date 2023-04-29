@@ -22,7 +22,7 @@ public class ReactTypeConfiguration : IEntityTypeConfiguration<Reaction>
             .HasConversion<ReactionTypeConverter>()
             .IsRequired();
 
-        builder.Property<int>("PostId");
+        builder.Property<int?>("PostId");
 
         builder.HasOne<Post>()
             .WithMany(_ => _.Reactions)
@@ -30,7 +30,7 @@ public class ReactTypeConfiguration : IEntityTypeConfiguration<Reaction>
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
 
-        builder.Property<int>("CommentId");
+        builder.Property<int?>("CommentId");
 
         builder.HasOne<Comment>()
             .WithMany(_ => _.Reactions)

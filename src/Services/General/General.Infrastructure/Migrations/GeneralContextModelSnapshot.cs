@@ -81,13 +81,13 @@ namespace General.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CommentId")
+                    b.Property<int?>("CommentId")
                         .HasColumnType("int");
 
                     b.Property<int>("Creator")
                         .HasColumnType("int");
 
-                    b.Property<int>("PostId")
+                    b.Property<int?>("PostId")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -143,8 +143,7 @@ namespace General.Infrastructure.Migrations
                                 .HasColumnType("datetime2")
                                 .HasColumnName("DeletedAt");
 
-                            b1.Property<DateTime?>("LastModified")
-                                .IsRequired()
+                            b1.Property<DateTime>("LastModified")
                                 .HasColumnType("datetime2")
                                 .HasColumnName("LastModified");
 
@@ -194,8 +193,7 @@ namespace General.Infrastructure.Migrations
                                 .HasColumnType("datetime2")
                                 .HasColumnName("DeletedAt");
 
-                            b1.Property<DateTime?>("LastModified")
-                                .IsRequired()
+                            b1.Property<DateTime>("LastModified")
                                 .HasColumnType("datetime2")
                                 .HasColumnName("LastModified");
 
