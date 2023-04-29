@@ -5,7 +5,7 @@ using Shared.Implementations.Abstractions;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
 
-namespace General.Application.Comments.Create;
+namespace General.Application.Features.Comments.CreateComment;
 
 public class CreateCommentHandler : ICommandHandler<CreateCommentCommand, int>
 {

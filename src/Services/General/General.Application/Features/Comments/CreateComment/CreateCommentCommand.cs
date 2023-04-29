@@ -1,7 +1,7 @@
 ﻿using General.Application.Models.Parameters;
 using Shared.Implementations.Abstractions;
 
-namespace General.Application.Comments.Create;
+namespace General.Application.Features.Comments.CreateComment;
 
 public record CreateCommentCommand(int PostId, string Comment) : ICommand<int>
 {

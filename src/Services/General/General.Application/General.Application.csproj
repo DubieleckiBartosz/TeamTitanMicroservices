@@ -12,19 +12,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Comments\Delete\" />
-    <Folder Include="Comments\CreateReaction\" />
-    <Folder Include="Comments\DeleteReaction\" />
-    <Folder Include="Comments\Update\" />
+    <Folder Include="Features\Comments\DeleteComment\" />
+    <Folder Include="Features\Comments\UpdateComment\" />
+    <Folder Include="Features\Posts\CreatePost\" />
+    <Folder Include="Features\Posts\DeletePost\" />
+    <Folder Include="Features\Posts\GetPostDetails\" />
+    <Folder Include="Features\Posts\GetPosts\" />
+    <Folder Include="Features\Posts\UpdatePost\" />
+    <Folder Include="Features\Reaction\DeleteCommentReaction\" />
+    <Folder Include="Features\Reaction\CreateCommentReaction\" />
+    <Folder Include="Features\Reaction\CreatePostReaction\" />
+    <Folder Include="Features\Reaction\DeletePostReaction\" />
     <Folder Include="Models\ViewModels\" />
-    <Folder Include="Features\" />
-    <Folder Include="Posts\Commands\CreatePost\" />
-    <Folder Include="Posts\Commands\DeletePost\" />
-    <Folder Include="Posts\Commands\CreatePostReaction\" />
-    <Folder Include="Posts\Commands\DeletePostReaction\" />
-    <Folder Include="Posts\Commands\UpdatePost\" />
-    <Folder Include="Posts\Queries\GetPostDetails\" />
-    <Folder Include="Posts\Queries\GetPosts\" />
   </ItemGroup>
 
 </Project>
