@@ -1,7 +1,7 @@
 ﻿using General.Domain.ValueObjects;
 using Shared.Domain.Abstractions;
 using Shared.Domain.Base;
-using Shared.Domain.DomainExceptions;
+using Shared.Domain.DomainExceptions; 
 
 namespace General.Domain.Entities;
 
@@ -22,7 +22,7 @@ public class Post : Entity, IAggregateRoot
         Comments = new List<Comment>();
     }
 
-    private Post(int creator, string? description, bool isPublic, string? organization, Attachment? attachment)
+    private Post(int creator, string? description, bool isPublic, string? organization)
     {
         CreatedBy = creator;
         Organization = organization;
@@ -30,18 +30,37 @@ public class Post : Entity, IAggregateRoot
         if (description != null)
         {
             Content = Content.Create(description);
-        }
-
-        if (attachment != null)
-        { 
-            Attachments = new() {attachment};
-        }
+        } 
     }
 
-    public static Post Create(int creator, string? description, bool isPublic, string organization,
-        Attachment? attachment)
+    public void AddAttachment(Attachment attachment)
     {
-        return new(creator, description, isPublic, organization, attachment);
+        var result = Attachments.FirstOrDefault(_ => _.Title == attachment.Title);
+        if (result != null)
+        {
+            throw new BusinessException("Duplicate attachment",
+                "Attachment must be unique within the scope of the post");
+        }
+
+        Attachments.Add(attachment);
+    }
+
+    public void RemoveAttachment(string title)
+    {
+        var result = Attachments.FirstOrDefault(_ => _.Title == title);
+
+        if (result == null)
+        {
+            throw new BusinessException("Attachment does not exist",
+                $"Attachment '{title}' not found in the post");
+        }
+
+        Attachments.Remove(result);
+
+    }
+    public static Post Create(int creator, string? description, bool isPublic, string? organization)
+    {
+        return new(creator, description, isPublic, organization);
     }
 
     public Comment AddComment(int creator, string content)
