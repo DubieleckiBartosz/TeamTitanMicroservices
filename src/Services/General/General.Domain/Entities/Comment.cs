@@ -20,8 +20,12 @@ public class Comment : Entity
         Description = content; 
     }
 
-    public static Comment Create(int creator, string description) => new Comment(creator, Content.Create(description)); 
+    public static Comment Create(int creator, string description) => new Comment(creator, Content.Create(description));
 
+    public void UpdateContent(string description)
+    {
+        Description = Content.Create(description);
+    }
     public void AddNewReaction(int creator, int type)
     {
         

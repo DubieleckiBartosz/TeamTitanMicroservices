@@ -29,8 +29,8 @@ public class DeleteCommentHandler : ICommandHandler<DeleteCommentCommand, Unit>
         var comment = post.GetCommentById(request.CommentId); 
         if (comment.Creator != _currentUser.UserId && _currentUser.IsAdmin!)
         {
-            throw new NotFoundException(ExceptionDetails.DetailsNoPermissions(),
-                ExceptionTitles.TitleNoPermissions()); 
+            throw new NotFoundException(ExceptionDetails.DetailsNoPermissions,
+                ExceptionTitles.TitleNoPermissions); 
         }  
 
         post.RemoveComment(request.CommentId);

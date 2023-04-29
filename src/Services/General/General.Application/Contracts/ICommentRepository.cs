@@ -1,5 +1,7 @@
-﻿namespace General.Application.Contracts;
+﻿using General.Domain.Entities;
 
-public interface ICommentRepository
+namespace General.Application.Contracts;
+
+public interface ICommentRepository : IBaseRepository<Comment>
 {
 }
