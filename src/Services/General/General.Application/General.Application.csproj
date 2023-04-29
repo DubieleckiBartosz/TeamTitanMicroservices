@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Posts\CreatePost\" />
     <Folder Include="Features\Posts\DeletePost\" />
     <Folder Include="Features\Posts\GetPostDetails\" />
     <Folder Include="Features\Posts\GetPosts\" />
