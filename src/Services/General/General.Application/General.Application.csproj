@@ -14,9 +14,7 @@
   <ItemGroup>
     <Folder Include="Features\Posts\GetPostDetails\" />
     <Folder Include="Features\Posts\GetPosts\" />
-    <Folder Include="Features\Posts\UpdatePost\" />
     <Folder Include="Features\Reaction\DeleteCommentReaction\" />
-    <Folder Include="Features\Reaction\CreateCommentReaction\" />
     <Folder Include="Features\Reaction\CreatePostReaction\" />
     <Folder Include="Features\Reaction\DeletePostReaction\" />
     <Folder Include="Models\ViewModels\" />
