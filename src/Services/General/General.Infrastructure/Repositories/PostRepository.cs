@@ -28,6 +28,13 @@ public class PostRepository : BaseRepository<Post>, IPostRepository
         return result;
     }
 
+    public async Task<Post?> GetPostWithReactions(int postId)
+    {
+        var result = await DbSet.Include(_ => _.Reactions)
+            .FirstOrDefaultAsync(_ => _.Id == postId);
+        return result;
+    }
+
     public async Task<Post?> GetPostWithDetailsAsync(int postId)
     {
         throw new NotImplementedException();

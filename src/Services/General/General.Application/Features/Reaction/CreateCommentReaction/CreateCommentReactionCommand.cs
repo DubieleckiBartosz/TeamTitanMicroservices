@@ -9,6 +9,6 @@ public record CreateCommentReactionCommand(int CommentId, ReactionType Reaction)
 {
     public static CreateCommentReactionCommand Create(CreateCommentReactionParameters parameters)
     {
-        return new CreateCommentReactionCommand(parameters.CommentId, parameters.Type);
+        return new CreateCommentReactionCommand(parameters.CommentId, parameters.Reaction);
     }
 }

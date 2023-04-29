@@ -3,19 +3,19 @@ using Newtonsoft.Json;
 
 namespace General.Application.Models.Parameters;
 
-public class CreateCommentReactionParameters
+public class CreatePostReactionParameters
 {
-    public int CommentId { get; init; }
+    public int PostId { get; init; }
     public ReactionType Reaction { get; init; }
 
-    public CreateCommentReactionParameters()
+    public CreatePostReactionParameters()
     {
     }
 
     [JsonConstructor]
-    public CreateCommentReactionParameters(int commentId, ReactionType reaction)
+    public CreatePostReactionParameters(int postId, ReactionType reaction)
     {
-        CommentId = commentId;
+        PostId = postId;
         Reaction = reaction;
     }
 }
