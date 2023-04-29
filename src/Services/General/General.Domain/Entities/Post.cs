@@ -37,11 +37,13 @@ public class Post : Entity, IAggregateRoot
     public static Post Create(string creator, string? description, Attachment? attachment) =>
         new Post(creator, description, attachment);
 
-    public void AddComment(int creator, string content)
+    public Comment AddComment(int creator, string content)
     { 
         var newComment = Comment.Create(creator, content);
         Comments.Add(newComment);
         IncrementVersion();
+
+        return newComment;
     }
 
     public void RemoveComment(int commentId)

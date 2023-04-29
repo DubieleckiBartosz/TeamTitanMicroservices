@@ -1,9 +1,10 @@
-﻿using General.Infrastructure.Database;
+﻿using General.Application.Contracts;
+using General.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace General.Infrastructure.Repositories;
 
-public abstract class BaseRepository<TEntity> where TEntity : class
+public abstract class BaseRepository<TEntity>: IBaseRepository<TEntity> where TEntity : class
 {
     protected GeneralContext Context;
 
