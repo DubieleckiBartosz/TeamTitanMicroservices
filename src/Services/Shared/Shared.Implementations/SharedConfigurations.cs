@@ -23,6 +23,7 @@ using JwtAuthenticationManager;
 using JwtAuthenticationManager.Models;
 using Shared.Implementations.Background;
 using Shared.Implementations.Dapper;
+using Shared.Implementations.FileOperations;
 using Shared.Implementations.ProcessDispatcher;
 
 namespace Shared.Implementations;
@@ -113,6 +114,12 @@ public static class SharedConfigurations
             builder.RegisterBackgroundConnectionSettings(backgroundDbConnection, true);
         } 
 
+        return builder;
+    }
+    public static WebApplicationBuilder RegisterFileService(this WebApplicationBuilder builder)
+    {
+        //FILE OPERATIONS
+        builder.Services.AddScoped<IFileService, FileService>();
         return builder;
     }
 
