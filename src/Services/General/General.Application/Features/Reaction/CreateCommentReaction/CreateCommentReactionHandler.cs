@@ -19,14 +19,14 @@ public class CreateCommentReactionHandler : ICommandHandler<CreateCommentReactio
     }
     public async Task<Unit> Handle(CreateCommentReactionCommand request, CancellationToken cancellationToken)
     {
-        var comment = await _commentRepository.GetCommentWithReactions(request.CommentId); 
+        var comment = await _commentRepository.GetCommentWithReactionsAsync(request.CommentId); 
         if (comment == null)
         {
             throw new NotFoundException(ExceptionDetails.DetailsNotFound("GetCommentWithReactions"),
                 ExceptionTitles.TitleNotFound("Comment"));
         }
 
-        comment.AddNewReaction(_currentUser.UserId, (int) request.Reaction);
+        comment.AddNewReaction(_currentUser.UserId, _currentUser.UserName, (int) request.Reaction);
 
         _commentRepository.Update(comment);
         await _commentRepository.SaveAsync();

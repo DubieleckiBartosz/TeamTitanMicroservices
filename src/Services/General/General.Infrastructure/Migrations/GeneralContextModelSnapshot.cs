@@ -33,6 +33,10 @@ namespace General.Infrastructure.Migrations
                     b.Property<int>("Creator")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
@@ -91,6 +95,10 @@ namespace General.Infrastructure.Migrations
 
                     b.Property<int>("Creator")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PostId")
                         .HasColumnType("int");
@@ -251,12 +259,12 @@ namespace General.Infrastructure.Migrations
                     b.HasOne("General.Domain.Entities.Comment", null)
                         .WithMany("Reactions")
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("General.Domain.Entities.Post", null)
                         .WithMany("Reactions")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("General.Domain.Entities.Comment", b =>

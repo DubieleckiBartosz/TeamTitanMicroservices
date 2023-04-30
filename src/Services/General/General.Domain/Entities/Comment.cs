@@ -7,6 +7,7 @@ namespace General.Domain.Entities;
 public class Comment : Entity
 {
     public int Creator { get; private set; } 
+    public string CreatorName { get; private set; } 
     public Content Description { get; private set; }
     public List<Reaction> Reactions { get; private set; } = new();
 
@@ -14,19 +15,21 @@ public class Comment : Entity
     {
     }
 
-    private Comment(int creator, Content content)
+    private Comment(int creator, string creatorName, Content content)
     {
         Creator = creator;
         Description = content; 
+        CreatorName = creatorName;
     }
 
-    public static Comment Create(int creator, string description) => new Comment(creator, Content.Create(description));
+    public static Comment Create(int creator, string creatorName, string description)
+        => new Comment(creator, creatorName, Content.Create(description));
 
     public void UpdateContent(string description)
     {
         Description = Content.Create(description);
     }
-    public void AddNewReaction(int creator, int type)
+    public void AddNewReaction(int creator, string creatorName, int type)
     {
         
         var reactionExists= Reactions.Any(_ => _.Creator == creator);
@@ -35,7 +38,7 @@ public class Comment : Entity
             throw new BusinessException("Double reaction", "Only one user reaction per comment");
         }
 
-        var newReaction = Reaction.CreateReaction(creator, type);
+        var newReaction = Reaction.CreateReaction(creator, creatorName, type);
         Reactions.Add(newReaction);
         IncrementVersion();
     }

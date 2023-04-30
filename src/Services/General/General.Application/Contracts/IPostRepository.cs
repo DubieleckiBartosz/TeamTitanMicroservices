@@ -1,11 +1,12 @@
-﻿using General.Domain.Entities;
+﻿using General.Application.Models.Wrappers;
+using General.Domain.Entities;
 
 namespace General.Application.Contracts;
 
 public interface IPostRepository : IBaseRepository<Post>
 {
     Task<Post?> GetPostWithCommentsAsync(int postId);
-    Task<Post?> GetPostWithAttachments(int postId);
-    Task<Post?> GetPostWithReactions(int postId);
-    Task<Post?> GetPostWithDetailsAsync(int postId);
+    Task<Post?> GetPostWithAttachmentsAsync(int postId);
+    Task<Post?> GetPostWithReactionsAsync(int postId);
+    Task<ListWrapper<Post>?> SearchPostsAsync(int pageSize, int pageNumber);
 }

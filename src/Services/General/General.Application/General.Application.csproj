@@ -12,9 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Posts\GetPostDetails\" />
-    <Folder Include="Features\Posts\GetPosts\" />
-    <Folder Include="Models\ViewModels\" />
     <Folder Include="Validators\Commands\" />
   </ItemGroup>
 

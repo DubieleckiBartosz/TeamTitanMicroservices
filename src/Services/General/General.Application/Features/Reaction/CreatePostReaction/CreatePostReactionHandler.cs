@@ -19,14 +19,14 @@ public class CreatePostReactionHandler : ICommandHandler<CreatePostReactionComma
     }
     public async Task<Unit> Handle(CreatePostReactionCommand request, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.GetPostWithReactions(request.PostId);
+        var post = await _postRepository.GetPostWithReactionsAsync(request.PostId);
         if (post == null)
         {
             throw new NotFoundException(ExceptionDetails.DetailsNotFound("GetPostWithReactions"),
                 ExceptionTitles.TitleNotFound("Post"));
         }
 
-        post.AddNewReaction(_currentUser.UserId, (int) request.Reaction);
+        post.AddNewReaction(_currentUser.UserId, _currentUser.UserName, (int) request.Reaction);
         _postRepository.Update(post);
         await _postRepository.SaveAsync();
 

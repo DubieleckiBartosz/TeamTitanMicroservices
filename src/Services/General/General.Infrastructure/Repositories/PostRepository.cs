@@ -1,4 +1,5 @@
 ﻿using General.Application.Contracts;
+using General.Application.Models.Wrappers;
 using General.Domain.Entities;
 using General.Infrastructure.Database;
 using General.Infrastructure.Database.Extensions;
@@ -21,22 +22,28 @@ public class PostRepository : BaseRepository<Post>, IPostRepository
         return result;
     }
 
-    public async Task<Post?> GetPostWithAttachments(int postId)
+    public async Task<Post?> GetPostWithAttachmentsAsync(int postId)
     {
         var result = await DbSet.IncludePaths(Common.NavigationAttachmentsList)
             .FirstOrDefaultAsync(_ => _.Id == postId);
         return result;
     }
 
-    public async Task<Post?> GetPostWithReactions(int postId)
+    public async Task<Post?> GetPostWithReactionsAsync(int postId)
     {
         var result = await DbSet.Include(_ => _.Reactions)
             .FirstOrDefaultAsync(_ => _.Id == postId);
         return result;
     }
-
-    public async Task<Post?> GetPostWithDetailsAsync(int postId)
+    
+    public async Task<ListWrapper<Post>?> SearchPostsAsync(int pageSize, int pageNumber)
     {
-        throw new NotImplementedException();
+        var query = DbSet.Include(_ => _.Reactions)
+            .IncludePaths(Common.NavigationAttachmentsList).OrderByDescending(_ => _.CreatedBy).AsQueryable();
+        var count = query.Count();
+        var result = await query.Skip(pageNumber - 1).Take(pageSize).ToListAsync();
+
+        return ListWrapper<Post>.Wrap(result, count, pageNumber, pageSize);
     }
+
 }
