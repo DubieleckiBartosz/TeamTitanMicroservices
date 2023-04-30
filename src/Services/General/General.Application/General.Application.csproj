@@ -12,9 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Comments\Queries\" />
     <Folder Include="Features\Posts\Queries\GetPostsWithReactions\" />
-    <Folder Include="Models\ViewModels\" />
     <Folder Include="Validators\Commands\" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 ﻿using General.Application.Models.Enums;
 using Newtonsoft.Json;
 
-namespace General.Application.Models.Parameters;
+namespace General.Application.Models.Parameters.PostParameters;
 
 public class CreatePostReactionParameters
 {

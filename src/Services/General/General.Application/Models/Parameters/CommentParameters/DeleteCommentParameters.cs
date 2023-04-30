@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
 
-namespace General.Application.Models.Parameters;
+namespace General.Application.Models.Parameters.CommentParameters;
 
 public class DeleteCommentParameters
 {
-    public int PostId { get; init; } 
+    public int PostId { get; init; }
     public int CommentId { get; init; }
 
     public DeleteCommentParameters()

@@ -26,7 +26,7 @@ public class CreatePostReactionHandler : ICommandHandler<CreatePostReactionComma
                 ExceptionTitles.TitleNotFound("Post"));
         }
 
-        post.AddNewReaction(_currentUser.UserId, (int) request.Reaction);
+        post.AddNewReaction(_currentUser.UserId, _currentUser.UserName, (int) request.Reaction);
         _postRepository.Update(post);
         await _postRepository.SaveAsync();
 

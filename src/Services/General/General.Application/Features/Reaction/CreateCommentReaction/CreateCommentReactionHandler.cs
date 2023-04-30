@@ -26,7 +26,7 @@ public class CreateCommentReactionHandler : ICommandHandler<CreateCommentReactio
                 ExceptionTitles.TitleNotFound("Comment"));
         }
 
-        comment.AddNewReaction(_currentUser.UserId, (int) request.Reaction);
+        comment.AddNewReaction(_currentUser.UserId, _currentUser.UserName, (int) request.Reaction);
 
         _commentRepository.Update(comment);
         await _commentRepository.SaveAsync();

@@ -1,4 +1,4 @@
-﻿using General.Application.Models.Parameters;
+﻿using General.Application.Models.Parameters.CommentParameters;
 using Shared.Implementations.Abstractions;
 
 namespace General.Application.Features.Comments.Commands.CreateComment;

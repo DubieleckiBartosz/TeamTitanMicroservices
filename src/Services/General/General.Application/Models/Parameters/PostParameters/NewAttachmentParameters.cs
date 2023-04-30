@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace General.Application.Models.Parameters;
+namespace General.Application.Models.Parameters.PostParameters;
 
 public class NewAttachmentParameters
 {
@@ -22,5 +22,5 @@ public class NewAttachmentParameters
         Title = title;
         Path = path;
         Attachment = attachment;
-    } 
+    }
 }

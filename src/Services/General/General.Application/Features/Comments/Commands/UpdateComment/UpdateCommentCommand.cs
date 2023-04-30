@@ -1,4 +1,4 @@
-﻿using General.Application.Models.Parameters;
+﻿using General.Application.Models.Parameters.CommentParameters;
 using MediatR;
 using Shared.Implementations.Abstractions;
 

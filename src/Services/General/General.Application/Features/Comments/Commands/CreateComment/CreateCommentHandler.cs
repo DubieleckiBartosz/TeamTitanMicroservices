@@ -27,7 +27,7 @@ public class CreateCommentHandler : ICommandHandler<CreateCommentCommand, int>
                 ExceptionTitles.TitleNotFound("Post"));
         }
 
-        var comment = post.AddComment(_currentUser.UserId, request.Comment);
+        var comment = post.AddComment(_currentUser.UserId, _currentUser.UserName, request.Comment);
         await _postBaseRepository.SaveAsync();
 
         return comment.Id;

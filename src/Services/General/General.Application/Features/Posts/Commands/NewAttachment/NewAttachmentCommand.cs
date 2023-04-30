@@ -1,4 +1,4 @@
-﻿using General.Application.Models.Parameters;
+﻿using General.Application.Models.Parameters.PostParameters;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Shared.Implementations.Abstractions;

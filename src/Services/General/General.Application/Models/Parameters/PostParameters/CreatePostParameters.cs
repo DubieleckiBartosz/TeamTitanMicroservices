@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 
-namespace General.Application.Models.Parameters;
+namespace General.Application.Models.Parameters.PostParameters;
 
 public class CreatePostParameters
-{ 
+{
     public string Description { get; init; }
     public bool IsPublic { get; init; }
 

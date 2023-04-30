@@ -21,4 +21,9 @@ public class Content : ValueObject
     {
         yield return Description;
     }
+
+    public override string ToString()
+    {
+        return Description;
+    }
 }

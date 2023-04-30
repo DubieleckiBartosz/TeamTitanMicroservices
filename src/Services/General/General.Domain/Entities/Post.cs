@@ -63,9 +63,9 @@ public class Post : Entity, IAggregateRoot
         return new(creator, description, isPublic, organization);
     }
 
-    public Comment AddComment(int creator, string content)
+    public Comment AddComment(int creator, string creatorName, string content)
     {
-        var newComment = Comment.Create(creator, content);
+        var newComment = Comment.Create(creator, creatorName, content);
         Comments.Add(newComment);
         IncrementVersion();
 
@@ -85,7 +85,7 @@ public class Post : Entity, IAggregateRoot
         IncrementVersion();
     }  
 
-    public void AddNewReaction(int creator, int type)
+    public void AddNewReaction(int creator, string creatorName, int type)
     {
         var reactionExists = Reactions.Any(_ => _.Creator == creator);
         if (reactionExists)
@@ -93,7 +93,7 @@ public class Post : Entity, IAggregateRoot
             throw new BusinessException("Double reaction", "Only one user reaction per post");
         }
 
-        var newReaction = Reaction.CreateReaction(creator, type);
+        var newReaction = Reaction.CreateReaction(creator, creatorName, type);
         Reactions.Add(newReaction);
         IncrementVersion();
     }

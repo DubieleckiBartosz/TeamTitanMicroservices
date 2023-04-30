@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace General.Application.Models.Parameters;
+namespace General.Application.Models.Parameters.CommentParameters;
 
 public class UpdateCommentParameters
 {
