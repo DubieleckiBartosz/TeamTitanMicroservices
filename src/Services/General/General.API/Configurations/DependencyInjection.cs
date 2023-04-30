@@ -23,7 +23,7 @@ public static class DependencyInjection
         services.GetAccessoriesDependencyInjection();
         services.RegisterValidatorPipeline();
         services.RegisterAutoMapper(typeof(AssemblyGeneralApplicationReference).Assembly);
-        services.RegisterMediator(typeof(AssemblyGeneralApplicationReference));
+        services.RegisterMediator(typeof(AssemblyGeneralApplicationReference)); 
 
         return builder;
     }

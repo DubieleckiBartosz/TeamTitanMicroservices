@@ -3,10 +3,7 @@ using General.Application.Features.Comments.Commands.DeleteComment;
 using General.Application.Features.Comments.Commands.UpdateComment;
 using General.Application.Features.Comments.Queries.SearchComments;
 using General.Application.Features.Reaction.CreateCommentReaction;
-using General.Application.Features.Reaction.CreatePostReaction;
-using General.Application.Features.Reaction.DeletePostReaction;
 using General.Application.Models.Parameters.CommentParameters;
-using General.Application.Models.Parameters.PostParameters;
 using General.Application.Models.Parameters.SearchParameters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +29,7 @@ public class CommentController : BaseController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateNewPost([FromBody] CreateCommentParameters parameters)
+    public async Task<IActionResult> CreateNewComment([FromBody] CreateCommentParameters parameters)
     {
         var command = CreateCommentCommand.Create(parameters);
         var response = await CommandBus.Send(command);

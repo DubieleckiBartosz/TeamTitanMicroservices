@@ -86,3 +86,21 @@ services:
       - seq 
       - mssql
       - teamtitansmtp
+
+  general-service: 
+    build:
+      context: .
+      dockerfile: src/Services/General/General.API/Dockerfile 
+    container_name: generalapi
+    env_file:
+      - .env
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=${TEST_ENV}  
+      - ConnectionStrings__DefaultConnection=${GENERAL_MSSLQ_CONNECTION_ENV} 
+    ports:
+      - "8014:80"
+    networks:
+        - team-titan-microservice-network
+    depends_on: 
+      - seq 
+      - mssql
