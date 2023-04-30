@@ -40,17 +40,12 @@ public static class SharedConfigurations
         var services = builder.Services;
         var config = builder.Configuration;
         services.AddTransient<IDomainDecorator, MediatRDecorator>();
-        var assemblies = types.Select(type => type.GetTypeInfo().Assembly);
-
-        foreach (var assembly in assemblies)
-        {
-            services.AddMediatR(assembly);
-        }
+        services.RegisterMediator(types);
 
         //MAPPER
         if (mapperAssembly != null)
         {
-            services.AddAutoMapper(mapperAssembly);
+            services.RegisterAutoMapper(mapperAssembly);
         }
 
         //TRANSACTIONS
@@ -85,7 +80,7 @@ public static class SharedConfigurations
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
          
         //PIPELINES
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviour<,>));
+        services.RegisterValidatorPipeline();
 
 
         //OPTIONS
@@ -116,13 +111,41 @@ public static class SharedConfigurations
 
         return builder;
     }
-    public static WebApplicationBuilder RegisterFileService(this WebApplicationBuilder builder)
+    public static IServiceCollection RegisterFileService(this IServiceCollection services)
     {
         //FILE OPERATIONS
-        builder.Services.AddScoped<IFileService, FileService>();
-        return builder;
+        services.AddScoped<IFileService, FileService>();
+        return services;
     }
 
+    public static IServiceCollection RegisterAutoMapper(this IServiceCollection services, Assembly mapperAssembly)
+    {
+        //AUTOMAPPER
+        services.AddAutoMapper(mapperAssembly);
+
+        return services;
+    }
+    
+    public static IServiceCollection RegisterMediator(this IServiceCollection services, params Type[] types)
+    {       
+        //MEDIATOR
+        var assemblies = types.Select(type => type.GetTypeInfo().Assembly);
+
+        foreach (var assembly in assemblies)
+        {
+            services.AddMediatR(assembly);
+        }
+        return services;
+    }
+
+    public static IServiceCollection RegisterValidatorPipeline(this IServiceCollection services)
+    {
+        //VALIDATOR PIPELINE
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehaviour<,>));
+
+        return services;
+    }
+     
     public static WebApplicationBuilder RegisterBackgroundConnectionSettings(this WebApplicationBuilder builder, string? connection = null, bool withJobServiceMediator = false)
     { 
         if (withJobServiceMediator)

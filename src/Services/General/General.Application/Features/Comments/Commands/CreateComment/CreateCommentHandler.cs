@@ -1,6 +1,5 @@
 ﻿using General.Application.Constants;
 using General.Application.Contracts;
-using General.Domain.Entities;
 using Shared.Implementations.Abstractions;
 using Shared.Implementations.Core.Exceptions;
 using Shared.Implementations.Services;
@@ -9,12 +8,12 @@ namespace General.Application.Features.Comments.Commands.CreateComment;
 
 public class CreateCommentHandler : ICommandHandler<CreateCommentCommand, int>
 {
-    private readonly IBaseRepository<Post> _postBaseRepository;
+    private readonly IPostRepository _postBaseRepository;
     private readonly ICurrentUser _currentUser;
 
-    public CreateCommentHandler(IBaseRepository<Post> postBaseRepository, ICurrentUser currentUser)
+    public CreateCommentHandler(IPostRepository postRepository, ICurrentUser currentUser)
     {
-        _postBaseRepository = postBaseRepository ?? throw new ArgumentNullException(nameof(postBaseRepository));
+        _postBaseRepository = postRepository ?? throw new ArgumentNullException(nameof(postRepository));
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
     }
 

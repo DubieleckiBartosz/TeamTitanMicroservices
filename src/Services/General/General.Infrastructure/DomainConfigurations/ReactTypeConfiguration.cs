@@ -27,7 +27,7 @@ public class ReactTypeConfiguration : IEntityTypeConfiguration<Reaction>
         builder.HasOne<Post>()
             .WithMany(_ => _.Reactions)
             .HasForeignKey("PostId")
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired(false);
 
         builder.Property<int?>("CommentId");
@@ -35,7 +35,7 @@ public class ReactTypeConfiguration : IEntityTypeConfiguration<Reaction>
         builder.HasOne<Comment>()
             .WithMany(_ => _.Reactions)
             .HasForeignKey("CommentId")
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired(false);
 
         builder.HasCheckConstraint("CK_Reaction_AtLeastOneForeignKey",

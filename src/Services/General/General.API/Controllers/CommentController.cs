@@ -8,11 +8,13 @@ using General.Application.Features.Reaction.DeletePostReaction;
 using General.Application.Models.Parameters.CommentParameters;
 using General.Application.Models.Parameters.PostParameters;
 using General.Application.Models.Parameters.SearchParameters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Implementations.Abstractions;
 
 namespace General.API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class CommentController : BaseController
