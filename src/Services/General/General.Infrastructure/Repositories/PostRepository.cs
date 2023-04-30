@@ -36,10 +36,13 @@ public class PostRepository : BaseRepository<Post>, IPostRepository
         return result;
     }
     
-    public async Task<ListWrapper<Post>?> SearchPostsAsync(int pageSize, int pageNumber)
+    public async Task<ListWrapper<Post>?> SearchPostsAsync(int pageSize, int pageNumber, string? organizationKey = null)
     {
         var query = DbSet.Include(_ => _.Reactions)
-            .IncludePaths(Common.NavigationAttachmentsList).OrderByDescending(_ => _.CreatedBy).AsQueryable();
+            .IncludePaths(Common.NavigationAttachmentsList)
+            .Where(_ => organizationKey == null ? _.IsPublic == true : _.IsPublic || _.Organization == organizationKey)
+            .OrderByDescending(_ => _.CreatedBy).AsQueryable();
+
         var count = query.Count();
         var result = await query.Skip(pageNumber - 1).Take(pageSize).ToListAsync();
 

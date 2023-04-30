@@ -63,8 +63,6 @@ public static class SharedConfigurations
         services.GetAccessoriesDependencyInjection();
 
         //EVENT
-        services.AddScoped<ICommandBus, CommandBus>();
-        services.AddScoped<IQueryBus, QueryBus>();
         services.AddScoped<IStore, Store>();
         services.AddScoped<IEventBus, EventBus>();
         services.AddScoped<IEventStore, EventStore.EventStore>(_ =>
@@ -135,6 +133,11 @@ public static class SharedConfigurations
         {
             services.AddMediatR(assembly);
         }
+
+
+        services.AddScoped<ICommandBus, CommandBus>();
+        services.AddScoped<IQueryBus, QueryBus>();
+
         return services;
     }
 

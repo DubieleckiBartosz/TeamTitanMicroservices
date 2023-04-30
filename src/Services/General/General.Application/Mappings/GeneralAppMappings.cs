@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using General.Application.Models.Enums;
 using General.Application.Models.ViewModels;
+using General.Application.Models.Wrappers;
 using General.Domain.Entities;
 using General.Domain.ValueObjects;
 
@@ -18,5 +19,8 @@ public class GeneralAppMappings : Profile
         CreateMap<Post, PostViewModel>()
             .ForMember(dest => dest.Description,
                 opt => opt.MapFrom(src => src.Content == null ? null : src.Content.ToString()));
+
+        CreateMap<ListWrapper<Comment>, SearchViewModel<CommentViewModel>>();
+        CreateMap<ListWrapper<Post>, SearchViewModel<PostViewModel>>();
     }
 }
