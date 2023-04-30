@@ -10,7 +10,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/new-owner",
-      "UpstreamHttpMethod": [ "Get" ], 
+      "UpstreamHttpMethod": [ "Get" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -29,7 +29,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/AssignUserCodes",
-      "UpstreamHttpMethod": [ "Put" ], 
+      "UpstreamHttpMethod": [ "Put" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -45,7 +45,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/ClearUserCodes",
-      "UpstreamHttpMethod": [ "Put" ], 
+      "UpstreamHttpMethod": [ "Put" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -61,7 +61,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/InitUserOrganization",
-      "UpstreamHttpMethod": [ "Post" ], 
+      "UpstreamHttpMethod": [ "Post" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -104,7 +104,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/LoginUser",
-      "UpstreamHttpMethod": [ "Post" ] 
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/Account/RefreshToken",
@@ -116,7 +116,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/RefreshToken",
-      "UpstreamHttpMethod": [ "Post" ] 
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/Account/ForgotPassword",
@@ -128,7 +128,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/ForgotPassword",
-      "UpstreamHttpMethod": [ "Post" ] 
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/Account/reset-password",
@@ -140,7 +140,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/Account/reset-password",
-      "UpstreamHttpMethod": [ "Post" ] 
+      "UpstreamHttpMethod": [ "Post" ]
     },
     {
       "DownstreamPathTemplate": "/api/company/{everything}",
@@ -156,7 +156,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/contract/{everything}",
@@ -172,7 +172,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/department/{everything}",
@@ -188,7 +188,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/employee/{everything}",
@@ -204,7 +204,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/account/{everything}",
@@ -220,7 +220,7 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
     },
     {
       "DownstreamPathTemplate": "/api/product/{everything}",
@@ -236,7 +236,39 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      } 
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Post/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "general-service",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{controller}/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/Comment/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "general-service",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/api/{controller}/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     }
   ],
   "GlobalConfiguration": {
