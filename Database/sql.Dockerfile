@@ -17,6 +17,7 @@ COPY ./Database/Background/Background-create-db.sql ./
 COPY ./Database/Management/Management-create-db.sql ./
 COPY ./Database/Management/Management-create-tables.sql ./
 COPY ./Database/Management/Management-create-storedProcedures.sql ./ 
+COPY ./Database/General/General-create-db.sql ./ 
 
 COPY Database/entrypoint.sh ./ 
 COPY Database/setupsql.sh ./ 
