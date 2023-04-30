@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace General.Infrastructure.Migrations
 {
     [DbContext(typeof(GeneralContext))]
-    [Migration("20230429154231_Init1")]
+    [Migration("20230430083938_Init1")]
     partial class Init1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,10 @@ namespace General.Infrastructure.Migrations
 
                     b.Property<int>("Creator")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
@@ -93,6 +97,10 @@ namespace General.Infrastructure.Migrations
 
                     b.Property<int>("Creator")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatorName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PostId")
                         .HasColumnType("int");

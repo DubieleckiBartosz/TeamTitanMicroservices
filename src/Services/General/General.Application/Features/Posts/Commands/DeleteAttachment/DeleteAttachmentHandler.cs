@@ -19,7 +19,7 @@ public class DeleteAttachmentHandler : ICommandHandler<DeleteAttachmentCommand, 
     }
     public async Task<Unit> Handle(DeleteAttachmentCommand request, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.GetPostWithAttachments(request.PostId);
+        var post = await _postRepository.GetPostWithAttachmentsAsync(request.PostId);
 
         if (post == null)
         {

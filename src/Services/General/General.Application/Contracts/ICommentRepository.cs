@@ -5,6 +5,6 @@ namespace General.Application.Contracts;
 
 public interface ICommentRepository : IBaseRepository<Comment>
 {
-    Task<Comment?> GetCommentWithReactions(int commentId);
-    Task<ListWrapper<Comment>?> SearchCommentsWithReactions(int postId, int pageNumber, int pageSize);
+    Task<Comment?> GetCommentWithReactionsAsync(int commentId);
+    Task<ListWrapper<Comment>?> SearchCommentsWithReactionsAsync(int postId, int pageNumber, int pageSize);
 }

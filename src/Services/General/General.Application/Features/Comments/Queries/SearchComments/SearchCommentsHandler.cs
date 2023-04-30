@@ -19,7 +19,7 @@ public class SearchCommentsHandler : IQueryHandler<SearchCommentsQuery, SearchVi
     }
     public async Task<SearchViewModel<CommentViewModel>> Handle(SearchCommentsQuery request, CancellationToken cancellationToken)
     {
-        var searchResult = await _commentRepository.SearchCommentsWithReactions(request.PostId, request.Search.PageNumber,
+        var searchResult = await _commentRepository.SearchCommentsWithReactionsAsync(request.PostId, request.Search.PageNumber,
             request.Search.PageSize);
 
         if (searchResult == null || !searchResult.Items.Any())

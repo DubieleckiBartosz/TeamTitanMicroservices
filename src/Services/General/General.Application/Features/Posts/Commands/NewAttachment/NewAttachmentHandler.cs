@@ -20,7 +20,7 @@ public class NewAttachmentHandler : ICommandHandler<NewAttachmentCommand, Unit>
     }
     public async Task<Unit> Handle(NewAttachmentCommand request, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.GetPostWithAttachments(request.PostId);
+        var post = await _postRepository.GetPostWithAttachmentsAsync(request.PostId);
 
         if (post == null)
         {

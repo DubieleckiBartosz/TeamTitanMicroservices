@@ -19,7 +19,7 @@ public class DeletePostReactionHandler : ICommandHandler<DeletePostReactionComma
     }
     public async Task<Unit> Handle(DeletePostReactionCommand request, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.GetPostWithReactions(request.PostId);
+        var post = await _postRepository.GetPostWithReactionsAsync(request.PostId);
         if (post == null)
         {
             throw new NotFoundException(ExceptionDetails.DetailsNotFound("GetPostWithReactions"),

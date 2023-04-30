@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Posts\Queries\GetPostsWithReactions\" />
     <Folder Include="Validators\Commands\" />
   </ItemGroup>
 

@@ -19,7 +19,7 @@ public class DeleteCommentReactionHandler : ICommandHandler<DeleteCommentReactio
     }
     public async Task<Unit> Handle(DeleteCommentReactionCommand request, CancellationToken cancellationToken)
     {
-        var comment = await _commentRepository.GetCommentWithReactions(request.CommentId);
+        var comment = await _commentRepository.GetCommentWithReactionsAsync(request.CommentId);
         if (comment == null)
         {
             throw new NotFoundException(ExceptionDetails.DetailsNotFound("GetCommentWithReactions"),

@@ -10,9 +10,13 @@ public class GeneralAppMappings : Profile
 {
     public GeneralAppMappings()
     {
-        this.CreateMap<Comment, CommentViewModel>()
+        CreateMap<Comment, CommentViewModel>()
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description.ToString()));
-        this.CreateMap<Reaction, ReactionViewModel>()
+        CreateMap<Reaction, ReactionViewModel>()
             .ForMember(dest => dest.Reaction, opt => opt.MapFrom(src => (ReactionType) src.Type.Id));
+        CreateMap<Attachment, AttachmentViewModel>();
+        CreateMap<Post, PostViewModel>()
+            .ForMember(dest => dest.Description,
+                opt => opt.MapFrom(src => src.Content == null ? null : src.Content.ToString()));
     }
 }

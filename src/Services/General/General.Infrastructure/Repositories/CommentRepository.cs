@@ -12,14 +12,14 @@ public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
     }
 
-    public async Task<Comment?> GetCommentWithReactions(int commentId)
+    public async Task<Comment?> GetCommentWithReactionsAsync(int commentId)
     {
         var result = await DbSet.Include(_ => _.Reactions)
             .FirstOrDefaultAsync(_ => _.Id == commentId);
         return result;
     }
 
-    public async Task<ListWrapper<Comment>?> SearchCommentsWithReactions(int postId, int pageNumber, int pageSize)
+    public async Task<ListWrapper<Comment>?> SearchCommentsWithReactionsAsync(int postId, int pageNumber, int pageSize)
     {
         var query =  DbSet
             .Include(_ => _.Reactions)
