@@ -25,6 +25,14 @@ builder.GetSwagger();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var migration = scope.ServiceProvider
+        .GetRequiredService<AutomaticMigration>();
+     
+    migration.RunMigration();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

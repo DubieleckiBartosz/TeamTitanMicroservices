@@ -46,7 +46,7 @@ public class PostController : BaseController
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateNewAttachment([FromBody] NewAttachmentParameters parameters)
+    public async Task<IActionResult> CreateNewAttachment([FromForm] NewAttachmentParameters parameters)
     {
         var command = NewAttachmentCommand.Create(parameters);
         await CommandBus.Send(command);
