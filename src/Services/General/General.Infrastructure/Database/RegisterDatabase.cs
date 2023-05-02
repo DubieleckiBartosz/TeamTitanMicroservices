@@ -7,10 +7,12 @@ public static class RegisterDatabase
 {
     public static IServiceCollection RegisterGeneralDatabase(this IServiceCollection services, string connection)
     {
+        services.AddScoped<AutomaticMigration>();
         services.AddDbContext<GeneralContext>(options =>
         { 
             options.UseSqlServer(connection); 
         }); 
+
         return services;
     }
 
