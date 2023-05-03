@@ -13,10 +13,11 @@ services:
         - management-service
         - calculator-service
         - identity-service 
+        - general-service
     ports:
       - "8010:80"
     networks:
-        - team-titan-microservice-network
+        - team-titan-microservice-network 
 
   management-service: 
     build:
@@ -76,7 +77,7 @@ services:
     environment: 
       - ASPNETCORE_ENVIRONMENT=${TEST_ENV} 
       - EmailOptions__Host=${SMTP_HOST_ENV}
-      - ConnectionStrings__DefaultConnection=${IDENTITY_MSSLQ_CONNECTION_ENV}
+      - ConnectionStrings__DefaultConnection=${IDENTITY_MSSQL_CONNECTION_ENV}
       - ConnectionStrings__HangfireConnection=${HANGFIRE_CONNECTION_ENV}
     ports:
       - "8013:80"
@@ -96,7 +97,7 @@ services:
       - .env
     environment: 
       - ASPNETCORE_ENVIRONMENT=${TEST_ENV}  
-      - ConnectionStrings__DefaultConnection=${GENERAL_MSSLQ_CONNECTION_ENV} 
+      - ConnectionStrings__DefaultGeneralConnection=${GENERAL_MSSLQ_CONNECTION_ENV} 
     ports:
       - "8014:80"
     networks:
