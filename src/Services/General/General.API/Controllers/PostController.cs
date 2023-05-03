@@ -30,7 +30,7 @@ public class PostController : BaseController
     }
     
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateNewPost([FromBody] CreatePostParameters parameters)
+    public async Task<IActionResult> CreateNewPost([FromForm] CreatePostParameters parameters)
     {
         var command = CreatePostCommand.Create(parameters);
         var response = await CommandBus.Send(command);

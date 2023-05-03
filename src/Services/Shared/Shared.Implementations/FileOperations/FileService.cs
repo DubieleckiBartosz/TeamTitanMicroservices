@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Shared.Implementations.Logging;
+using Shared.Implementations.Tools;
 
 namespace Shared.Implementations.FileOperations;
 
@@ -20,7 +21,7 @@ public class FileService : IFileService
             Directory.CreateDirectory(rootFilePath);
         }
 
-        var path = $"{name ?? "File"}-{DateTime.Now.ToShortDateString()}-{formFile.FileName}";
+        var path = name ?? formFile.CreateFilePath();
         var finalPath = Path.Combine(rootPath, path);
 
         await using Stream fileStream = new FileStream(finalPath, FileMode.Create);
