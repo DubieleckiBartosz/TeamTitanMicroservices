@@ -247,7 +247,7 @@
           "Port": 7164
         }
       ],
-      "UpstreamPathTemplate": "/api/{controller}/{everything}",
+      "UpstreamPathTemplate": "/api/{Post}/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -263,7 +263,7 @@
           "Port": 7164
         }
       ],
-      "UpstreamPathTemplate": "/api/{controller}/{everything}",
+      "UpstreamPathTemplate": "/api/{Comment}/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",

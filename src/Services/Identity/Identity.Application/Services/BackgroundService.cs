@@ -18,8 +18,8 @@ public class BackgroundService : IBackgroundService
 
     public void StartJobs()
     {
-        this.ClearTokensRecurringJob();
-        this.ClearTempUsersRecurringJob();
+        ClearTokensRecurringJob();
+        ClearTempUsersRecurringJob();
     }
 
     private void ClearTokensRecurringJob()
@@ -28,7 +28,7 @@ public class BackgroundService : IBackgroundService
         var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
 
         _recurringJobManager.AddOrUpdate(ConstantKeys.ClearTokensRecurringJob,
-            () => userRepository.ClearTokens(), "0 */12 * * *", TimeZoneInfo.Local);
+            () => userRepository.ClearTokens(), "0 */12 * * *");
     }
 
     private void ClearTempUsersRecurringJob()
@@ -37,6 +37,6 @@ public class BackgroundService : IBackgroundService
         var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
 
         _recurringJobManager.AddOrUpdate(ConstantKeys.ClearTempUsersRecurringJob,
-            () => userRepository.ClearTempUsers(DateTime.UtcNow.AddMonths(-1)), "0 */12 * * *", TimeZoneInfo.Local);
+            () => userRepository.ClearTempUsers(DateTime.UtcNow.AddMonths(-1)), "0 */12 * * *");
     }
 }

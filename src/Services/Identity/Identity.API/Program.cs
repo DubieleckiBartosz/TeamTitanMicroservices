@@ -1,6 +1,5 @@
 using Identity.API.Common;
 using Identity.API.Configurations;
-using Identity.Application.Contracts;
 using Serilog;
 using Shared.Implementations;
 using Shared.Implementations.Core;
@@ -37,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Services.GetService<IBackgroundService>()?.StartJobs();
+//app.Services.GetService<IBackgroundService>()?.StartJobs();
 
 app.Run();

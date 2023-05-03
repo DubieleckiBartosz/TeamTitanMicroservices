@@ -8,8 +8,7 @@ namespace Shared.Implementations.Background;
 public static class BackgroundConnectionSettings
 {
     public static WebApplicationBuilder GetBackgroundConnectionSettings(this WebApplicationBuilder builder, string connection)
-    {
-
+    {   
         builder.Services.AddHangfire(_ =>
         {
             _.UseSqlServerStorage(connection,

@@ -7,13 +7,14 @@ RUN mkdir -p $PROJECT_DIR
 WORKDIR $PROJECT_DIR
 ENV SA_PASSWORD=sql123456(!)
 ENV ACCEPT_EULA=Y
+
+COPY ./Database/Background/Background-create-db.sql ./ 
 COPY ./Database/Identity/Identity-create-db.sql ./
 COPY ./Database/Identity/Identity-create-tables.sql ./
 COPY ./Database/Identity/Identity-create-storedProcedures.sql ./ 
 COPY ./Database/Calculator/Calculator-create-db.sql ./
 COPY ./Database/Calculator/Calculator-create-tables.sql ./
 COPY ./Database/Calculator/Calculator-create-storedProcedures.sql ./ 
-COPY ./Database/Background/Background-create-db.sql ./ 
 COPY ./Database/Management/Management-create-db.sql ./
 COPY ./Database/Management/Management-create-tables.sql ./
 COPY ./Database/Management/Management-create-storedProcedures.sql ./ 
