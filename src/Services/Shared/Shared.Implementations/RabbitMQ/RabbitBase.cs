@@ -35,6 +35,7 @@ public class RabbitBase : IRabbitBase
          
         _connectionFactory = new ConnectionFactory
         { 
+            Port = rabbitOptions.Port,
             HostName = rabbitOptions.Host,
             Password = rabbitOptions.Password,
             UserName = rabbitOptions.User,

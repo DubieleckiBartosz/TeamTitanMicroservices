@@ -4,17 +4,21 @@ using Serilog;
 using Shared.Implementations;
 using Shared.Implementations.Core;
 using Shared.Implementations.Logging;
+using ILogger = Serilog.ILogger;
 
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
 
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: true)
-    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true).AddEnvironmentVariables();
+    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
 
 // Add services to the container.
 builder.GetDependencyInjection().GetShared();
-builder.Services.RegisterGeneralDatabase(builder.Configuration["ConnectionStrings:DefaultGeneralConnection"]);
+
+var connectionDatabase = builder.Configuration["ConnectionStrings:DefaultGeneralConnection"];
+builder.Services.RegisterGeneralDatabase(connectionDatabase);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,7 +35,7 @@ using (var scope = app.Services.CreateScope())
         .GetRequiredService<AutomaticMigration>();
      
     migration.RunMigration();
-}
+} 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
