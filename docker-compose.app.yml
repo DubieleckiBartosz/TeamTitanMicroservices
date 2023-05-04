@@ -32,6 +32,7 @@ services:
       - ConnectionStrings__HangfireConnection=${HANGFIRE_CONNECTION_ENV}
       - StoreOptions__ConnectionString=${MONGO_STORE_ENV} 
       - RabbitOptions__Host=${RABBIT_CONNECTION_ENV}
+      - RabbitOptions__Port=${RABBIT_PORT_ENV}
       - EmailOptions__Host=${SMTP_HOST_ENV}
       - LinkOptions__Uri=${LINK_URI_ENV}
     ports:
@@ -56,6 +57,7 @@ services:
       - ConnectionStrings__DefaultCalculatorConnection=${CALCULATOR_MSSLQ_CONNECTION_ENV}
       - ConnectionStrings__HangfireConnection=${HANGFIRE_CONNECTION_ENV}
       - RabbitOptions__Host=${RABBIT_CONNECTION_ENV}
+      - RabbitOptions__Port=${RABBIT_PORT_ENV}
       - StoreOptions__ConnectionString=${MONGO_STORE_ENV} 
     ports:
       - "8012:80"
@@ -98,6 +100,7 @@ services:
     environment: 
       - ASPNETCORE_ENVIRONMENT=${TEST_ENV}  
       - ConnectionStrings__DefaultGeneralConnection=${GENERAL_MSSLQ_CONNECTION_ENV} 
+      - ConnectionStrings:DefaultGeneralConnection=${GENERAL_MSSLQ_CONNECTION_ENV} 
     ports:
       - "8014:80"
     networks:
