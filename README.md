@@ -251,4 +251,10 @@ PUT UpdatePriceProduct: Admin,Owner,Manager
 
 
 
+**[todo]**
+
+fix hangfire due to disconnect while running docker file
+
+
+
 
